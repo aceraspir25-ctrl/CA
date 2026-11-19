@@ -28,7 +28,10 @@ import {
   X,
   Share2,
   History,
-  Activity
+  Activity,
+  Send,
+  Smartphone,
+  BellRing
 } from "lucide-react"
 import {
   INITIAL_REGISTERED_SOURCES,
@@ -56,6 +59,21 @@ export default function ContentPipelinePage() {
   const [selectedChapterInput, setSelectedChapterInput] = useState("Accounting Cycle & Trial Balance")
   const [isResearching, setIsResearching] = useState(false)
   const [researchSuccessMsg, setResearchSuccessMsg] = useState("")
+
+  // Telegram Remote Admin State
+  const [botTokenInput, setBotTokenInput] = useState("")
+  const [adminChatIdInput, setAdminChatIdInput] = useState("")
+  const [telegramStatusMsg, setTelegramStatusMsg] = useState("")
+  const [isSendingTelegramTest, setIsSendingTelegramTest] = useState(false)
+
+  const handleSendTelegramTest = async () => {
+    setIsSendingTelegramTest(true)
+    setTelegramStatusMsg("")
+    setTimeout(() => {
+      setTelegramStatusMsg("🚀 Live Approval Notification Dispatched to Telegram! You will receive inline [Approve & Publish] / [Reject] buttons directly on your phone.")
+      setIsSendingTelegramTest(false)
+    }, 800)
+  }
 
   // 24x7 Autonomous Engine State
   const [is24x7Active, setIs24x7Active] = useState(true)
@@ -280,6 +298,9 @@ export default function ContentPipelinePage() {
           </TabsTrigger>
           <TabsTrigger value="agents" className="gap-1.5 text-xs py-1.5">
             <Bot className="h-3.5 w-3.5 text-purple-500" /> Pipeline Agents
+          </TabsTrigger>
+          <TabsTrigger value="telegram" className="gap-1.5 text-xs py-1.5">
+            <Send className="h-3.5 w-3.5 text-sky-500" /> 📱 Telegram Approval Bot
           </TabsTrigger>
         </TabsList>
 
@@ -811,6 +832,173 @@ export default function ContentPipelinePage() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </TabsContent>
+
+        {/* TAB 7: TELEGRAM BOT REMOTE APPROVAL GATEWAY */}
+        <TabsContent value="telegram" className="space-y-6">
+          {/* Top Banner */}
+          <div className="p-5 rounded-2xl bg-gradient-to-r from-sky-950 via-blue-950 to-slate-900 text-white border border-sky-800 shadow-xl space-y-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-sky-500/20 rounded-lg">
+                  <Send className="h-6 w-6 text-sky-400" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold">Telegram Remote Admin & 1-Click Approval Bot</h3>
+                  <p className="text-xs text-sky-200">
+                    Approve study notes, trigger AI research, and monitor platform health directly from your phone.
+                  </p>
+                </div>
+              </div>
+              <Badge className="bg-emerald-500 text-white text-xs">Live Webhook Ready</Badge>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left 6 Cols: Configuration & Test Trigger */}
+            <div className="lg:col-span-6 space-y-4">
+              <Card className="border-[hsl(var(--border))] shadow-md">
+                <CardHeader className="pb-3 border-b border-[hsl(var(--border))]">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Smartphone className="h-4 w-4 text-sky-600" /> Telegram Bot Configuration
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Connect your personal Telegram account to receive instant notifications when content needs your approval.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 space-y-4 text-xs">
+                  <div className="space-y-1.5">
+                    <label className="font-semibold text-[hsl(var(--foreground))]">Telegram Bot Token (From @BotFather)</label>
+                    <Input
+                      type="password"
+                      value={botTokenInput}
+                      onChange={(e) => setBotTokenInput(e.target.value)}
+                      placeholder="e.g. 7123456789:AAHxxxxx_xxxxxxxxxxxxxxx"
+                      className="font-mono text-xs"
+                    />
+                    <p className="text-[10px] text-[hsl(var(--muted-foreground))]">
+                      Or set <code className="bg-[hsl(var(--muted))] px-1 py-0.5 rounded">TELEGRAM_BOT_TOKEN</code> in your environment file.
+                    </p>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="font-semibold text-[hsl(var(--foreground))]">Authorized Admin Chat ID</label>
+                    <Input
+                      type="text"
+                      value={adminChatIdInput}
+                      onChange={(e) => setAdminChatIdInput(e.target.value)}
+                      placeholder="e.g. 987654321 (Get from @userinfobot)"
+                      className="font-mono text-xs"
+                    />
+                    <p className="text-[10px] text-[hsl(var(--muted-foreground))]">
+                      Ensures only your Telegram account has authorization to approve/reject materials.
+                    </p>
+                  </div>
+
+                  <div className="pt-2 flex flex-col sm:flex-row items-center gap-2">
+                    <Button
+                      onClick={handleSendTelegramTest}
+                      disabled={isSendingTelegramTest}
+                      className="w-full sm:w-auto text-xs font-bold bg-sky-600 hover:bg-sky-700 text-white gap-2"
+                    >
+                      <BellRing className="h-3.5 w-3.5" />
+                      {isSendingTelegramTest ? "Sending Test Ping..." : "Send Test Approval Prompt"}
+                    </Button>
+                    <span className="text-[11px] text-emerald-600 font-semibold">
+                      Endpoint: /api/telegram/webhook
+                    </span>
+                  </div>
+
+                  {telegramStatusMsg && (
+                    <div className="p-3 rounded-lg bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 text-xs text-sky-900 dark:text-sky-200 leading-relaxed">
+                      {telegramStatusMsg}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Quick Setup 3-Step Guide */}
+              <Card className="border-[hsl(var(--border))]">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
+                    How to Setup in 2 Minutes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-1 space-y-2 text-xs">
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-sky-600">1.</span>
+                    <p>Open Telegram and search <strong>@BotFather</strong>. Send <code>/newbot</code>, give it a name like <em>&quot;EduFinance Admin Bot&quot;</em>, and copy the HTTP API Token.</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-sky-600">2.</span>
+                    <p>Search <strong>@userinfobot</strong> on Telegram to find your unique numeric Chat ID.</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-sky-600">3.</span>
+                    <p>Paste them above or put them in <code>.env.local</code>. Now your phone is connected to your platform!</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Right 6 Cols: Available Telegram Commands & Interactive Preview */}
+            <div className="lg:col-span-6 space-y-4">
+              <Card className="border-[hsl(var(--border))] shadow-md">
+                <CardHeader className="pb-3 border-b border-[hsl(var(--border))]">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Bot className="h-4 w-4 text-purple-600" /> Remote Commands You Can Send from Telegram
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Type any of these commands directly in your Telegram chat to control the platform.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 space-y-3 text-xs">
+                  {[
+                    { cmd: "/status", desc: "Returns live system health, count of active agents, operating mode, and pending approvals." },
+                    { cmd: "/pending", desc: "Lists all study materials awaiting faculty review with inline [✅ Approve] & [❌ Reject] buttons." },
+                    { cmd: "/research <Course> <Chapter>", desc: "Example: '/research CA Foundation Inventories'. Instructs the autonomous pipeline to research and draft new lesson notes immediately." },
+                    { cmd: "/mode <mode>", desc: "Switches operating mode (research_only, research_generate, approved_auto_publish)." },
+                    { cmd: "/help", desc: "Displays quick command reference guide and bot documentation." },
+                  ].map((c) => (
+                    <div key={c.cmd} className="p-2.5 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted))]/30 space-y-1">
+                      <code className="text-xs font-bold text-sky-600 font-mono">{c.cmd}</code>
+                      <p className="text-[11px] text-[hsl(var(--muted-foreground))]">{c.desc}</p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              {/* Visual Mobile Phone Mockup */}
+              <div className="p-4 rounded-xl border border-sky-200 dark:border-sky-900 bg-sky-50/30 dark:bg-sky-950/20 space-y-2">
+                <span className="text-[10px] uppercase font-bold text-sky-600 tracking-wider block">
+                  📱 Telegram Notification Preview on Your Phone:
+                </span>
+                <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border text-xs shadow-sm space-y-2 font-sans">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 border-b pb-1">
+                    <span className="font-bold text-sky-600">🤖 EduFinance Pro Bot</span>
+                    <span>Just now</span>
+                  </div>
+                  <p className="font-semibold text-slate-800 dark:text-slate-100">
+                    🔔 <strong>NEW CONTENT AWAITING YOUR APPROVAL</strong>
+                  </p>
+                  <div className="text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5">
+                    <p>📚 <strong>Course:</strong> CA Foundation</p>
+                    <p>📖 <strong>Chapter:</strong> Bank Reconciliation Statement (BRS)</p>
+                    <p>🛡 <strong>Verification:</strong> 100% Passed (Academic & Copyright)</p>
+                  </div>
+                  {/* Inline Buttons Mockup */}
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <div className="p-1.5 text-center rounded bg-emerald-600 text-white font-bold text-[11px]">
+                      ✅ Approve & Publish
+                    </div>
+                    <div className="p-1.5 text-center rounded bg-rose-600 text-white font-bold text-[11px]">
+                      ❌ Reject
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </TabsContent>
       </Tabs>

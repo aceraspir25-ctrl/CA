@@ -12,6 +12,7 @@ import {
   MultiPlatformDossier,
   SourceRightsRecord
 } from "@/data/multiPlatformResearchData"
+import { sendTelegramApprovalPrompt } from "@/lib/telegram/bot"
 
 // In-memory runtime state for pipeline items, multi-platform dossiers, and operating mode
 let pipelineItems: PipelineItem[] = [...INITIAL_PIPELINE_ITEMS]
@@ -124,6 +125,17 @@ export async function POST(req: NextRequest) {
       }
 
       pipelineItems = [newItem, ...pipelineItems]
+
+      // Dispatch real-time Telegram approval prompt if awaiting human review
+      if (newItem.stage === "faculty_review_pending") {
+        sendTelegramApprovalPrompt({
+          id: newItem.id,
+          title: newItem.title,
+          course: newItem.course,
+          chapter: newItem.chapter
+        }).catch((e) => console.log("Telegram prompt dispatch notice:", e))
+      }
+
       return NextResponse.json({ success: true, item: newItem })
     }
 
