@@ -337,7 +337,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
     name: "Institute of Cost Accountants of India",
     shortName: "ICMAI",
     badgeColor: "bg-emerald-600 text-white",
-    description: "Statutory professional accountancy body regulating the Cost and Management Accounting (CMA) profession.",
+    description: "Statutory body established under an Act of Parliament to regulate the profession of Cost and Management Accountancy in India.",
     officialUrl: "https://icmai.in",
     levels: [
       {
@@ -345,18 +345,19 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "CMA Foundation Course",
         shortTitle: "CMA Foundation",
         institution: "ICMAI",
-        description: "Entry-level qualification for Cost & Management Accountancy under ICMAI Syllabus 2022.",
-        eligibility: "Passed Class 12",
-        scheme: "ICMAI Syllabus 2022",
+        description: "Entry-level qualification covering commercial laws, financial accounting, mathematics, and business economics.",
+        eligibility: "Passed Class 12 or equivalent from recognized board",
+        scheme: "ICMAI Syllabus 2022 (4 Papers)",
         papers: [
           {
             id: "cma-f-p1",
             paperNumber: 1,
             title: "Fundamentals of Business Laws and Business Communication",
             marks: 100,
-            description: "Indian Contract Act, Sale of Goods Act, Negotiable Instruments Act, Communication skills.",
+            description: "Indian Contract Act, Sale of Goods Act, Negotiable Instruments Act, and Business Communication essentials.",
             chapters: [
-              { id: "cma-bl-1", number: 1, title: "Essentials of Commercial Law", hindiTitle: "वाणिज्यिक कानून के मूल तत्व", description: "Contract Act, Offer, Acceptance, Consideration.", levels: { min: 0, max: 30 }, topicsCount: 6, estimatedHours: 10 }
+              { id: "cma-f-bl-1", number: 1, title: "Commercial Laws: Contract Act & Sale of Goods Act", hindiTitle: "व्यापारिक कानून: अनुबंध अधिनियम एवं माल विक्रय अधिनियम", description: "Offer, acceptance, consideration, breach of contract, conditions and warranties.", levels: { min: 0, max: 25 }, topicsCount: 7, estimatedHours: 12 },
+              { id: "cma-f-bl-2", number: 2, title: "Business Communication & Professional Ethics", hindiTitle: "व्यावसायिक संचार एवं व्यावसायिक नैतिकता", description: "Channels of communication, formal correspondence, business ethics fundamentals.", levels: { min: 0, max: 20 }, topicsCount: 5, estimatedHours: 8 }
             ]
           },
           {
@@ -364,9 +365,10 @@ export const INSTITUTIONS_DATA: Institution[] = [
             paperNumber: 2,
             title: "Fundamentals of Financial and Cost Accounting",
             marks: 100,
-            description: "Accounting principles, cost sheets, classification of costs, preparation of final accounts.",
+            description: "Accounting principles, ledger posting, bank reconciliation, depreciation, cost concepts and classification.",
             chapters: [
-              { id: "cma-ac-1", number: 1, title: "Fundamentals of Cost Accounting & Cost Concepts", hindiTitle: "लागत लेखांकन के मूल सिद्धांत एवं लागत अवधारणाएं", description: "Direct vs indirect cost, fixed vs variable cost, elements of cost, Cost Sheet preparation.", levels: { min: 10, max: 40 }, topicsCount: 8, estimatedHours: 14 }
+              { id: "cma-f-acc-1", number: 1, title: "Financial Accounting: Cycle & Final Accounts", hindiTitle: "वित्तीय लेखांकन: चक्र एवं अंतिम खाते", description: "Double-entry framework, trial balance, adjustments, Trading & Profit and Loss account.", levels: { min: 5, max: 35 }, topicsCount: 8, estimatedHours: 16 },
+              { id: "cma-f-cost-1", number: 2, title: "Fundamentals of Cost Accounting & Cost Sheet", hindiTitle: "लागत लेखांकन के मूल सिद्धांत एवं लागत पत्रक (Cost Sheet)", description: "Prime cost, factory cost, cost of production, preparation of cost sheet.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 14 }
             ]
           },
           {
@@ -374,9 +376,10 @@ export const INSTITUTIONS_DATA: Institution[] = [
             paperNumber: 3,
             title: "Fundamentals of Business Mathematics and Statistics",
             marks: 100,
-            description: "Arithmetic, Algebra, Calculus, Central Tendency, Measures of Dispersion, Probability.",
+            description: "Arithmetic, algebra, calculus, measures of central tendency, dispersion, correlation and probability.",
             chapters: [
-              { id: "cma-ms-1", number: 1, title: "Commercial Mathematics & Statistics", hindiTitle: "वाणिज्यिक गणित एवं सांख्यिकी", description: "Interest, annuities, index numbers, correlation and regression.", levels: { min: 0, max: 35 }, topicsCount: 7, estimatedHours: 12 }
+              { id: "cma-f-math-1", number: 1, title: "Business Mathematics: Ratios, Simple & Compound Interest", hindiTitle: "व्यावसायिक गणित: अनुपात, साधारण एवं चक्रवृद्धि ब्याज", description: "Time value of money, annuities, arithmetic and geometric progressions.", levels: { min: 5, max: 30 }, topicsCount: 6, estimatedHours: 12 },
+              { id: "cma-f-stat-1", number: 2, title: "Business Statistics: Central Tendency & Dispersion", hindiTitle: "व्यावसायिक सांख्यिकी: केंद्रीय प्रवृत्ति एवं अपकिरण के माप", description: "Mean, median, mode, standard deviation, variance, coefficient of variation.", levels: { min: 5, max: 35 }, topicsCount: 7, estimatedHours: 14 }
             ]
           },
           {
@@ -384,9 +387,10 @@ export const INSTITUTIONS_DATA: Institution[] = [
             paperNumber: 4,
             title: "Fundamentals of Business Economics and Management",
             marks: 100,
-            description: "Microeconomics, Macroeconomics, Principles of Management, Decision Making.",
+            description: "Demand and supply analysis, market structures, money and banking, management principles and leadership.",
             chapters: [
-              { id: "cma-em-1", number: 1, title: "Business Economics & Management Functions", hindiTitle: "व्यावसायिक अर्थशास्त्र एवं प्रबंधन कार्य", description: "Planning, organising, staffing, directing, controlling, market structures.", levels: { min: 0, max: 30 }, topicsCount: 6, estimatedHours: 10 }
+              { id: "cma-f-eco-1", number: 1, title: "Basic Economic Concepts & Market Forms", hindiTitle: "मूलभूत आर्थिक अवधारणाएं एवं बाजार के रूप", description: "Law of Demand, elasticity, perfect competition, monopoly, oligopoly pricing.", levels: { min: 0, max: 25 }, topicsCount: 6, estimatedHours: 10 },
+              { id: "cma-f-mgmt-1", number: 2, title: "Management Processes: Planning to Controlling", hindiTitle: "प्रबंधन प्रक्रियाएं: नियोजन से नियंत्रण तक", description: "Functions of management, delegation, decentralization, leadership styles.", levels: { min: 0, max: 25 }, topicsCount: 6, estimatedHours: 10 }
             ]
           }
         ]
@@ -396,24 +400,58 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "CMA Intermediate Course",
         shortTitle: "CMA Intermediate",
         institution: "ICMAI",
-        description: "Intermediate level with special focus on Cost Accounting, Direct & Indirect Tax, Operations Management.",
-        eligibility: "Passed CMA Foundation or Graduation",
+        description: "Core professional qualification consisting of 8 papers covering Costing, Taxation, Corporate Law, and Financial Management.",
+        eligibility: "Passed CMA Foundation or Graduation in any discipline",
         scheme: "ICMAI Syllabus 2022 (8 Papers)",
         groups: [
           {
             id: "cma-int-g1",
             title: "Group 1",
-            description: "Business Laws and Ethics, Financial Accounting, Direct and Indirect Taxation, Cost Accounting",
+            description: "Business Laws & Ethics, Financial Accounting, Direct & Indirect Taxation, Cost Accounting",
             papers: [
+              {
+                id: "cma-int-p5",
+                paperNumber: 5,
+                title: "Business Laws and Ethics",
+                marks: 100,
+                description: "Commercial Laws, Industrial and Labour Laws, Corporate Law provisions, Business Ethics.",
+                chapters: [
+                  { id: "cma-bl-1", number: 1, title: "Indian Contracts, Sale of Goods & Factories Act", hindiTitle: "भारतीय अनुबंध, माल विक्रय एवं कारखाना अधिनियम", description: "Special contracts, worker safety, health and welfare statutory compliances.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 },
+                  { id: "cma-bl-2", number: 2, title: "Corporate Law: Incorporation & Management", hindiTitle: "कंपनी अधिनियम: निगमन एवं प्रबंधन", description: "Director duties, board meetings, corporate governance, CSR compliance under Companies Act 2013.", levels: { min: 40, max: 75 }, topicsCount: 9, estimatedHours: 18 }
+                ]
+              },
+              {
+                id: "cma-int-p6",
+                paperNumber: 6,
+                title: "Financial Accounting",
+                marks: 100,
+                description: "Accounting standards, partnership dissolution, branch and departmental accounts, hire purchase.",
+                chapters: [
+                  { id: "cma-fa-1", number: 1, title: "Accounting Standards (AS 1, 2, 9, 10, 16)", hindiTitle: "लेखांकन मानक (AS ढांचा)", description: "Mandatory AS issued by ICAI/ICMAI for financial statement preparation.", levels: { min: 35, max: 75 }, topicsCount: 7, estimatedHours: 16 },
+                  { id: "cma-fa-2", number: 2, title: "Partnership Dissolution & Piecemeal Distribution", hindiTitle: "साझेदारी विघटन एवं क्रमिक वितरण", description: "Garner vs Murray rule, insolvency of partners, maximum loss method.", levels: { min: 40, max: 80 }, topicsCount: 8, estimatedHours: 18 }
+                ]
+              },
+              {
+                id: "cma-int-p7",
+                paperNumber: 7,
+                title: "Direct and Indirect Taxation",
+                marks: 100,
+                description: "Income Tax Act 1961 (Direct Tax 50 Marks) and Goods and Services Tax (Indirect Tax 50 Marks).",
+                chapters: [
+                  { id: "cma-tax-1", number: 1, title: "Income Tax: 5 Heads of Income & Total Tax Liability", hindiTitle: "आयकर: आय के 5 शीर्षक एवं कुल कर दायित्व", description: "Salaries, House Property, PGBP, Capital Gains, Other Sources, Section 115BAC.", levels: { min: 45, max: 85 }, topicsCount: 12, estimatedHours: 24 },
+                  { id: "cma-tax-2", number: 2, title: "GST: Levy, Time of Supply, Value & Input Tax Credit", hindiTitle: "जीएसटी: लेवी, आपूर्ति का समय, मूल्य एवं इनपुट टैक्स क्रेडिट", description: "CGST/SGST/IGST, ITC eligibility, blocked credits under Section 17(5).", levels: { min: 45, max: 85 }, topicsCount: 10, estimatedHours: 20 }
+                ]
+              },
               {
                 id: "cma-int-p8",
                 paperNumber: 8,
                 title: "Cost Accounting",
                 marks: 100,
-                description: "Cost Accounting Standards (CAS), Material, Labour, Overheads, Job/Batch/Contract Costing, Marginal Costing.",
+                description: "Cost Accounting Standards (CAS 1 to 24), Material, Labour, Overheads, Marginal Costing, Standard Costing.",
                 chapters: [
-                  { id: "cma-cost-1", number: 1, title: "Cost Accounting Standards (CAS 1 to 24)", hindiTitle: "लागत लेखांकन मानक (CAS 1-24)", description: "Mandatory CAS issued by ICMAI for Indian cost records and audits.", levels: { min: 40, max: 85 }, topicsCount: 10, estimatedHours: 20 },
-                  { id: "cma-cost-2", number: 2, title: "Marginal Costing, CVP Analysis and Decision Making", hindiTitle: "सीमांत लागत, CVP विश्लेषण एवं निर्णय निर्माण", description: "Make or buy, shut down, product mix decisions, angle of incidence.", levels: { min: 45, max: 90 }, topicsCount: 8, estimatedHours: 18 }
+                  { id: "cma-cost-1", number: 1, title: "Cost Accounting Standards (CAS 1 to 24)", hindiTitle: "लागत लेखांकन मानक (CAS 1-24)", description: "Mandatory CAS issued by ICMAI for Indian cost records and statutory cost audits.", levels: { min: 40, max: 85 }, topicsCount: 10, estimatedHours: 20 },
+                  { id: "cma-cost-2", number: 2, title: "Marginal Costing, CVP Analysis and Decision Making", hindiTitle: "सीमांत लागत, CVP विश्लेषण एवं निर्णय निर्माण", description: "P/V ratio, Break-even point, Margin of safety, make or buy decisions.", levels: { min: 45, max: 90 }, topicsCount: 8, estimatedHours: 18 },
+                  { id: "cma-cost-3", number: 3, title: "Standard Costing and Variance Analysis", hindiTitle: "प्रमाप लागत निर्धारण एवं विचरण विश्लेषण", description: "Material, labour, overhead, sales variances and reconciliation statements.", levels: { min: 50, max: 90 }, topicsCount: 9, estimatedHours: 18 }
                 ]
               }
             ]
@@ -421,8 +459,41 @@ export const INSTITUTIONS_DATA: Institution[] = [
           {
             id: "cma-int-g2",
             title: "Group 2",
-            description: "Operations Management & Strategic Management, Corporate Accounting & Auditing, Financial Management, Management Accounting",
+            description: "Operations Management & SM, Corporate Accounting & Auditing, Financial Management & BDA, Management Accounting",
             papers: [
+              {
+                id: "cma-int-p9",
+                paperNumber: 9,
+                title: "Operations Management and Strategic Management",
+                marks: 100,
+                description: "Production planning, facility layout, inventory control, strategic analysis and implementation.",
+                chapters: [
+                  { id: "cma-om-1", number: 1, title: "Operations Planning, Scheduling & Maintenance", hindiTitle: "परिचालन योजना, शेड्यूलिंग एवं रखरखाव", description: "Plant location, layout, aggregate planning, CPM/PERT network analysis.", levels: { min: 40, max: 80 }, topicsCount: 8, estimatedHours: 16 },
+                  { id: "cma-sm-1", number: 2, title: "Strategic Analysis: SWOT, Porter's 5 Forces & Vision", hindiTitle: "रणनीतिक विश्लेषण: स्वाट, पोर्टर मॉडल एवं विज़न", description: "Mission, vision, environmental appraisal, generic competitive strategies.", levels: { min: 40, max: 80 }, topicsCount: 7, estimatedHours: 14 }
+                ]
+              },
+              {
+                id: "cma-int-p10",
+                paperNumber: 10,
+                title: "Corporate Accounting and Auditing",
+                marks: 100,
+                description: "Schedule III financial statements, company audit, auditor powers, duties, CARO 2020.",
+                chapters: [
+                  { id: "cma-ca-1", number: 1, title: "Company Financial Statements under Schedule III", hindiTitle: "अनुसूची III के अंतर्गत कंपनी वित्तीय विवरण", description: "Balance sheet, Statement of Profit and Loss, cash flow statements.", levels: { min: 45, max: 85 }, topicsCount: 9, estimatedHours: 18 },
+                  { id: "cma-aud-1", number: 2, title: "Company Audit, Auditor Powers & CARO 2020", hindiTitle: "कंपनी अंकेक्षण, अधिकार, कर्तव्य एवं कारो 2020", description: "Statutory auditor appointment, disqualifications, reporting under Section 143.", levels: { min: 45, max: 85 }, topicsCount: 8, estimatedHours: 16 }
+                ]
+              },
+              {
+                id: "cma-int-p11",
+                paperNumber: 11,
+                title: "Financial Management and Business Data Analytics",
+                marks: 100,
+                description: "Capital Budgeting, Cost of Capital, Working Capital, Data Analytics, Python/R applications in finance.",
+                chapters: [
+                  { id: "cma-fm-1", number: 1, title: "Capital Budgeting & Financing Decisions (WACC)", hindiTitle: "पूंजी बजटिंग एवं वित्तपोषण निर्णय (WACC)", description: "NPV, IRR, cost of equity, cost of debt, weighted average cost of capital.", levels: { min: 45, max: 90 }, topicsCount: 9, estimatedHours: 18 },
+                  { id: "cma-bda-1", number: 2, title: "Business Data Analytics & Financial Modelling", hindiTitle: "व्यावसायिक डेटा एनालिटिक्स एवं वित्तीय मॉडलिंग", description: "Big data in accounting, predictive analytics, data visualization in finance.", levels: { min: 45, max: 85 }, topicsCount: 6, estimatedHours: 12 }
+                ]
+              },
               {
                 id: "cma-int-p12",
                 paperNumber: 12,
@@ -430,7 +501,8 @@ export const INSTITUTIONS_DATA: Institution[] = [
                 marks: 100,
                 description: "Activity-Based Costing (ABC), Target Costing, Life Cycle Costing, Responsibility Accounting, Transfer Pricing.",
                 chapters: [
-                  { id: "cma-ma-1", number: 1, title: "Activity-Based Costing (ABC) & Cost Drivers", hindiTitle: "गतिविधि आधारित लागत निर्धारण (ABC)", description: "Cost pools, cost drivers, traditional vs ABC system comparison.", levels: { min: 50, max: 90 }, topicsCount: 7, estimatedHours: 14 }
+                  { id: "cma-ma-1", number: 1, title: "Activity-Based Costing (ABC) & Cost Drivers", hindiTitle: "गतिविधि आधारित लागत निर्धारण (ABC)", description: "Cost pools, cost drivers, traditional vs ABC system comparison.", levels: { min: 50, max: 90 }, topicsCount: 7, estimatedHours: 14 },
+                  { id: "cma-ma-2", number: 2, title: "Transfer Pricing & Divisional Performance", hindiTitle: "हस्तांतरण मूल्य निर्धारण एवं प्रभागीय प्रदर्शन", description: "Cost-based, market-based and negotiated transfer pricing, dual rate method.", levels: { min: 50, max: 90 }, topicsCount: 6, estimatedHours: 14 }
                 ]
               }
             ]
@@ -442,8 +514,8 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "CMA Final Course",
         shortTitle: "CMA Final",
         institution: "ICMAI",
-        description: "Strategic Cost Management, Cost & Management Audit, Strategic Performance Management, Business Valuation.",
-        eligibility: "Passed CMA Intermediate and prescribed practical training",
+        description: "The peak qualification stage focusing on Strategic Cost Management, Corporate Laws, Tax Planning, and Cost Audit.",
+        eligibility: "Passed CMA Intermediate Examination and practical training",
         scheme: "ICMAI Syllabus 2022 (8 Papers)",
         groups: [
           {
@@ -452,13 +524,47 @@ export const INSTITUTIONS_DATA: Institution[] = [
             description: "Corporate and Economic Laws, Strategic Financial Management, Direct Tax Laws, Strategic Cost Management",
             papers: [
               {
+                id: "cma-fn-p13",
+                paperNumber: 13,
+                title: "Corporate and Economic Laws",
+                marks: 100,
+                description: "Companies Act 2013 (Board processes, Mergers, Winding up), IBC 2016, SEBI laws, FEMA 1999.",
+                chapters: [
+                  { id: "cma-cl-1", number: 1, title: "Corporate Governance, Board Processes & Mergers", hindiTitle: "कॉर्पोरेट गवर्नेंस, बोर्ड प्रक्रियाएं एवं विलय", description: "Compromise, arrangements, amalgamations, NCLT proceedings.", levels: { min: 65, max: 95 }, topicsCount: 8, estimatedHours: 18 },
+                  { id: "cma-el-1", number: 2, title: "Insolvency and Bankruptcy Code (IBC) 2016 & FEMA", hindiTitle: "दिवाला एवं शोधन अक्षमता संहिता (IBC) व फेमा", description: "Corporate insolvency resolution process (CIRP), liquidation, current and capital account transactions.", levels: { min: 70, max: 100 }, topicsCount: 9, estimatedHours: 20 }
+                ]
+              },
+              {
+                id: "cma-fn-p14",
+                paperNumber: 14,
+                title: "Strategic Financial Management (SFM)",
+                marks: 100,
+                description: "Investment decisions, portfolio management, financial derivatives (Futures & Options), Forex risk management.",
+                chapters: [
+                  { id: "cma-sfm-1", number: 1, title: "Portfolio Management & Security Analysis (CAPM & APT)", hindiTitle: "पोर्टफोलियो प्रबंधन एवं प्रतिभूति विश्लेषण", description: "Markowitz model, Sharpe & Treynor ratios, Capital Asset Pricing Model.", levels: { min: 70, max: 100 }, topicsCount: 9, estimatedHours: 22 },
+                  { id: "cma-sfm-2", number: 2, title: "Forex Risk Management & Financial Derivatives", hindiTitle: "विदेशी मुद्रा जोखिम प्रबंधन एवं वित्तीय डेरिवेटिव्स", description: "Currency swaps, forward contracts, interest rate hedging, Black-Scholes model.", levels: { min: 75, max: 100 }, topicsCount: 9, estimatedHours: 24 }
+                ]
+              },
+              {
+                id: "cma-fn-p15",
+                paperNumber: 15,
+                title: "Direct Tax Laws and International Taxation",
+                marks: 100,
+                description: "Comprehensive direct taxes, corporate tax planning, transfer pricing, Double Tax Avoidance Agreements (DTAA).",
+                chapters: [
+                  { id: "cma-dt-1", number: 1, title: "Corporate Tax Assessment, MAT (Sec 115JB) & AMT", hindiTitle: "कॉर्पोरेट कर निर्धारण एवं न्यूनतम वैकल्पिक कर (MAT)", description: "Book profits computation, tax planning, assessments and reassessments.", levels: { min: 70, max: 100 }, topicsCount: 10, estimatedHours: 22 },
+                  { id: "cma-dt-2", number: 2, title: "International Taxation, Transfer Pricing & DTAA", hindiTitle: "अंतर्राष्ट्रीय कराधान, ट्रांसफर प्राइसिंग एवं डीटीएए", description: "Arm's length price methods, APA, Equalisation Levy, BEPS action plans.", levels: { min: 75, max: 100 }, topicsCount: 9, estimatedHours: 20 }
+                ]
+              },
+              {
                 id: "cma-fn-p16",
                 paperNumber: 16,
                 title: "Strategic Cost Management (SCM)",
                 marks: 100,
-                description: "Value Chain Analysis, Kaizen Costing, Balanced Scorecard, Total Quality Management (TQM).",
+                description: "Value Chain Analysis, Kaizen Costing, Balanced Scorecard, Target Costing, Total Quality Management (TQM).",
                 chapters: [
-                  { id: "scm-ch1", number: 1, title: "Strategic Cost Management & Value Chain Analysis", hindiTitle: "रणनीतिक लागत प्रबंधन एवं मूल्य श्रृंखला विश्लेषण", description: "Porter's Value Chain, Core competencies, Cost leadership vs Differentiation.", levels: { min: 70, max: 100 }, topicsCount: 9, estimatedHours: 20 }
+                  { id: "scm-ch1", number: 1, title: "Strategic Cost Management & Value Chain Analysis", hindiTitle: "रणनीतिक लागत प्रबंधन एवं मूल्य श्रृंखला विश्लेषण", description: "Porter's Value Chain, Core competencies, Cost leadership vs Differentiation.", levels: { min: 70, max: 100 }, topicsCount: 9, estimatedHours: 20 },
+                  { id: "scm-ch2", number: 2, title: "Modern Cost Management Techniques: Kaizen, TQM, JIT", hindiTitle: "आधुनिक लागत प्रबंधन: काइज़न, टीक्यूएम एवं जेआईटी", description: "Six Sigma, Theory of Constraints (TOC), Life cycle costing, Target costing.", levels: { min: 70, max: 100 }, topicsCount: 8, estimatedHours: 18 }
                 ]
               }
             ]
@@ -466,16 +572,50 @@ export const INSTITUTIONS_DATA: Institution[] = [
           {
             id: "cma-fn-g4",
             title: "Group 4",
-            description: "Cost & Management Audit, Corporate Financial Reporting, Indirect Tax Laws, Strategic Performance Management & Business Valuation",
+            description: "Cost & Management Audit, Corporate Financial Reporting, Indirect Tax Laws, Strategic Performance Management & Valuation",
             papers: [
               {
                 id: "cma-fn-p17",
                 paperNumber: 17,
-                title: "Cost and Management Audit (Section 148 of Companies Act 2013)",
+                title: "Cost and Management Audit (Section 148)",
                 marks: 100,
-                description: "Cost audit rules, CRA-1, CRA-2, CRA-3, CRA-4, Cost Audit Report.",
+                description: "Cost audit rules, CRA-1, CRA-2, CRA-3, CRA-4, Cost Audit Report, internal audit and operational audit.",
                 chapters: [
-                  { id: "cma-audit-1", number: 1, title: "Statutory Cost Audit under Section 148", hindiTitle: "धारा 148 के अंतर्गत सांविधिक लागत अंकेक्षण", description: "Applicability thresholds, regulated vs non-regulated sectors, duties of cost auditor.", levels: { min: 65, max: 100 }, topicsCount: 8, estimatedHours: 18 }
+                  { id: "cma-audit-1", number: 1, title: "Statutory Cost Audit under Section 148 & Companies Rules", hindiTitle: "धारा 148 के अंतर्गत सांविधिक लागत अंकेक्षण", description: "Applicability thresholds, regulated vs non-regulated sectors, duties of cost auditor, form filing.", levels: { min: 65, max: 100 }, topicsCount: 8, estimatedHours: 18 },
+                  { id: "cma-audit-2", number: 2, title: "Management Audit & Internal Control Systems", hindiTitle: "प्रबंधकीय अंकेक्षण एवं आंतरिक नियंत्रण प्रणालियां", description: "Operational audit, efficiency audit, social audit, internal audit standards.", levels: { min: 65, max: 95 }, topicsCount: 7, estimatedHours: 16 }
+                ]
+              },
+              {
+                id: "cma-fn-p18",
+                paperNumber: 18,
+                title: "Corporate Financial Reporting (CFR)",
+                marks: 100,
+                description: "Ind AS financial statements, group consolidation, valuation of goodwill, valuation of shares, accounting for financial instruments.",
+                chapters: [
+                  { id: "cma-cfr-1", number: 1, title: "Ind AS Group Accounting & Business Combinations", hindiTitle: "इंड एएस समूह लेखांकन एवं व्यावसायिक संयोजन", description: "Ind AS 103 Business Combinations, Ind AS 110 Consolidated Financial Statements.", levels: { min: 75, max: 100 }, topicsCount: 10, estimatedHours: 24 },
+                  { id: "cma-cfr-2", number: 2, title: "Financial Instruments (Ind AS 32, 107, 109) & Valuation", hindiTitle: "वित्तीय उपकरण एवं शेयरों का मूल्यांकन", description: "Recognition, measurement, hedge accounting, share valuation techniques.", levels: { min: 75, max: 100 }, topicsCount: 9, estimatedHours: 20 }
+                ]
+              },
+              {
+                id: "cma-fn-p19",
+                paperNumber: 19,
+                title: "Indirect Tax Laws and Practice (GST & Customs)",
+                marks: 100,
+                description: "Advanced GST procedures, appeals, assessment, audit, Customs Act 1962, Foreign Trade Policy.",
+                chapters: [
+                  { id: "cma-gst-1", number: 1, title: "Advanced GST Assessment, Audit & Anti-Profiteering", hindiTitle: "उन्नत जीएसटी कर निर्धारण, अंकेक्षण एवं अपीलीय प्रक्रियाएं", description: "Departmental audits, inspection, search, seizure, arrest, appeals to Tribunal and High Court.", levels: { min: 70, max: 100 }, topicsCount: 9, estimatedHours: 20 },
+                  { id: "cma-cust-1", number: 2, title: "Customs Law, Valuation & Foreign Trade Policy (FTP)", hindiTitle: "सीमा शुल्क कानून, मूल्यांकन एवं विदेश व्यापार नीति", description: "Types of duties, valuation of imported goods, baggage rules, duty drawback.", levels: { min: 70, max: 100 }, topicsCount: 8, estimatedHours: 18 }
+                ]
+              },
+              {
+                id: "cma-fn-p20",
+                paperNumber: 20,
+                title: "Strategic Performance Management and Business Valuation",
+                marks: 100,
+                description: "Performance evaluation metrics, EVA, MVA, DCF business valuation, mergers and acquisitions valuation.",
+                chapters: [
+                  { id: "cma-spm-1", number: 1, title: "Performance Evaluation: EVA, MVA & BSC", hindiTitle: "प्रदर्शन मूल्यांकन: आर्थिक मूल्य वर्धित (EVA) एवं बैलेंस्ड स्कोरकार्ड", description: "Economic Value Added, Market Value Added, productivity analysis, bench-marking.", levels: { min: 75, max: 100 }, topicsCount: 8, estimatedHours: 18 },
+                  { id: "cma-val-1", number: 2, title: "Business Valuation Techniques (DCF & Relative Multiples)", hindiTitle: "व्यावसायिक मूल्यांकन तकनीकें (DCF एवं गुणक विधि)", description: "Discounted Cash Flow method, PE multiples, EV/EBITDA valuation in M&A.", levels: { min: 75, max: 100 }, topicsCount: 9, estimatedHours: 22 }
                 ]
               }
             ]
@@ -489,7 +629,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
     name: "Institute of Company Secretaries of India",
     shortName: "ICSI",
     badgeColor: "bg-purple-600 text-white",
-    description: "Premier statutory body for developing and regulating the profession of Company Secretaries in India.",
+    description: "Premier statutory professional body in India dedicated to the development and regulation of Company Secretaries.",
     officialUrl: "https://www.icsi.edu",
     levels: [
       {
@@ -499,7 +639,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
         institution: "ICSI",
         description: "National entrance test for admission to the CS Executive Programme.",
         eligibility: "Passed or appearing in Class 12",
-        scheme: "ICSI Latest Scheme",
+        scheme: "ICSI Latest Scheme (4 Papers)",
         papers: [
           {
             id: "cs-e-p1",
@@ -551,13 +691,24 @@ export const INSTITUTIONS_DATA: Institution[] = [
         institution: "ICSI",
         description: "Intermediate CS qualification with in-depth focus on Company Law, Securities Laws, Economic Laws, Tax Laws.",
         eligibility: "Passed CSEET or Direct Entry for Graduates",
-        scheme: "ICSI New Syllabus 2022 (7 Papers)",
+        scheme: "ICSI New Syllabus 2022 (7 Papers in 2 Groups)",
         groups: [
           {
             id: "cs-ex-g1",
             title: "Group 1",
-            description: "Jurisprudence & General Laws, Company Law and Practice, Setting Up of Business, Corporate Accounting",
+            description: "Jurisprudence & General Laws, Company Law & Practice, Setting Up of Business & Labour Laws, Corporate Accounting & FM",
             papers: [
+              {
+                id: "cs-ex-p1",
+                paperNumber: 1,
+                title: "Jurisprudence, Interpretation and General Laws (JIGL)",
+                marks: 100,
+                description: "Sources of law, Constitution of India, Interpretation of Statutes, CPC, CrPC, Indian Penal Code, RTI Act.",
+                chapters: [
+                  { id: "cs-jigl-1", number: 1, title: "Interpretation of Statutes & General Clauses Act", hindiTitle: "कानूनों की व्याख्या एवं सामान्य खंड अधिनियम", description: "Literal, mischief, golden rules of interpretation, internal and external aids to interpretation.", levels: { min: 35, max: 70 }, topicsCount: 7, estimatedHours: 14 },
+                  { id: "cs-jigl-2", number: 2, title: "Constitution of India, Writs & Administrative Law", hindiTitle: "भारतीय संविधान, रिट क्षेत्राधिकार एवं प्रशासनिक कानून", description: "Fundamental Rights, Directive Principles, Articles 32 and 226, principles of natural justice.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 }
+                ]
+              },
               {
                 id: "cs-ex-p2",
                 paperNumber: 2,
@@ -565,7 +716,30 @@ export const INSTITUTIONS_DATA: Institution[] = [
                 marks: 100,
                 description: "Comprehensive Companies Act 2013, Board meetings, Secretarial Standards (SS-1 and SS-2), ROC filings.",
                 chapters: [
-                  { id: "cs-cl-1", number: 1, title: "Board Meetings, Committees & Secretarial Standards (SS-1)", hindiTitle: "बोर्ड बैठकें, समितियां एवं सेक्रेटेरियल स्टैंडर्ड्स", description: "Notice, agenda, quorum, minutes, Audit Committee, Stakeholders Relationship Committee.", levels: { min: 45, max: 85 }, topicsCount: 9, estimatedHours: 18 }
+                  { id: "cs-cl-1", number: 1, title: "Board Meetings, Committees & Secretarial Standards (SS-1)", hindiTitle: "बोर्ड बैठकें, समितियां एवं सेक्रेटेरियल स्टैंडर्ड्स", description: "Notice, agenda, quorum, minutes, Audit Committee, Stakeholders Relationship Committee.", levels: { min: 45, max: 85 }, topicsCount: 9, estimatedHours: 18 },
+                  { id: "cs-cl-2", number: 2, title: "Shareholders Meetings, Voting & Secretarial Standards (SS-2)", hindiTitle: "शेयरधारकों की बैठकें, मतदान एवं एसएस-2", description: "AGM, EGM, postal ballot, e-voting, proxy, resolutions and minutes recording.", levels: { min: 45, max: 85 }, topicsCount: 8, estimatedHours: 16 }
+                ]
+              },
+              {
+                id: "cs-ex-p3",
+                paperNumber: 3,
+                title: "Setting Up of Business, Industrial and Labour Laws (SBILL)",
+                marks: 100,
+                description: "Entity selection (Pvt Ltd, LLP, Section 8), licenses, registrations, Labour codes (Wages, Social Security, OSH).",
+                chapters: [
+                  { id: "cs-sbill-1", number: 1, title: "Setting up Business Entities: Companies, LLPs & Startups", hindiTitle: "व्यावसायिक इकाइयों की स्थापना: कंपनी, एलएलपी एवं स्टार्टअप", description: "SPICe+ incorporation, MCA portal processes, PAN/TAN/GST registrations.", levels: { min: 40, max: 80 }, topicsCount: 8, estimatedHours: 16 },
+                  { id: "cs-sbill-2", number: 2, title: "Labour Codes & Industrial Safety Regulations", hindiTitle: "श्रम संहिताएं एवं औद्योगिक सुरक्षा नियम", description: "Code on Wages 2019, Social Security Code, Industrial Relations Code provisions.", levels: { min: 40, max: 75 }, topicsCount: 7, estimatedHours: 14 }
+                ]
+              },
+              {
+                id: "cs-ex-p4",
+                paperNumber: 4,
+                title: "Corporate Accounting and Financial Management (CAFM)",
+                marks: 100,
+                description: "Corporate accounting, Ind AS basics, financial management, ratios, cash flow, working capital.",
+                chapters: [
+                  { id: "cs-cafm-1", number: 1, title: "Corporate Financial Statements & Schedule III Compliances", hindiTitle: "कॉर्पोरेट वित्तीय विवरण एवं अनुसूची III अनुपालन", description: "Presentation of balance sheet, P&L, corporate dividend distribution, buyback of shares.", levels: { min: 45, max: 85 }, topicsCount: 8, estimatedHours: 16 },
+                  { id: "cs-cafm-2", number: 2, title: "Financial Analysis, Working Capital & Capital Structure", hindiTitle: "वित्तीय विश्लेषण, कार्यशील पूंजी एवं पूंजी संरचना", description: "Ratio analysis, operating cycle, leverage, EBIT-EPS analysis.", levels: { min: 45, max: 85 }, topicsCount: 8, estimatedHours: 16 }
                 ]
               }
             ]
@@ -573,7 +747,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
           {
             id: "cs-ex-g2",
             title: "Group 2",
-            description: "Capital Markets & Securities Laws, Economic & Commercial Laws, Tax Laws & Practice",
+            description: "Capital Markets & Securities Laws, Economic, Commercial & IP Laws, Tax Laws & Practice",
             papers: [
               {
                 id: "cs-ex-p5",
@@ -585,6 +759,28 @@ export const INSTITUTIONS_DATA: Institution[] = [
                   { id: "cs-sec-1", number: 1, title: "SEBI (LODR) Regulations, 2015 & Corporate Governance", hindiTitle: "सेबी (LODR) नियम एवं कॉर्पोरेट गवर्नेंस", description: "Independent directors, quarterly compliances, disclosures, board diversity.", levels: { min: 50, max: 90 }, topicsCount: 8, estimatedHours: 16 },
                   { id: "cs-sec-2", number: 2, title: "SEBI (Prohibition of Insider Trading) Regulations, 2015", hindiTitle: "भेदिया कारोबार रोकथाम नियम (PIT)", description: "UPSI, trading window, code of conduct, Chinese Wall mechanisms.", levels: { min: 55, max: 95 }, topicsCount: 7, estimatedHours: 14 }
                 ]
+              },
+              {
+                id: "cs-ex-p6",
+                paperNumber: 6,
+                title: "Economic, Commercial and Intellectual Property Laws (ECIPL)",
+                marks: 100,
+                description: "FEMA 1999, Competition Act 2002, Consumer Protection Act 2019, Patents, Trademarks, Copyrights, RERA.",
+                chapters: [
+                  { id: "cs-ecipl-1", number: 1, title: "Foreign Exchange Management Act (FEMA 1999) & FDI", hindiTitle: "विदेशी मुद्रा प्रबंधन अधिनियम (फेमा 1999) व प्रत्यक्ष विदेशी निवेश", description: "Current and capital account transactions, FDI policy, ECB regulations, ODI.", levels: { min: 50, max: 90 }, topicsCount: 8, estimatedHours: 18 },
+                  { id: "cs-ecipl-2", number: 2, title: "Intellectual Property Rights: Patents, Trademarks, Copyright", hindiTitle: "बौद्धिक संपदा अधिकार: पेटेंट, ट्रेडमार्क एवं कॉपीराइट", description: "Registration processes, infringement remedies, international conventions (TRIPS).", levels: { min: 45, max: 85 }, topicsCount: 7, estimatedHours: 14 }
+                ]
+              },
+              {
+                id: "cs-ex-p7",
+                paperNumber: 7,
+                title: "Tax Laws and Practice (TLP)",
+                marks: 100,
+                description: "Direct Taxes (Income Tax Act 1961) and Indirect Taxes (CGST, SGST, IGST, Customs Law).",
+                chapters: [
+                  { id: "cs-tlp-1", number: 1, title: "Income Tax for Corporates & Firms (Direct Taxes)", hindiTitle: "कंपनियों एवं फर्मों के लिए आयकर विधान", description: "Corporate tax rates, MAT under Section 115JB, TDS, TCS, advance tax.", levels: { min: 50, max: 90 }, topicsCount: 9, estimatedHours: 18 },
+                  { id: "cs-tlp-2", number: 2, title: "GST Compliances & Customs Import/Export Procedures", hindiTitle: "जीएसटी अनुपालन एवं सीमा शुल्क आयात/निर्यात प्रक्रियाएं", description: "GST returns, e-invoicing, assessment, customs valuation and clearance.", levels: { min: 50, max: 90 }, topicsCount: 9, estimatedHours: 18 }
+                ]
               }
             ]
           }
@@ -595,23 +791,45 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "CS Professional Programme",
         shortTitle: "CS Professional",
         institution: "ICSI",
-        description: "Advanced stage for corporate governance, secretarial audit, corporate restructuring, insolvency and pleadings.",
+        description: "The highest professional CS tier covering ESG, Restructuring, Insolvency, Secretarial Audit and Board Advisory.",
         eligibility: "Passed CS Executive Programme",
-        scheme: "ICSI New Syllabus 2022 (7 Papers)",
+        scheme: "ICSI New Syllabus 2022 (7 Papers in 2 Groups)",
         groups: [
           {
             id: "cs-prof-g1",
             title: "Group 1",
-            description: "Environmental, Social and Governance (ESG), Drafting and Pleadings, Compliance Management, Audit and Due Diligence",
+            description: "ESG Principles & Practice, Drafting, Pleadings & Appearances, Compliance Management & Secretarial Audit",
             papers: [
+              {
+                id: "cs-prof-p1",
+                paperNumber: 1,
+                title: "Environmental, Social and Governance (ESG) - Principles & Practice",
+                marks: 100,
+                description: "Sustainability reporting, BRSR framework, climate governance, CSR impact assessment, ethical investing.",
+                chapters: [
+                  { id: "cs-esg-1", number: 1, title: "ESG Frameworks & Business Responsibility Reporting (BRSR)", hindiTitle: "ईएसजी रूपरेखा एवं व्यापार उत्तरदायित्व रिपोर्टिंग (BRSR)", description: "SEBI mandate on BRSR for top 1000 listed entities, sustainability KPIs, carbon footprint.", levels: { min: 70, max: 100 }, topicsCount: 8, estimatedHours: 18 }
+                ]
+              },
               {
                 id: "cs-prof-p2",
                 paperNumber: 2,
-                title: "Secretarial Audit, Compliance Management and Due Diligence",
+                title: "Drafting, Pleadings and Appearances",
                 marks: 100,
-                description: "Section 204 of Companies Act 2013, Form MR-3, non-compliances, penalties, M&A due diligence.",
+                description: "Drafting commercial contracts, deeds, petitions, appeals before NCLT, NCLAT, High Court, and quasi-judicial bodies.",
                 chapters: [
-                  { id: "cs-audit-1", number: 1, title: "Secretarial Audit (Sec 204) & Form MR-3 Reporting", hindiTitle: "सेक्रेटेरियल ऑडिट एवं फॉर्म MR-3 रिपोर्टिंग", description: "Applicability, scope of audit, checklist of corporate laws, qualification reporting.", levels: { min: 70, max: 100 }, topicsCount: 10, estimatedHours: 20 }
+                  { id: "cs-draft-1", number: 1, title: "Principles of Legal Drafting & Commercial Agreements", hindiTitle: "कानूनी प्रारूपण के सिद्धांत एवं वाणिज्यिक समझौते", description: "Shareholders agreements, JV agreements, non-disclosure agreements, arbitration clauses.", levels: { min: 70, max: 100 }, topicsCount: 9, estimatedHours: 20 },
+                  { id: "cs-draft-2", number: 2, title: "Pleadings & Appearances before NCLT and NCLAT", hindiTitle: "एनसीएलटी एवं एनसीएलएटी के समक्ष अभिवचन व उपस्थिति", description: "Applications under Section 241/242 (Oppression and Mismanagement), appeals, affidavits.", levels: { min: 75, max: 100 }, topicsCount: 8, estimatedHours: 18 }
+                ]
+              },
+              {
+                id: "cs-prof-p3",
+                paperNumber: 3,
+                title: "Compliance Management, Audit and Due Diligence",
+                marks: 100,
+                description: "Secretarial Audit (Section 204), Form MR-3, non-compliances, penalties, M&A due diligence, peer review.",
+                chapters: [
+                  { id: "cs-audit-1", number: 1, title: "Secretarial Audit (Sec 204) & Form MR-3 Reporting", hindiTitle: "सेक्रेटेरियल ऑडिट एवं फॉर्म MR-3 रिपोर्टिंग", description: "Applicability, scope of audit, checklist of corporate laws, qualification reporting.", levels: { min: 70, max: 100 }, topicsCount: 10, estimatedHours: 20 },
+                  { id: "cs-audit-2", number: 2, title: "Legal Due Diligence in Mergers & Acquisitions", hindiTitle: "विलय एवं अधिग्रहण में कानूनी ड्यू डिलिजेंस", description: "Data room review, statutory liabilities check, encumbrances verification, due diligence report.", levels: { min: 75, max: 100 }, topicsCount: 8, estimatedHours: 18 }
                 ]
               }
             ]
@@ -619,16 +837,46 @@ export const INSTITUTIONS_DATA: Institution[] = [
           {
             id: "cs-prof-g2",
             title: "Group 2",
-            description: "Corporate Restructuring, Insolvency and Winding-Up, Resolution of Corporate Disputes, Electives",
+            description: "Strategic Management & Corporate Finance, Corporate Restructuring & Insolvency, IBC Law, Banking & Insurance Law",
             papers: [
               {
                 id: "cs-prof-p4",
                 paperNumber: 4,
+                title: "Strategic Management and Corporate Finance",
+                marks: 100,
+                description: "Strategic formulation, corporate valuation, capital structure, international finance, project finance.",
+                chapters: [
+                  { id: "cs-smcf-1", number: 1, title: "Corporate Financing & Cross-Border Capital Raising", hindiTitle: "कॉर्पोरेट वित्तपोषण एवं सीमा-पार पूंजी जुटाना", description: "ADRs, GDRs, FCCBs, green bonds, private equity, venture capital documentation.", levels: { min: 70, max: 100 }, topicsCount: 8, estimatedHours: 18 }
+                ]
+              },
+              {
+                id: "cs-prof-p5",
+                paperNumber: 5,
+                title: "Corporate Restructuring, Valuation and Insolvency",
+                marks: 100,
+                description: "Mergers, demergers, cross-border amalgamations, business valuation methodologies, cross-border insolvency.",
+                chapters: [
+                  { id: "cs-cr-1", number: 1, title: "Mergers, Demergers & Section 230-240 Approvals", hindiTitle: "विलय, डीमर्जर एवं धारा 230-240 के अंतर्गत स्वीकृतियां", description: "Scheme of arrangement, shareholder meetings, NCLT sanction process, stamp duty.", levels: { min: 75, max: 100 }, topicsCount: 9, estimatedHours: 22 }
+                ]
+              },
+              {
+                id: "cs-prof-p6",
+                paperNumber: 6,
                 title: "Insolvency and Bankruptcy Code, 2016 (IBC)",
                 marks: 100,
                 description: "Corporate Insolvency Resolution Process (CIRP), liquidation, pre-pack insolvency, NCLT jurisprudence.",
                 chapters: [
                   { id: "cs-ibc-1", number: 1, title: "Corporate Insolvency Resolution Process (CIRP)", hindiTitle: "कॉर्पोरेट दिवाला समाधान प्रक्रिया (CIRP)", description: "Sec 7, 9, 10 initiation, moratorium (Sec 14), Committee of Creditors (CoC), resolution plans.", levels: { min: 75, max: 100 }, topicsCount: 11, estimatedHours: 24 }
+                ]
+              },
+              {
+                id: "cs-prof-p7",
+                paperNumber: 7,
+                title: "Banking & Insurance - Law and Practice (Elective)",
+                marks: 100,
+                description: "RBI regulations, SARFAESI Act, recovery of debts, Insurance Regulatory and Development Authority (IRDAI) rules.",
+                chapters: [
+                  { id: "cs-bank-1", number: 1, title: "SARFAESI Act 2002 & Asset Reconstruction Mechanics", hindiTitle: "सरफेसी अधिनियम 2002 एवं परिसंपत्ति पुनर्गठन प्रणाली", description: "Enforcement of security interest, notice under Sec 13(2), DRT and DRAT appeals.", levels: { min: 75, max: 100 }, topicsCount: 8, estimatedHours: 18 }
                 ]
               }
             ]
@@ -642,7 +890,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
     name: "Pt. Ravishankar Shukla University (PRSU), Raipur",
     shortName: "PRSU B.Com",
     badgeColor: "bg-amber-600 text-white",
-    description: "State university in Raipur, Chhattisgarh offering undergraduate and postgraduate commerce degrees under NEP and Traditional Schemes.",
+    description: "State university in Raipur, Chhattisgarh offering undergraduate commerce degrees aligned with NEP-2020 and University Curriculum.",
     officialUrl: "https://www.prsu.ac.in",
     levels: [
       {
@@ -650,14 +898,14 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "B.Com Semester 1 (PRSU / NEP)",
         shortTitle: "B.Com Sem 1",
         institution: "PRSU",
-        description: "First semester covering Financial Accounting, Business Communication, Business Regulatory Framework.",
+        description: "First semester covering Financial Accounting, Business Communication, Business Regulatory Framework, Business Mathematics.",
         eligibility: "Class 12 in Commerce or equivalent",
-        scheme: "NEP-2020 / PRSU Scheme",
+        scheme: "NEP-2020 / PRSU Scheme (4 Papers)",
         papers: [
           {
             id: "prsu-s1-p1",
             paperNumber: 1,
-            title: "Financial Accounting (Major / Core)",
+            title: "Financial Accounting (वित्तीय लेखांकन)",
             marks: 100,
             description: "Accounting principles, royalty accounts, hire purchase and installment purchase systems.",
             chapters: [
@@ -674,6 +922,26 @@ export const INSTITUTIONS_DATA: Institution[] = [
             chapters: [
               { id: "prsu-brf-1", number: 1, title: "Law of Contract: General Principles & Special Contracts", hindiTitle: "अनुबंध का नियम: सामान्य सिद्धांत व विशिष्ट अनुबंध", description: "Guarantee, Indemnity, Bailment, Pledge, Agency rules and case laws.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12 }
             ]
+          },
+          {
+            id: "prsu-s1-p3",
+            paperNumber: 3,
+            title: "Business Communication (व्यावसायिक संचार)",
+            marks: 100,
+            description: "Principles of effective communication, business letters, report writing, presentation skills.",
+            chapters: [
+              { id: "prsu-bc-1", number: 1, title: "Effective Business Correspondence & Report Writing", hindiTitle: "प्रभावी व्यावसायिक पत्राचार एवं रिपोर्ट लेखन", description: "Inquiry, quotation, orders, complaints, circular letters and official reports.", levels: { min: 5, max: 35 }, topicsCount: 6, estimatedHours: 10 }
+            ]
+          },
+          {
+            id: "prsu-s1-p4",
+            paperNumber: 4,
+            title: "Business Mathematics (व्यावसायिक गणित)",
+            marks: 100,
+            description: "Ratio, proportion, percentage, simultaneous equations, matrices, determinants, calculus basics.",
+            chapters: [
+              { id: "prsu-bm-1", number: 1, title: "Matrices, Determinants & Financial Mathematics", hindiTitle: "आव्यूह, सारणिक एवं वित्तीय गणित", description: "Matrix operations, Cramer's rule, simple and compound interest, depreciation annuities.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 14 }
+            ]
           }
         ]
       },
@@ -682,9 +950,9 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "B.Com Semester 2 (PRSU / NEP)",
         shortTitle: "B.Com Sem 2",
         institution: "PRSU",
-        description: "Second semester covering Corporate Accounting, Business Economics, Business Mathematics.",
+        description: "Second semester covering Corporate Accounting, Business Economics, Business Management, Business Environment.",
         eligibility: "Completed B.Com Semester 1",
-        scheme: "NEP-2020 / PRSU Scheme",
+        scheme: "NEP-2020 / PRSU Scheme (4 Papers)",
         papers: [
           {
             id: "prsu-s2-p1",
@@ -693,7 +961,38 @@ export const INSTITUTIONS_DATA: Institution[] = [
             marks: 100,
             description: "Issue and forfeiture of shares, redemption of preference shares and debentures, final accounts of companies.",
             chapters: [
-              { id: "prsu-ca-1", number: 1, title: "Issue and Forfeiture of Shares & Pro-rata Allotment", hindiTitle: "अंशों का निर्गमन, जब्ती एवं आनुपातिक आवंटन", description: "Journal entries for calls in arrears, calls in advance, pro-rata allotment, forfeiture and re-issue.", levels: { min: 20, max: 55 }, topicsCount: 8, estimatedHours: 16 }
+              { id: "prsu-ca-1", number: 1, title: "Issue and Forfeiture of Shares & Pro-rata Allotment", hindiTitle: "अंशों का निर्गमन, जब्ती एवं आनुपातिक आवंटन", description: "Journal entries for calls in arrears, calls in advance, pro-rata allotment, forfeiture and re-issue.", levels: { min: 20, max: 55 }, topicsCount: 8, estimatedHours: 16 },
+              { id: "prsu-ca-2", number: 2, title: "Redemption of Preference Shares & Debentures", hindiTitle: "पूर्वाधिकार अंशों एवं ऋणपत्रों का शोधन", description: "Capital Redemption Reserve (CRR), sinking fund, purchase of own debentures in open market.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 }
+            ]
+          },
+          {
+            id: "prsu-s2-p2",
+            paperNumber: 2,
+            title: "Business Economics (व्यावसायिक अर्थशास्त्र)",
+            marks: 100,
+            description: "Consumer behavior, utility analysis, indifference curves, production function, market pricing.",
+            chapters: [
+              { id: "prsu-be-1", number: 1, title: "Indifference Curve Analysis & Law of Variable Proportions", hindiTitle: "उदासीनता वक्र विश्लेषण एवं परिवर्तनशील अनुपातों का नियम", description: "Consumer equilibrium, MRS, marginal productivity, ISO-quants.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 12 }
+            ]
+          },
+          {
+            id: "prsu-s2-p3",
+            paperNumber: 3,
+            title: "Principles of Business Management (प्रबंध के सिद्धांत)",
+            marks: 100,
+            description: "Management principles, planning, decision-making, organization structure, motivation, control.",
+            chapters: [
+              { id: "prsu-mgmt-1", number: 1, title: "Organization Structures, Authority & Motivation Theories", hindiTitle: "संगठन संरचनाएं, अधिकार प्रत्यायोजन एवं अभिप्रेरणा सिद्धांत", description: "Line and staff, functional authority, Maslow and Herzberg motivation models.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 }
+            ]
+          },
+          {
+            id: "prsu-s2-p4",
+            paperNumber: 4,
+            title: "Business Environment (व्यावसायिक पर्यावरण)",
+            marks: 100,
+            description: "Economic environment, New Economic Policy 1991, NITI Aayog, EXIM policy, FDI in India.",
+            chapters: [
+              { id: "prsu-benv-1", number: 1, title: "Economic Reforms, LPG & Industrial Policy in India", hindiTitle: "आर्थिक सुधार: उदारीकरण, निजीकरण, वैश्वीकरण एवं औद्योगिक नीति", description: "Impact of 1991 reforms, privatization, Make in India, public sector reforms.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 }
             ]
           }
         ]
@@ -703,18 +1002,49 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "B.Com Semester 3 (PRSU / NEP)",
         shortTitle: "B.Com Sem 3",
         institution: "PRSU",
-        description: "Third semester covering Income Tax Law & Accounts (Part 1), Cost Accounting, Principles of Business Management.",
+        description: "Third semester covering Income Tax Law & Accounts (Direct Tax), Cost Accounting, Statistics, Company Law.",
         eligibility: "Completed B.Com Semester 2",
-        scheme: "NEP-2020 / PRSU Scheme",
+        scheme: "NEP-2020 / PRSU Scheme (4 Papers)",
         papers: [
           {
             id: "prsu-s3-p1",
             paperNumber: 1,
-            title: "Income Tax Law & Accounts (आयकर विधान एवं लेखे)",
+            title: "Income Tax Law & Accounts (आयकर विधान एवं लेखे - Part 1)",
             marks: 100,
-            description: "Income Tax Act 1961: Definition, Residential Status, Heads of Income (Salary, House Property).",
+            description: "Income Tax Act 1961: Definitions, Residential Status, Salary, Income from House Property.",
             chapters: [
-              { id: "prsu-it-1", number: 1, title: "Income from Salaries (वेतन से आय)", hindiTitle: "वेतन से आय", description: "Computation of gross salary, taxable allowances, perquisites, deductions under Section 16.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 }
+              { id: "prsu-it-1", number: 1, title: "Income from Salaries (वेतन से आय)", hindiTitle: "वेतन से आय", description: "Gross salary, allowances, perquisites, retirement benefits, standard deduction under Sec 16.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
+              { id: "prsu-it-2", number: 2, title: "Income from House Property (मकान संपत्ति से आय)", hindiTitle: "मकान संपत्ति से आय", description: "Annual value determination, municipal taxes, standard deduction Sec 24(a), interest on housing loan Sec 24(b).", levels: { min: 30, max: 65 }, topicsCount: 6, estimatedHours: 12 }
+            ]
+          },
+          {
+            id: "prsu-s3-p2",
+            paperNumber: 2,
+            title: "Cost Accounting (लागत लेखांकन)",
+            marks: 100,
+            description: "Cost elements, material control (EOQ, inventory levels), labour remuneration, overhead distribution.",
+            chapters: [
+              { id: "prsu-cost-1", number: 1, title: "Material Control & Inventory Valuation (EOQ, FIFO)", hindiTitle: "सामग्री नियंत्रण एवं स्कंध मूल्यांकन (EOQ, FIFO, LIFO)", description: "Economic order quantity, reorder level, ABC analysis, store ledger posting.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 }
+            ]
+          },
+          {
+            id: "prsu-s3-p3",
+            paperNumber: 3,
+            title: "Principles of Business Statistics (व्यावसायिक सांख्यिकी)",
+            marks: 100,
+            description: "Data collection, classification, tabulation, measures of central tendency, dispersion, skewness.",
+            chapters: [
+              { id: "prsu-stat-1", number: 1, title: "Central Tendency, Standard Deviation & Skewness", hindiTitle: "केंद्रीय प्रवृत्ति, प्रमाप विचलन एवं विषमता के माप", description: "Mean, median, mode, Karl Pearson and Bowley's coefficient of skewness.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 16 }
+            ]
+          },
+          {
+            id: "prsu-s3-p4",
+            paperNumber: 4,
+            title: "Company Law (कंपनी अधिनियम 2013)",
+            marks: 100,
+            description: "Incorporation, Memorandum & Articles of Association, Prospectus, Shares and Debentures.",
+            chapters: [
+              { id: "prsu-cl-1", number: 1, title: "MOA, AOA, Doctrine of Ultra Vires & Indoor Management", hindiTitle: "सीमा नियम, अंतर्नियम एवं आंतरिक प्रबंध का सिद्धांत", description: "Clauses of MOA, alteration procedure, protection of outsiders, prospectus liability.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 }
             ]
           }
         ]
@@ -724,18 +1054,49 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "B.Com Semester 4 (PRSU / NEP)",
         shortTitle: "B.Com Sem 4",
         institution: "PRSU",
-        description: "Fourth semester covering Income Tax Law (Part 2 - Business, Capital Gains, Deductions), Advanced Cost Accounting.",
+        description: "Fourth semester covering Income Tax Law (Part 2 - Business & Capital Gains), Management Accounting, Marketing, Applied Statistics.",
         eligibility: "Completed B.Com Semester 3",
-        scheme: "NEP-2020 / PRSU Scheme",
+        scheme: "NEP-2020 / PRSU Scheme (4 Papers)",
         papers: [
           {
             id: "prsu-s4-p1",
             paperNumber: 1,
-            title: "Income Tax Law (Part 2) & Tax Planning",
+            title: "Income Tax Law & Accounts (Part 2) & Tax Planning",
             marks: 100,
-            description: "Profits of Business, Capital Gains, Gross Total Income, Chapter VI-A Deductions, Rebates.",
+            description: "Profits of Business/Profession (PGBP), Capital Gains, Deductions under Chapter VI-A, Tax liability computation.",
             chapters: [
-              { id: "prsu-it2-1", number: 1, title: "Capital Gains & Deductions from GTI", hindiTitle: "पूंजीगत लाभ एवं सकल कुल आय से कटौतियां", description: "Section 54 series, 80C, 80D, 80G deductions, calculation of tax liability.", levels: { min: 35, max: 70 }, topicsCount: 7, estimatedHours: 14 }
+              { id: "prsu-it2-1", number: 1, title: "Profits & Gains of Business or Profession (PGBP)", hindiTitle: "व्यापार अथवा पेशे से लाभ एवं प्राप्तियां (PGBP)", description: "Allowable expenses (Sec 30-37), disallowances (Sec 40, 40A), depreciation block system.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 },
+              { id: "prsu-it2-2", number: 2, title: "Capital Gains & Deductions from Gross Total Income", hindiTitle: "पूंजीगत लाभ एवं सकल कुल आय से कटौतियां (80C to 80U)", description: "Short-term vs long-term capital gains, Section 54 exemptions, tax rebates.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 }
+            ]
+          },
+          {
+            id: "prsu-s4-p2",
+            paperNumber: 2,
+            title: "Management Accounting (प्रबंधकीय लेखांकन)",
+            marks: 100,
+            description: "Ratio analysis, Fund Flow Statement, Cash Flow Statement (AS 3), Break-Even Analysis.",
+            chapters: [
+              { id: "prsu-ma-1", number: 1, title: "Ratio Analysis & Cash Flow Statement (AS 3)", hindiTitle: "अनुपात विश्लेषण एवं रोकड़ प्रवाह विवरण", description: "Operating, investing and financing activities, liquidity, solvency and profitability ratios.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 }
+            ]
+          },
+          {
+            id: "prsu-s4-p3",
+            paperNumber: 3,
+            title: "Principles of Marketing (विपणन के सिद्धांत)",
+            marks: 100,
+            description: "Marketing concept, marketing mix (4Ps), product life cycle (PLC), pricing strategies, channels of distribution.",
+            chapters: [
+              { id: "prsu-mkt-1", number: 1, title: "Marketing Mix (4Ps), Product Life Cycle & Branding", hindiTitle: "विपणन मिश्रण, उत्पाद जीवन चक्र एवं ब्रांडिंग", description: "Product planning, packaging, penetration vs skimming pricing, promotional mix.", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12 }
+            ]
+          },
+          {
+            id: "prsu-s4-p4",
+            paperNumber: 4,
+            title: "Applied Business Statistics & Correlation (व्यावहारिक सांख्यिकी)",
+            marks: 100,
+            description: "Correlation, linear regression, index numbers, time series analysis.",
+            chapters: [
+              { id: "prsu-astat-1", number: 1, title: "Karl Pearson Correlation, Regression & Index Numbers", hindiTitle: "सहसंबंध, प्रतीपगमन एवं निर्देशांक", description: "Scatter diagram, regression equations, Laspeyres, Paasche and Fisher's ideal index.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 }
             ]
           }
         ]
@@ -745,9 +1106,9 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "B.Com Semester 5 (PRSU / NEP)",
         shortTitle: "B.Com Sem 5",
         institution: "PRSU",
-        description: "Fifth semester covering Financial Management, Auditing, Indirect Tax (GST).",
+        description: "Fifth semester covering Financial Management, Auditing, Entrepreneurship Development, Financial Markets.",
         eligibility: "Completed B.Com Semester 4",
-        scheme: "NEP-2020 / PRSU Scheme",
+        scheme: "NEP-2020 / PRSU Scheme (4 Papers)",
         papers: [
           {
             id: "prsu-s5-p1",
@@ -756,7 +1117,8 @@ export const INSTITUTIONS_DATA: Institution[] = [
             marks: 100,
             description: "Capital Budgeting, Cost of Capital, Working Capital Management, Leverage analysis.",
             chapters: [
-              { id: "prsu-fm-1", number: 1, title: "Capital Budgeting & Investment Decisions", hindiTitle: "पूंजी बजटिंग एवं निवेश निर्णय", description: "Net Present Value (NPV), Internal Rate of Return (IRR), Payback method.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16, isCompleted: true }
+              { id: "prsu-fm-1", number: 1, title: "Capital Budgeting & Investment Decisions", hindiTitle: "पूंजी बजटिंग एवं निवेश निर्णय", description: "Net Present Value (NPV), Internal Rate of Return (IRR), Payback method.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16, isCompleted: true },
+              { id: "prsu-fm-2", number: 2, title: "Cost of Capital & Working Capital Management", hindiTitle: "पूंजी की लागत एवं कार्यशील पूंजी प्रबंधन", description: "Weighted average cost of capital (WACC), operating cycle estimation.", levels: { min: 40, max: 75 }, topicsCount: 7, estimatedHours: 14 }
             ]
           },
           {
@@ -766,7 +1128,28 @@ export const INSTITUTIONS_DATA: Institution[] = [
             marks: 100,
             description: "Internal control, vouching, verification of assets and liabilities, company auditor duties.",
             chapters: [
-              { id: "prsu-aud-1", number: 1, title: "Vouching & Verification of Assets and Liabilities", hindiTitle: "प्रमाणन एवं संपत्तियों तथा दायित्वों का सत्यापन", description: "Vouching of cash transactions, sales, purchases, verification of stock, debtors, fixed assets.", levels: { min: 35, max: 70 }, topicsCount: 6, estimatedHours: 12 }
+              { id: "prsu-aud-1", number: 1, title: "Vouching & Verification of Assets and Liabilities", hindiTitle: "प्रमाणन एवं संपत्तियों तथा दायित्वों का सत्यापन", description: "Vouching of cash transactions, sales, purchases, verification of stock, debtors, fixed assets.", levels: { min: 35, max: 70 }, topicsCount: 6, estimatedHours: 12 },
+              { id: "prsu-aud-2", number: 2, title: "Company Auditor: Appointment, Powers, Duties & Report", hindiTitle: "कंपनी अंकेक्षक: नियुक्ति, अधिकार, कर्तव्य एवं अंकेक्षण प्रतिवेदन", description: "Section 139 to 147 of Companies Act 2013, clean report vs qualified report.", levels: { min: 40, max: 75 }, topicsCount: 7, estimatedHours: 14 }
+            ]
+          },
+          {
+            id: "prsu-s5-p3",
+            paperNumber: 3,
+            title: "Entrepreneurship Development (उद्यमिता विकास)",
+            marks: 100,
+            description: "Role of entrepreneur in economic development, project identification, business plan preparation, government subsidies.",
+            chapters: [
+              { id: "prsu-ed-1", number: 1, title: "Project Formulation, Feasibility & MSME Schemes", hindiTitle: "परियोजना निर्माण, व्यवहार्यता अध्ययन एवं एमएसएमई योजनाएं", description: "Technical, financial and commercial feasibility, PMEGP, Stand-Up India.", levels: { min: 30, max: 60 }, topicsCount: 6, estimatedHours: 12 }
+            ]
+          },
+          {
+            id: "prsu-s5-p4",
+            paperNumber: 4,
+            title: "Financial Markets & Operations (वित्तीय बाजार एवं परिचालन)",
+            marks: 100,
+            description: "Money market instruments, Capital market, Stock exchanges (BSE, NSE), SEBI regulations.",
+            chapters: [
+              { id: "prsu-fmo-1", number: 1, title: "Primary & Secondary Markets, BSE/NSE & SEBI Framework", hindiTitle: "प्राथमिक एवं द्वितीयक बाजार, शेयर बाजार तथा सेबी", description: "IPOs, book building, demat trading, clearing and settlement.", levels: { min: 35, max: 70 }, topicsCount: 7, estimatedHours: 14 }
             ]
           }
         ]
@@ -776,18 +1159,49 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "B.Com Semester 6 (PRSU / NEP)",
         shortTitle: "B.Com Sem 6",
         institution: "PRSU",
-        description: "Sixth semester final year covering International Marketing, Corporate Governance, Goods & Services Tax (GST).",
+        description: "Sixth semester final year covering Goods & Services Tax (GST), Advanced Costing, HRM, E-Commerce.",
         eligibility: "Completed B.Com Semester 5",
-        scheme: "NEP-2020 / PRSU Scheme",
+        scheme: "NEP-2020 / PRSU Scheme (4 Papers)",
         papers: [
           {
             id: "prsu-s6-p1",
             paperNumber: 1,
-            title: "Goods & Services Tax (GST) & Customs Law",
+            title: "Goods & Services Tax (GST) & Customs Law (जीएसटी एवं सीमा शुल्क)",
             marks: 100,
-            description: "CGST/SGST/IGST structure, Input Tax Credit, registration, return filing.",
+            description: "CGST/SGST/IGST structure, Input Tax Credit, registration, return filing, basic customs duty.",
             chapters: [
-              { id: "prsu-gst-1", number: 1, title: "GST Registration, Invoicing and Returns", hindiTitle: "जीएसटी पंजीकरण, इनवॉइसिंग एवं विवरणियां", description: "Threshold limits, GSTR-1, GSTR-3B, e-way bill system, reverse charge.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 14 }
+              { id: "prsu-gst-1", number: 1, title: "GST Registration, Invoicing and Returns (GSTR-1, 3B)", hindiTitle: "जीएसटी पंजीकरण, इनवॉइसिंग एवं विवरणियां", description: "Threshold limits, GSTR-1, GSTR-3B, e-way bill system, reverse charge mechanism.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 14 },
+              { id: "prsu-gst-2", number: 2, title: "Input Tax Credit (ITC) Mechanics & Blocked Credits", hindiTitle: "इनपुट टैक्स क्रेडिट (ITC) एवं रोकी गई छूट (Sec 17(5))", description: "Section 16 eligibility, Section 17(5) blocked credits, tax payment offset hierarchy.", levels: { min: 50, max: 85 }, topicsCount: 8, estimatedHours: 16 }
+            ]
+          },
+          {
+            id: "prsu-s6-p2",
+            paperNumber: 2,
+            title: "Advanced Cost & Management Accounting (उच्चतर लागत एवं प्रबंध लेखांकन)",
+            marks: 100,
+            description: "Process costing, contract costing, operating costing (transport), budgetary control.",
+            chapters: [
+              { id: "prsu-acost-1", number: 1, title: "Process Costing: Equivalent Production & Joint Products", hindiTitle: "प्रक्रिया लागत: समतुल्य उत्पादन, सह-उत्पाद एवं उप-उत्पाद", description: "Normal and abnormal loss, abnormal gain, inter-process profits.", levels: { min: 45, max: 85 }, topicsCount: 8, estimatedHours: 16 }
+            ]
+          },
+          {
+            id: "prsu-s6-p3",
+            paperNumber: 3,
+            title: "Human Resource Management (मानव संसाधन प्रबंध)",
+            marks: 100,
+            description: "HR planning, recruitment, selection, job evaluation, performance appraisal, industrial relations.",
+            chapters: [
+              { id: "prsu-hrm-1", number: 1, title: "HR Planning, Recruitment, Training & 360 Appraisal", hindiTitle: "मानव संसाधन नियोजन, भर्ती, प्रशिक्षण एवं मूल्यांकन", description: "Job description, job specification, interview methods, executive development.", levels: { min: 35, max: 65 }, topicsCount: 7, estimatedHours: 12 }
+            ]
+          },
+          {
+            id: "prsu-s6-p4",
+            paperNumber: 4,
+            title: "E-Commerce & Digital Business Applications (ई-कॉमर्स)",
+            marks: 100,
+            description: "B2B, B2C, C2C business models, electronic payment systems (UPI, NEFT, gateways), cyber security & IT Act 2000.",
+            chapters: [
+              { id: "prsu-ecom-1", number: 1, title: "E-Commerce Framework, Payment Gateways & IT Act 2000", hindiTitle: "ई-कॉमर्स ढांचा, भुगतान गेटवे एवं सूचना प्रौद्योगिकी कानून", description: "Digital signatures, electronic records, cyber crime remedies under IT Act.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 12 }
             ]
           }
         ]
@@ -809,7 +1223,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
         institution: "ACCA",
         description: "The starting point for the ACCA Qualification, covering broad introduction to finance and accounting.",
         eligibility: "10+2 passed or equivalent higher secondary education",
-        scheme: "ACCA Global Qualification Framework",
+        scheme: "ACCA Global Qualification Framework (3 Papers)",
         papers: [
           {
             id: "acca-bt",
@@ -851,10 +1265,40 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "ACCA Applied Skills",
         shortTitle: "Applied Skills",
         institution: "ACCA",
-        description: "Intermediate professional level developing technical knowledge in law, tax, reporting, audit and management.",
+        description: "Intermediate professional level developing technical knowledge across 6 papers in law, performance, tax, reporting, audit and finance.",
         eligibility: "Completed Applied Knowledge or relevant degree exemptions",
-        scheme: "ACCA Global Qualification Framework",
+        scheme: "ACCA Global Qualification Framework (6 Papers)",
         papers: [
+          {
+            id: "acca-lw",
+            paperNumber: "LW",
+            title: "Corporate and Business Law",
+            marks: 100,
+            description: "Legal frameworks, contract law, employment law, agency, company formation, capital and management.",
+            chapters: [
+              { id: "acca-lw-ch1", number: 1, title: "Essential Elements of Legal Systems & Law of Obligations", hindiTitle: "कानूनी प्रणालियां एवं अनुबंध कानून", description: "Sources of law, court structure, breach of contract, tort of negligence.", levels: { min: 35, max: 70 }, topicsCount: 7, estimatedHours: 14 }
+            ]
+          },
+          {
+            id: "acca-pm",
+            paperNumber: "PM",
+            title: "Performance Management",
+            marks: 100,
+            description: "Specialist cost and management accounting techniques, decision-making, budgeting, standard costing and control.",
+            chapters: [
+              { id: "acca-pm-ch1", number: 1, title: "Advanced Costing Techniques & Decision Analysis", hindiTitle: "उन्नत लागत तकनीकें एवं निर्णय विश्लेषण", description: "Activity-based costing, target costing, life-cycle costing, limiting factor analysis, pricing.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 }
+            ]
+          },
+          {
+            id: "acca-tx",
+            paperNumber: "TX",
+            title: "Taxation",
+            marks: 100,
+            description: "Income tax, corporation tax, capital gains tax, inheritance tax, and value added tax (VAT).",
+            chapters: [
+              { id: "acca-tx-ch1", number: 1, title: "Individual & Corporate Tax Liability Computations", hindiTitle: "व्यक्तिगत एवं कॉर्पोरेट कर दायित्व संगणना", description: "Trading income, capital allowances, corporation tax computation, VAT mechanics.", levels: { min: 40, max: 75 }, topicsCount: 9, estimatedHours: 18 }
+            ]
+          },
           {
             id: "acca-fr",
             paperNumber: "FR",
@@ -864,6 +1308,16 @@ export const INSTITUTIONS_DATA: Institution[] = [
             chapters: [
               { id: "acca-fr-ch1", number: 1, title: "Group Financial Statements (Consolidated Balance Sheet & P&L)", hindiTitle: "समूह वित्तीय विवरण (समेकित बैलेंस शीट व लाभ-हानि)", description: "IFRS 10 Consolidated Financial Statements, IFRS 3 Business Combinations, Goodwill and NCI calculations.", levels: { min: 45, max: 80 }, topicsCount: 10, estimatedHours: 20 },
               { id: "acca-fr-ch2", number: 2, title: "Leases (IFRS 16) & Revenue Recognition (IFRS 15)", hindiTitle: "पट्टे (IFRS 16) एवं राजस्व अभिज्ञान (IFRS 15)", description: "Right-of-use asset, lease liability, 5-step revenue model application.", levels: { min: 40, max: 75 }, topicsCount: 7, estimatedHours: 15 }
+            ]
+          },
+          {
+            id: "acca-aa",
+            paperNumber: "AA",
+            title: "Audit and Assurance",
+            marks: 100,
+            description: "Audit framework, internal audit, planning and risk assessment, internal control, audit evidence and reporting.",
+            chapters: [
+              { id: "acca-aa-ch1", number: 1, title: "Audit Planning, Risk Assessment & Internal Control (ISA)", hindiTitle: "अंकेक्षण योजना, जोखिम मूल्यांकन एवं आंतरिक नियंत्रण", description: "Audit risk model, testing controls, substantive procedures, auditor's report under ISA 700.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 16 }
             ]
           },
           {
@@ -886,7 +1340,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
         institution: "ACCA",
         description: "Advanced leadership, corporate governance, strategic advisory and complex financial management.",
         eligibility: "Completed Applied Skills level",
-        scheme: "ACCA Global Qualification Framework",
+        scheme: "ACCA Global Qualification Framework (4 Papers)",
         papers: [
           {
             id: "acca-sbl",
@@ -907,6 +1361,26 @@ export const INSTITUTIONS_DATA: Institution[] = [
             chapters: [
               { id: "acca-sbr-ch1", number: 1, title: "Complex Financial Instruments (IFRS 9) & Employee Benefits (IAS 19)", hindiTitle: "जटिल वित्तीय उपकरण एवं कर्मचारी लाभ", description: "Classification and measurement, amortised cost vs FVTPL/FVTOCI, defined benefit pension plans.", levels: { min: 70, max: 100 }, topicsCount: 9, estimatedHours: 24 }
             ]
+          },
+          {
+            id: "acca-afm",
+            paperNumber: "AFM",
+            title: "Advanced Financial Management (Optional)",
+            marks: 100,
+            description: "Advanced investment appraisal, corporate restructuring, international finance, treasury management.",
+            chapters: [
+              { id: "acca-afm-ch1", number: 1, title: "International Investment Appraisal & Cross-Border M&A", hindiTitle: "अंतर्राष्ट्रीय निवेश मूल्यांकन एवं सीमा-पार विलय", description: "Adjusted present value (APV), Black-Scholes real options, cross-border risk assessment.", levels: { min: 75, max: 100 }, topicsCount: 8, estimatedHours: 20 }
+            ]
+          },
+          {
+            id: "acca-aaa",
+            paperNumber: "AAA",
+            title: "Advanced Audit and Assurance (Optional)",
+            marks: 100,
+            description: "Regulatory environment, professional ethical considerations, quality control, group audits.",
+            chapters: [
+              { id: "acca-aaa-ch1", number: 1, title: "Audit Quality Management, Group Audits & Forensic Review", hindiTitle: "अंकेक्षण गुणवत्ता प्रबंधन, समूह अंकेक्षण एवं फॉरेंसिक समीक्षा", description: "ISQM 1, transnational audits, forensic investigations, money laundering checks.", levels: { min: 75, max: 100 }, topicsCount: 8, estimatedHours: 20 }
+            ]
           }
         ]
       }
@@ -925,9 +1399,9 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "BBA Semester 1",
         shortTitle: "BBA Sem 1",
         institution: "BBA",
-        description: "First semester establishing foundations of management, business communication and business economics.",
+        description: "First semester establishing foundations of management, business communication, accounting, and business economics.",
         eligibility: "10+2 passed from recognized board",
-        scheme: "NEP-2020 Management Framework",
+        scheme: "NEP-2020 Management Framework (4 Papers)",
         papers: [
           {
             id: "bba-s1-p1",
@@ -948,6 +1422,26 @@ export const INSTITUTIONS_DATA: Institution[] = [
             chapters: [
               { id: "bba-be-1", number: 1, title: "Demand Analysis, Elasticity & Forecasting Methods", hindiTitle: "मांग विश्लेषण, लोच एवं पूर्वानुमान विधियां", description: "Law of Demand, price/income/cross elasticity, survey & trend projection methods.", levels: { min: 5, max: 25 }, topicsCount: 6, estimatedHours: 10 }
             ]
+          },
+          {
+            id: "bba-s1-p3",
+            paperNumber: 3,
+            title: "Fundamentals of Financial Accounting",
+            marks: 100,
+            description: "Accounting principles, journal, ledger, trial balance, preparation of final accounts of sole proprietors.",
+            chapters: [
+              { id: "bba-fa-1", number: 1, title: "Accounting Equation, Journal Entries & Financial Statements", hindiTitle: "लेखांकन समीकरण, रोजनामचा प्रविष्टियां एवं वित्तीय विवरण", description: "Double-entry rules, posting to ledger, trading and profit/loss accounts.", levels: { min: 5, max: 30 }, topicsCount: 7, estimatedHours: 14 }
+            ]
+          },
+          {
+            id: "bba-s1-p4",
+            paperNumber: 4,
+            title: "Business Communication & Soft Skills",
+            marks: 100,
+            description: "Verbal and non-verbal communication, business letters, resume drafting, interview techniques.",
+            chapters: [
+              { id: "bba-bc-1", number: 1, title: "Corporate Communication & Executive Presentation Skills", hindiTitle: "कॉर्पोरेट संचार एवं प्रस्तुति कौशल", description: "Barriers to communication, business reports, professional email etiquette.", levels: { min: 0, max: 20 }, topicsCount: 6, estimatedHours: 10 }
+            ]
           }
         ]
       },
@@ -956,9 +1450,9 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "BBA Semester 3",
         shortTitle: "BBA Sem 3",
         institution: "BBA",
-        description: "Third semester focusing on Marketing Management, Human Resource Management, and Business Research.",
+        description: "Third semester focusing on Marketing Management, Human Resource Management, Cost Accounting, Business Law.",
         eligibility: "Completed BBA Semester 2",
-        scheme: "NEP-2020 Management Framework",
+        scheme: "NEP-2020 Management Framework (4 Papers)",
         papers: [
           {
             id: "bba-s3-p1",
@@ -979,6 +1473,26 @@ export const INSTITUTIONS_DATA: Institution[] = [
             chapters: [
               { id: "bba-hrm-1", number: 1, title: "Talent Acquisition, Training & Performance Appraisal", hindiTitle: "प्रतिभा अधिग्रहण, प्रशिक्षण एवं प्रदर्शन मूल्यांकन", description: "Job analysis, 360-degree appraisal, MBO (Management by Objectives), Maslow & Herzberg theories.", levels: { min: 25, max: 50 }, topicsCount: 8, estimatedHours: 14 }
             ]
+          },
+          {
+            id: "bba-s3-p3",
+            paperNumber: 3,
+            title: "Cost and Management Accounting for Managers",
+            marks: 100,
+            description: "Cost sheet, marginal costing, break-even point, budget preparation, variance analysis.",
+            chapters: [
+              { id: "bba-cost-1", number: 1, title: "Marginal Costing, CVP & Managerial Decision Making", hindiTitle: "सीमांत लागत, सीवीपी एवं प्रबंधकीय निर्णय", description: "Contribution, P/V ratio, break-even analysis, profit planning.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 14 }
+            ]
+          },
+          {
+            id: "bba-s3-p4",
+            paperNumber: 4,
+            title: "Business Law and Corporate Governance",
+            marks: 100,
+            description: "Indian Contract Act, Sale of Goods Act, Consumer Protection Act 2019, Corporate governance rules.",
+            chapters: [
+              { id: "bba-law-1", number: 1, title: "Commercial Laws & Consumer Protection Act 2019", hindiTitle: "व्यापारिक कानून एवं उपभोक्ता संरक्षण अधिनियम 2019", description: "Remedies for breach, consumer dispute redressal commissions, unfair trade practices.", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12 }
+            ]
           }
         ]
       },
@@ -987,9 +1501,9 @@ export const INSTITUTIONS_DATA: Institution[] = [
         title: "BBA Semester 5",
         shortTitle: "BBA Sem 5",
         institution: "BBA",
-        description: "Fifth semester covering Strategic Management, Entrepreneurship and Business Analytics.",
+        description: "Fifth semester covering Strategic Management, Entrepreneurship, Financial Markets, Digital Business.",
         eligibility: "Completed BBA Semester 4",
-        scheme: "NEP-2020 Management Framework",
+        scheme: "NEP-2020 Management Framework (4 Papers)",
         papers: [
           {
             id: "bba-s5-p1",
@@ -1000,10 +1514,39 @@ export const INSTITUTIONS_DATA: Institution[] = [
             chapters: [
               { id: "bba-sm-1", number: 1, title: "Strategic Formulation: SWOT, BCG Matrix & Porter's Generic Models", hindiTitle: "रणनीतिक सूत्रीकरण: स्वाट, बीसीजी मैट्रिक्स एवं पोर्टर मॉडल", description: "Cost leadership, differentiation, focus strategy, portfolio analysis.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 16 }
             ]
+          },
+          {
+            id: "bba-s5-p2",
+            paperNumber: 2,
+            title: "Financial Markets, Institutions & Services",
+            marks: 100,
+            description: "Commercial banking, mutual funds, merchant banking, venture capital, stock markets in India.",
+            chapters: [
+              { id: "bba-fmis-1", number: 1, title: "Mutual Funds, Merchant Banking & Credit Rating Agencies", hindiTitle: "म्यूचुअल फंड, मर्चेंट बैंकिंग एवं क्रेडिट रेटिंग एजेंसियां", description: "SEBI mutual fund regulations, underwriting, credit rating symbols (CRISIL, ICRA).", levels: { min: 45, max: 80 }, topicsCount: 7, estimatedHours: 14 }
+            ]
+          },
+          {
+            id: "bba-s5-p3",
+            paperNumber: 3,
+            title: "Operations & Supply Chain Management",
+            marks: 100,
+            description: "Facility layout, inventory management, JIT, total quality management, logistics and supply chain optimization.",
+            chapters: [
+              { id: "bba-scm-1", number: 1, title: "Supply Chain Optimization, JIT & Total Quality Management (TQM)", hindiTitle: "आपूर्ति श्रृंखला अनुकूलन, जेआईटी एवं टीक्यूएम", description: "Bullwhip effect, lean manufacturing, vendor management, ISO quality standards.", levels: { min: 45, max: 80 }, topicsCount: 7, estimatedHours: 14 }
+            ]
+          },
+          {
+            id: "bba-s5-p4",
+            paperNumber: 4,
+            title: "Digital Business & Entrepreneurship Development",
+            marks: 100,
+            description: "E-business models, digital marketing, startup incubation, venture capital funding, pitch deck preparation.",
+            chapters: [
+              { id: "bba-db-1", number: 1, title: "Startup Ecosystem, Business Plan Formulation & Digital Marketing", hindiTitle: "स्टार्टअप पारिस्थितिकी तंत्र, बिजनेस प्लान एवं डिजिटल मार्केटिंग", description: "SEO, SEM, social media campaigns, investor pitch deck, valuation basics for startups.", levels: { min: 40, max: 75 }, topicsCount: 7, estimatedHours: 14 }
+            ]
           }
         ]
       }
     ]
   }
-]
-
+];
