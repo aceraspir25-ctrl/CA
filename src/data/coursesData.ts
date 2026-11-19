@@ -30,7 +30,7 @@ export interface CourseLevel {
   id: string
   title: string
   shortTitle: string
-  institution: "ICAI" | "ICMAI" | "ICSI" | "PRSU"
+  institution: "ICAI" | "ICMAI" | "ICSI" | "PRSU" | "ACCA" | "BBA" | string
   description: string
   eligibility: string
   scheme: string
@@ -788,6 +788,217 @@ export const INSTITUTIONS_DATA: Institution[] = [
             description: "CGST/SGST/IGST structure, Input Tax Credit, registration, return filing.",
             chapters: [
               { id: "prsu-gst-1", number: 1, title: "GST Registration, Invoicing and Returns", hindiTitle: "जीएसटी पंजीकरण, इनवॉइसिंग एवं विवरणियां", description: "Threshold limits, GSTR-1, GSTR-3B, e-way bill system, reverse charge.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 14 }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "acca",
+    name: "Association of Chartered Certified Accountants",
+    shortName: "ACCA",
+    badgeColor: "bg-red-600 text-white",
+    description: "Global professional accounting body offering the Chartered Certified Accountant qualification recognized in 180+ countries.",
+    officialUrl: "https://www.accaglobal.com",
+    levels: [
+      {
+        id: "acca-knowledge",
+        title: "ACCA Applied Knowledge",
+        shortTitle: "Applied Knowledge",
+        institution: "ACCA",
+        description: "The starting point for the ACCA Qualification, covering broad introduction to finance and accounting.",
+        eligibility: "10+2 passed or equivalent higher secondary education",
+        scheme: "ACCA Global Qualification Framework",
+        papers: [
+          {
+            id: "acca-bt",
+            paperNumber: "BT/FBT",
+            title: "Business and Technology",
+            marks: 100,
+            description: "Understand business environment, corporate governance, organizational structure, leadership, and ethical compliance.",
+            chapters: [
+              { id: "acca-bt-ch1", number: 1, title: "The Business Organization, Stakeholders & External Environment", hindiTitle: "व्यावसायिक संगठन, हितधारक एवं बाह्य वातावरण", description: "Types of organization, stakeholder mapping (Mendelow matrix), PESTEL macro-environment.", levels: { min: 0, max: 25 }, topicsCount: 6, estimatedHours: 10 },
+              { id: "acca-bt-ch2", number: 2, title: "Corporate Governance, Ethics & Professional Regulation", hindiTitle: "कॉर्पोरेट गवर्नेंस, नैतिकता एवं व्यावसायिक विनियमन", description: "OECD governance principles, directors' duties, IFAC code of ethics, whistleblowing.", levels: { min: 10, max: 35 }, topicsCount: 5, estimatedHours: 8 }
+            ]
+          },
+          {
+            id: "acca-ma",
+            paperNumber: "MA/FMA",
+            title: "Management Accounting",
+            marks: 100,
+            description: "Management information, cost classification, budgeting, standard costing, and performance measurement.",
+            chapters: [
+              { id: "acca-ma-ch1", number: 1, title: "Cost Classification, Behavior and Overhead Absorption", hindiTitle: "लागत वर्गीकरण एवं ओवरहेड अवशोषण", description: "Direct vs indirect, fixed vs variable, stepped costs, absorption costing vs marginal costing.", levels: { min: 15, max: 40 }, topicsCount: 7, estimatedHours: 12 },
+              { id: "acca-ma-ch2", number: 2, title: "Budgeting, Variance Analysis & Performance Evaluation", hindiTitle: "बजट निर्माण, विचरण विश्लेषण एवं प्रदर्शन मूल्यांकन", description: "Master budget, flexed budget, material/labor variances, ROI and Residual Income (RI).", levels: { min: 25, max: 50 }, topicsCount: 8, estimatedHours: 14 }
+            ]
+          },
+          {
+            id: "acca-fa",
+            paperNumber: "FA/FFA",
+            title: "Financial Accounting",
+            marks: 100,
+            description: "Double-entry accounting, trial balance, preparation of financial statements under IFRS.",
+            chapters: [
+              { id: "acca-fa-ch1", number: 1, title: "Double-Entry Bookkeeping & Trial Balance under IFRS", hindiTitle: "दोहरा लेखा प्रणाली एवं तलपट (IFRS के अंतर्गत)", description: "Recording transactions, ledger accounting, correction of errors, suspense accounts.", levels: { min: 10, max: 35 }, topicsCount: 8, estimatedHours: 14 },
+              { id: "acca-fa-ch2", number: 2, title: "Preparation of Financial Statements (IAS 1 & IFRS)", hindiTitle: "वित्तीय विवरणों का निर्माण (IAS 1 एवं IFRS)", description: "Statement of Profit or Loss, Statement of Financial Position, Statement of Cash Flows (IAS 7).", levels: { min: 25, max: 55 }, topicsCount: 9, estimatedHours: 16 }
+            ]
+          }
+        ]
+      },
+      {
+        id: "acca-skills",
+        title: "ACCA Applied Skills",
+        shortTitle: "Applied Skills",
+        institution: "ACCA",
+        description: "Intermediate professional level developing technical knowledge in law, tax, reporting, audit and management.",
+        eligibility: "Completed Applied Knowledge or relevant degree exemptions",
+        scheme: "ACCA Global Qualification Framework",
+        papers: [
+          {
+            id: "acca-fr",
+            paperNumber: "FR",
+            title: "Financial Reporting",
+            marks: 100,
+            description: "Single entity and group accounts under IFRS, accounting standards application and financial analysis.",
+            chapters: [
+              { id: "acca-fr-ch1", number: 1, title: "Group Financial Statements (Consolidated Balance Sheet & P&L)", hindiTitle: "समूह वित्तीय विवरण (समेकित बैलेंस शीट व लाभ-हानि)", description: "IFRS 10 Consolidated Financial Statements, IFRS 3 Business Combinations, Goodwill and NCI calculations.", levels: { min: 45, max: 80 }, topicsCount: 10, estimatedHours: 20 },
+              { id: "acca-fr-ch2", number: 2, title: "Leases (IFRS 16) & Revenue Recognition (IFRS 15)", hindiTitle: "पट्टे (IFRS 16) एवं राजस्व अभिज्ञान (IFRS 15)", description: "Right-of-use asset, lease liability, 5-step revenue model application.", levels: { min: 40, max: 75 }, topicsCount: 7, estimatedHours: 15 }
+            ]
+          },
+          {
+            id: "acca-fm",
+            paperNumber: "FM",
+            title: "Financial Management",
+            marks: 100,
+            description: "Investment appraisal, working capital management, business valuation, and risk management.",
+            chapters: [
+              { id: "acca-fm-ch1", number: 1, title: "Advanced Investment Appraisal: NPV, IRR & MIRR", hindiTitle: "उन्नत निवेश मूल्यांकन: एनपीवी, आईआरआर एवं एमआईआरआर", description: "Discounted cash flow, taxation and inflation effects, project specific cost of capital.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 },
+              { id: "acca-fm-ch2", number: 2, title: "Cost of Capital (WACC) & Capital Structure Decisions", hindiTitle: "पूंजी की लागत (WACC) एवं पूंजी संरचना निर्णय", description: "CAPM, Dividend Growth Model, Modigliani-Miller theorems, gearing and risk.", levels: { min: 45, max: 80 }, topicsCount: 7, estimatedHours: 14 }
+            ]
+          }
+        ]
+      },
+      {
+        id: "acca-professional",
+        title: "ACCA Strategic Professional",
+        shortTitle: "Strategic Professional",
+        institution: "ACCA",
+        description: "Advanced leadership, corporate governance, strategic advisory and complex financial management.",
+        eligibility: "Completed Applied Skills level",
+        scheme: "ACCA Global Qualification Framework",
+        papers: [
+          {
+            id: "acca-sbl",
+            paperNumber: "SBL",
+            title: "Strategic Business Leader",
+            marks: 100,
+            description: "Integrated case study testing leadership, ethical decisions, risk management, and strategic execution.",
+            chapters: [
+              { id: "acca-sbl-ch1", number: 1, title: "Leadership, Strategic Choice & Organizational Transformation", hindiTitle: "नेतृत्व, रणनीतिक चयन एवं संगठनात्मक परिवर्तन", description: "Porter's 5 Forces, Ansoff matrix, stakeholder management, change management models.", levels: { min: 65, max: 95 }, topicsCount: 8, estimatedHours: 22 }
+            ]
+          },
+          {
+            id: "acca-sbr",
+            paperNumber: "SBR",
+            title: "Strategic Business Reporting",
+            marks: 100,
+            description: "Professional judgment in complex IFRS applications, group restructurings, and ethical financial reporting.",
+            chapters: [
+              { id: "acca-sbr-ch1", number: 1, title: "Complex Financial Instruments (IFRS 9) & Employee Benefits (IAS 19)", hindiTitle: "जटिल वित्तीय उपकरण एवं कर्मचारी लाभ", description: "Classification and measurement, amortised cost vs FVTPL/FVTOCI, defined benefit pension plans.", levels: { min: 70, max: 100 }, topicsCount: 9, estimatedHours: 24 }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "bba",
+    name: "Bachelor of Business Administration",
+    shortName: "BBA",
+    badgeColor: "bg-indigo-600 text-white",
+    description: "Undergraduate degree in management providing foundational to advanced competence in business leadership and operations.",
+    officialUrl: "https://www.ugc.gov.in",
+    levels: [
+      {
+        id: "bba-sem1",
+        title: "BBA Semester 1",
+        shortTitle: "BBA Sem 1",
+        institution: "BBA",
+        description: "First semester establishing foundations of management, business communication and business economics.",
+        eligibility: "10+2 passed from recognized board",
+        scheme: "NEP-2020 Management Framework",
+        papers: [
+          {
+            id: "bba-s1-p1",
+            paperNumber: 1,
+            title: "Principles of Management (प्रबंधन के सिद्धांत)",
+            marks: 100,
+            description: "Planning, organizing, staffing, directing, controlling, Henri Fayol & Taylor principles.",
+            chapters: [
+              { id: "bba-pm-1", number: 1, title: "Foundations of Management & Administrative Theories", hindiTitle: "प्रबंधन की नींव एवं प्रशासनिक सिद्धांत", description: "Management functions, POSDCORB, 14 Principles of Henri Fayol, Scientific Management by FW Taylor.", levels: { min: 0, max: 20 }, topicsCount: 7, estimatedHours: 12 }
+            ]
+          },
+          {
+            id: "bba-s1-p2",
+            paperNumber: 2,
+            title: "Business Economics & Managerial Decision Making",
+            marks: 100,
+            description: "Demand forecasting, production functions, cost concepts, market forms.",
+            chapters: [
+              { id: "bba-be-1", number: 1, title: "Demand Analysis, Elasticity & Forecasting Methods", hindiTitle: "मांग विश्लेषण, लोच एवं पूर्वानुमान विधियां", description: "Law of Demand, price/income/cross elasticity, survey & trend projection methods.", levels: { min: 5, max: 25 }, topicsCount: 6, estimatedHours: 10 }
+            ]
+          }
+        ]
+      },
+      {
+        id: "bba-sem3",
+        title: "BBA Semester 3",
+        shortTitle: "BBA Sem 3",
+        institution: "BBA",
+        description: "Third semester focusing on Marketing Management, Human Resource Management, and Business Research.",
+        eligibility: "Completed BBA Semester 2",
+        scheme: "NEP-2020 Management Framework",
+        papers: [
+          {
+            id: "bba-s3-p1",
+            paperNumber: 1,
+            title: "Marketing Management (विपणन प्रबंध)",
+            marks: 100,
+            description: "STP (Segmentation, Targeting, Positioning), Marketing Mix 4Ps, Consumer Behavior.",
+            chapters: [
+              { id: "bba-mm-1", number: 1, title: "Market Segmentation, Targeting & Positioning (STP)", hindiTitle: "बाजार विभक्तिकरण, लक्ष्यीकरण एवं स्थिति निर्धारण", description: "Demographic/Psychographic segmentation, target strategies, perceptual mapping.", levels: { min: 25, max: 50 }, topicsCount: 7, estimatedHours: 12 }
+            ]
+          },
+          {
+            id: "bba-s3-p2",
+            paperNumber: 2,
+            title: "Human Resource Management (मानव संसाधन प्रबंध)",
+            marks: 100,
+            description: "Recruitment, selection, training, performance appraisal, employee motivation.",
+            chapters: [
+              { id: "bba-hrm-1", number: 1, title: "Talent Acquisition, Training & Performance Appraisal", hindiTitle: "प्रतिभा अधिग्रहण, प्रशिक्षण एवं प्रदर्शन मूल्यांकन", description: "Job analysis, 360-degree appraisal, MBO (Management by Objectives), Maslow & Herzberg theories.", levels: { min: 25, max: 50 }, topicsCount: 8, estimatedHours: 14 }
+            ]
+          }
+        ]
+      },
+      {
+        id: "bba-sem5",
+        title: "BBA Semester 5",
+        shortTitle: "BBA Sem 5",
+        institution: "BBA",
+        description: "Fifth semester covering Strategic Management, Entrepreneurship and Business Analytics.",
+        eligibility: "Completed BBA Semester 4",
+        scheme: "NEP-2020 Management Framework",
+        papers: [
+          {
+            id: "bba-s5-p1",
+            paperNumber: 1,
+            title: "Strategic Management & Corporate Policy",
+            marks: 100,
+            description: "SWOT analysis, Porter's Value Chain, BCG Matrix, generic competitive strategies.",
+            chapters: [
+              { id: "bba-sm-1", number: 1, title: "Strategic Formulation: SWOT, BCG Matrix & Porter's Generic Models", hindiTitle: "रणनीतिक सूत्रीकरण: स्वाट, बीसीजी मैट्रिक्स एवं पोर्टर मॉडल", description: "Cost leadership, differentiation, focus strategy, portfolio analysis.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 16 }
             ]
           }
         ]

@@ -43,6 +43,7 @@ function AITutorContent() {
   const {
     studentName,
     studentLevel,
+    activeLanguage,
     aiMessages,
     weakConcepts,
     studiedTopics,
@@ -63,7 +64,7 @@ function AITutorContent() {
     }
   }, [promptParam])
 
-  const handleSend = (textToSend?: string) => {
+  const handleSend = async (textToSend?: string) => {
     const query = textToSend || inputQuery
     if (!query.trim()) return
 
@@ -76,6 +77,40 @@ function AITutorContent() {
     if (!textToSend) setInputQuery("")
     setIsTyping(true)
 
+    try {
+      // 1. Attempt server AI Gateway with Gemini / OpenAI fallback
+      const res = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            ...aiMessages.slice(-6).map((m) => ({ role: m.role, content: m.content })),
+            { role: "user", content: query },
+          ],
+          capability: "teacher",
+          studentLevel,
+          language: activeLanguage,
+        }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        if (data?.content) {
+          addAIMessage({
+            role: "assistant",
+            content: data.content,
+            category: "explanation",
+            quickPromptUsed: textToSend ? query : undefined,
+          })
+          setIsTyping(false)
+          return
+        }
+      }
+    } catch (e) {
+      console.warn("AI Gateway offline, falling back to local pedagogical engine:", e)
+    }
+
+    // 2. Client-side local pedagogical fallback (preserved)
     setTimeout(() => {
       let botResponse = ""
       const q = query.toLowerCase()

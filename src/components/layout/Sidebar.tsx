@@ -38,9 +38,12 @@ const mainNav: NavItem[] = [
   { label: "My Courses", href: "/courses", icon: BookOpen },
   { label: "Study Lab", href: "/lab", icon: FlaskConical },
   { label: "Tests & Exams", href: "/tests", icon: ClipboardList },
+  { label: "PYQ & Exam Simulator", href: "/exams", icon: ClipboardList },
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
+  { label: "AI Academic Agents", href: "/admin/agents", icon: Bot },
   { label: "Library", href: "/library", icon: Library },
   { label: "My Progress", href: "/progress", icon: BarChart2 },
+  { label: "Admin & Faculty", href: "/admin", icon: Settings },
   { label: "Settings", href: "/settings", icon: Settings },
 ]
 
@@ -73,10 +76,28 @@ const courseGroups: NavGroup[] = [
     ],
   },
   {
+    title: "ACCA – Global Qualification",
+    color: "text-red-500",
+    items: [
+      { label: "Applied Knowledge", href: "/courses?inst=acca&level=acca-knowledge", icon: BookOpen },
+      { label: "Applied Skills", href: "/courses?inst=acca&level=acca-skills", icon: BookOpen },
+      { label: "Strategic Professional", href: "/courses?inst=acca&level=acca-professional", icon: BookOpen },
+    ],
+  },
+  {
     title: "B.Com – University",
     color: "text-orange-500",
     items: [
       { label: "PRSU B.Com", href: "/courses?inst=prsu&level=prsu-bcom-sem1", icon: BookOpen },
+    ],
+  },
+  {
+    title: "BBA – Management",
+    color: "text-indigo-500",
+    items: [
+      { label: "BBA Semester 1", href: "/courses?inst=bba&level=bba-sem1", icon: BookOpen },
+      { label: "BBA Semester 3", href: "/courses?inst=bba&level=bba-sem3", icon: BookOpen },
+      { label: "BBA Semester 5", href: "/courses?inst=bba&level=bba-sem5", icon: BookOpen },
     ],
   },
 ]

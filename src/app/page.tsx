@@ -107,13 +107,33 @@ const courseCards = [
     badge: "bg-orange-100 text-orange-700",
     href: "/courses?inst=prsu&level=prsu-bcom-sem1",
   },
+  {
+    name: "ACCA",
+    fullName: "Chartered Certified Accountant",
+    body: "Global",
+    path: "Knowledge → Skills → Professional",
+    desc: "Global accounting, IFRS, audit, strategic business reporting and international taxation in 180+ countries.",
+    color: "border-t-red-500",
+    badge: "bg-red-100 text-red-700",
+    href: "/courses?inst=acca&level=acca-knowledge",
+  },
+  {
+    name: "BBA",
+    fullName: "Bachelor of Business Administration",
+    body: "NEP UGC",
+    path: "Semester 1 – 6",
+    desc: "Management principles, organizational behavior, marketing, financial planning and business analytics.",
+    color: "border-t-indigo-500",
+    badge: "bg-indigo-100 text-indigo-700",
+    href: "/courses?inst=bba&level=bba-sem1",
+  },
 ]
 
 const stats = [
-  { value: "1000+", label: "Chapters" },
+  { value: "1200+", label: "Chapters" },
   { value: "100", label: "Learning Levels" },
-  { value: "4", label: "Professional Courses" },
-  { value: "AI", label: "Powered" },
+  { value: "6", label: "Professional Courses" },
+  { value: "AI", label: "Autonomous Agents" },
 ]
 
 export default function LandingPage() {
