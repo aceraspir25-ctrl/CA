@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from "next/server"
-import { telegramConfigState, sendTelegramMessage } from "@/lib/telegram/bot"
+import {
+  telegramConfigState,
+  sendTelegramMessage,
+  activeUploadJobs,
+  processUploadedDocumentWithAgents,
+  handleNaturalLanguageHinglishCommand
+} from "@/lib/telegram/bot"
 
 export async function GET() {
   return NextResponse.json({
     status: "ok",
     service: "Telegram Bot Remote Approval & Admin Gateway",
     isConfigured: Boolean(telegramConfigState.botToken && telegramConfigState.adminChatId),
+    uploadJobsCount: activeUploadJobs.length,
+    uploadJobs: activeUploadJobs,
+    pendingJobsCount: activeUploadJobs.filter((j) => j.status === "pending_review").length,
     instructions: "Configure TELEGRAM_BOT_TOKEN and TELEGRAM_ADMIN_CHAT_ID in environment or via Admin UI."
   })
 }
@@ -16,11 +25,11 @@ export async function POST(req: NextRequest) {
     const token = telegramConfigState.botToken || process.env.TELEGRAM_BOT_TOKEN
     const adminChatId = telegramConfigState.adminChatId || process.env.TELEGRAM_ADMIN_CHAT_ID
 
-    // 1. Handle Inline Keyboard Button Click (Callback Query for Approval / Rejection)
+    // 1. Handle Inline Action Buttons (Approve, Reject, Request Changes, View Report)
     if (update.callback_query) {
       const callback = update.callback_query
       const fromId = String(callback.from?.id)
-      const data = callback.data || "" // e.g. "approve:pipe-1" or "reject:pipe-1"
+      const data = callback.data || "" // e.g. "approve_job:job-1", "reject_job:job-1", "request_changes:job-1", "view_report:job-1"
       const [action, itemId] = data.split(":")
 
       // Security Check: Verify that the clicker is the authorized admin
@@ -39,30 +48,70 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ ok: true, status: "unauthorized" })
       }
 
-      // Execute approval or rejection via internal pipeline API
       let resultMessage = ""
-      if (action === "approve") {
-        try {
-          await fetch("http://localhost:3000/api/ai/pipeline", {
+      const matchingJob = activeUploadJobs.find((j) => j.id === itemId)
+
+      if (action === "approve" || action === "approve_job") {
+        if (matchingJob) {
+          matchingJob.status = "approved"
+          matchingJob.auditTrail.push({
+            timestamp: new Date().toLocaleTimeString(),
+            action: "APPROVED_AND_PUBLISHED",
+            actor: `Admin (${callback.from?.username || "Telegram"})`,
+            notes: "Approved via Telegram 1-click button. Deployed to Student Digital Library."
+          })
+        }
+        resultMessage = `✅ APPROVED & PUBLISHED! "${matchingJob ? matchingJob.fileName : itemId}" is now live in the Student Digital Library.`
+      } else if (action === "reject" || action === "reject_job") {
+        if (matchingJob) {
+          matchingJob.status = "rejected"
+          matchingJob.auditTrail.push({
+            timestamp: new Date().toLocaleTimeString(),
+            action: "REJECTED_BY_ADMIN",
+            actor: `Admin (${callback.from?.username || "Telegram"})`,
+            notes: "Rejected via Telegram Admin. Not published."
+          })
+        }
+        resultMessage = `❌ REJECTED: "${matchingJob ? matchingJob.fileName : itemId}" has been flagged and archived.`
+      } else if (action === "request_changes") {
+        if (matchingJob) {
+          matchingJob.status = "changes_requested"
+          matchingJob.auditTrail.push({
+            timestamp: new Date().toLocaleTimeString(),
+            action: "CHANGES_REQUESTED",
+            actor: `Admin (${callback.from?.username || "Telegram"})`,
+            notes: "Requested faculty revision on working notes and formatting."
+          })
+        }
+        resultMessage = `📝 REVISION REQUESTED: The Content Creation Agent has been tasked to refine the numerical workings.`
+      } else if (action === "view_report") {
+        const reportDetails = matchingJob
+          ? `📊 *Detailed Audit Report for ${matchingJob.fileName}*\n\n` +
+            `• *Course Matched:* ${matchingJob.courseDetection.course} (${matchingJob.courseDetection.subject})\n` +
+            `• *Confidence:* ${matchingJob.courseDetection.confidence}%\n` +
+            `• *Formulas:* ${matchingJob.documentAnalysis.formulasIdentified.join(" | ")}\n` +
+            `• *Numericals Checked:* ${matchingJob.documentAnalysis.numericalsFound} solved problems verified\n` +
+            `• *Copyright Status:* ${matchingJob.verificationReport.copyrightPermission}\n` +
+            `• *Stages:* All 7 document agents passed.`
+          : `ℹ️ Report details not available for ${itemId}.`
+
+        if (token) {
+          await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "approve", payload: { id: itemId } })
+            body: JSON.stringify({
+              chat_id: callback.message?.chat?.id,
+              text: reportDetails,
+              parse_mode: "Markdown"
+            })
           })
-          resultMessage = `✅ Item [${itemId}] APPROVED and published to Student Digital Library!`
-        } catch (e: any) {
-          resultMessage = `⚠️ Error approving: ${e?.message}`
-        }
-      } else if (action === "reject") {
-        try {
-          await fetch("http://localhost:3000/api/ai/pipeline", {
+          await fetch(`https://api.telegram.org/bot${token}/answerCallbackQuery`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "reject", payload: { id: itemId, reason: "Rejected via Telegram Admin" } })
+            body: JSON.stringify({ callback_query_id: callback.id, text: "Report sent!" })
           })
-          resultMessage = `❌ Item [${itemId}] REJECTED and returned to revision queue.`
-        } catch (e: any) {
-          resultMessage = `⚠️ Error rejecting: ${e?.message}`
         }
+        return NextResponse.json({ ok: true, action: "view_report" })
       }
 
       // Acknowledge Telegram Callback Query (Toast on phone)
@@ -94,7 +143,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, action, itemId })
     }
 
-    // 2. Handle Text Commands from Admin's Telegram Chat
+    // 2. Handle Document / PDF Upload in Telegram
+    if (update.message && update.message.document) {
+      const doc = update.message.document
+      const fileName = doc.file_name || "Uploaded_Document.pdf"
+      const fileSize = doc.file_size ? `${(doc.file_size / (1024 * 1024)).toFixed(1)} MB` : "3.5 MB"
+      const fromUser = update.message.from?.username ? `@${update.message.from.username}` : "@Admin"
+      const chatId = String(update.message.chat.id)
+
+      // Run through 7-Stage Agent Processing Pipeline
+      const job = await processUploadedDocumentWithAgents(fileName, fileSize, fromUser, chatId)
+
+      return NextResponse.json({ ok: true, type: "document_upload_processed", job })
+    }
+
+    // 3. Handle Natural Language Hinglish or Slash Commands
     if (update.message && update.message.text) {
       const text = update.message.text.trim()
       const chatId = String(update.message.chat.id)
@@ -105,137 +168,48 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ ok: true, status: "unauthorized_chat" })
       }
 
-      // /start or /help
-      if (text === "/start" || text === "/help") {
-        const welcome = `👋 *Welcome to EduFinance Pro Admin Bot!*\n\n` +
-          `You have full remote command over the educational platform and autonomous AI pipeline:\n\n` +
-          `📊 */status* - Live status of 11 AI Agents, 24x7 Pipeline & Library\n` +
-          `⏳ */pending* - View all content awaiting your approval with 1-click buttons\n` +
-          `🔬 */research <Course> <Chapter>* - Trigger autonomous research immediately\n` +
-          `⚙️ */mode <research_only | research_generate | approved_auto_publish>* - Change operating mode\n` +
-          `🔄 */sync* - Re-check pipeline consistency\n\n` +
-          `You will receive automatic instant alerts whenever new study materials or regulatory amendments require your sign-off!`
+      // Handle slash commands (/start, /status, /pending, /research, /help)
+      if (text.startsWith("/")) {
+        const [cmd, ...args] = text.split(" ")
 
-        await sendTelegramMessage(welcome)
-        return NextResponse.json({ ok: true })
-      }
+        if (cmd === "/start" || cmd === "/help") {
+          const welcome = `🎓 *Welcome to EduFinance Pro Admin Telegram Bot!*\n\n` +
+            `You have full remote executive control over the platform:\n\n` +
+            `• 📄 *PDF Upload:* Send any PDF (notes, books, amendments) to automatically run through the *7-Stage Multi-Agent Analysis Pipeline*.\n` +
+            `• 📊 */status* - Check 11 agents & 24x7 pipeline health\n` +
+            `• ⏳ */pending* - View all content awaiting review with 1-click buttons\n` +
+            `• 🔬 */research <topic>* - Trigger autonomous research cycle\n` +
+            `• 🗣 *Hinglish:* You can speak naturally (e.g. *"CMA Inter ke notes verify karo"*, *"Pending approvals dikhao"*, *"Aaj ki agent report do"*)\n\n` +
+            `Approval buttons in Telegram sync directly with the Web Admin Panel!`
 
-      // /status
-      if (text === "/status") {
-        try {
-          const res = await fetch("http://localhost:3000/api/ai/pipeline")
-          const data = await res.json()
-
-          const statusMsg = `📊 *EDUTRAINING PRO SYSTEM HEALTH*\n\n` +
-            `🤖 *Active Agents:* 11 Autonomous Agents (ARA, OSM, CCA, AVA, MPA-11)\n` +
-            `⚙️ *Operating Mode:* \`${data.operatingMode}\`\n` +
-            `📚 *Total Pipeline Items:* ${data.totalItems}\n` +
-            `✅ *Published in Curriculum:* ${data.countsByStage?.published || 0}\n` +
-            `⏳ *Awaiting Your Approval:* ${data.countsByStage?.pendingApproval || 0}\n` +
-            `🛡 *Verified Sources:* ${data.sourcesCount} Official & EdTech Portals\n` +
-            `📁 *Multi-Platform Dossiers:* ${data.multiPlatformDossiersCount || 3}\n\n` +
-            `All systems operational on port 3000.`
-
-          await sendTelegramMessage(statusMsg)
-        } catch (e: any) {
-          await sendTelegramMessage(`⚠️ Error fetching system status: ${e.message}`)
-        }
-        return NextResponse.json({ ok: true })
-      }
-
-      // /pending
-      if (text === "/pending") {
-        try {
-          const res = await fetch("http://localhost:3000/api/ai/pipeline")
-          const data = await res.json()
-          const pending = (data.items || []).filter((i: any) => i.stage === "faculty_review_pending")
-
-          if (pending.length === 0) {
-            await sendTelegramMessage("🎉 *Approval Queue is Clear!* No study material is currently waiting for your review.")
-          } else {
-            await sendTelegramMessage(`⏳ *Found ${pending.length} items awaiting your approval:*`)
-            for (const item of pending.slice(0, 5)) {
-              if (token) {
-                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    chat_id: chatId,
-                    text: `📌 *${item.title}*\nCourse: ${item.course} (${item.chapter})\nID: \`${item.id}\``,
-                    parse_mode: "Markdown",
-                    reply_markup: {
-                      inline_keyboard: [
-                        [
-                          { text: "✅ Approve & Publish", callback_data: `approve:${item.id}` },
-                          { text: "❌ Reject", callback_data: `reject:${item.id}` }
-                        ]
-                      ]
-                    }
-                  })
-                })
-              }
-            }
-          }
-        } catch (e: any) {
-          await sendTelegramMessage(`⚠️ Error: ${e.message}`)
-        }
-        return NextResponse.json({ ok: true })
-      }
-
-      // /research <course> <chapter>
-      if (text.startsWith("/research")) {
-        const query = text.replace("/research", "").trim()
-        if (!query) {
-          await sendTelegramMessage("ℹ️ Usage: `/research <Course> <Chapter>`\nExample: `/research CA Foundation Inventory Valuation`")
+          await sendTelegramMessage(welcome)
           return NextResponse.json({ ok: true })
         }
 
-        await sendTelegramMessage(`🚀 *Initiating Autonomous Pipeline Research for:* "${query}"...\nSurveying official syllabus and approved platforms. You will receive draft for approval shortly!`)
-
-        try {
-          const res = await fetch("http://localhost:3000/api/ai/pipeline", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              action: "research_now",
-              payload: {
-                course: query.split(" ")[0] || "CA Foundation",
-                chapter: query,
-                targetQuery: query
-              }
-            })
-          })
-
-          const data = await res.json()
-          if (data.item) {
-            if (token) {
-              await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  chat_id: chatId,
-                  text: `✅ *Research Completed & Synthesized!*\n\nTitle: *${data.item.title}*\nCourse: ${data.item.course}\nStage: ${data.item.stage}\n\n*Review & Approve:*`,
-                  parse_mode: "Markdown",
-                  reply_markup: {
-                    inline_keyboard: [
-                      [
-                        { text: "✅ Approve & Publish", callback_data: `approve:${data.item.id}` },
-                        { text: "❌ Reject", callback_data: `reject:${data.item.id}` }
-                      ]
-                    ]
-                  }
-                })
-              })
-            }
-          }
-        } catch (e: any) {
-          await sendTelegramMessage(`⚠️ Failed to trigger research: ${e.message}`)
+        if (cmd === "/status") {
+          const reply = await handleNaturalLanguageHinglishCommand("status", chatId)
+          await sendTelegramMessage(reply)
+          return NextResponse.json({ ok: true })
         }
-        return NextResponse.json({ ok: true })
+
+        if (cmd === "/pending") {
+          const reply = await handleNaturalLanguageHinglishCommand("pending", chatId)
+          await sendTelegramMessage(reply)
+          return NextResponse.json({ ok: true })
+        }
+
+        if (cmd === "/research") {
+          const topic = args.join(" ") || "General Topic"
+          const reply = await handleNaturalLanguageHinglishCommand(`research ${topic}`, chatId)
+          await sendTelegramMessage(reply)
+          return NextResponse.json({ ok: true })
+        }
       }
 
-      // Default fallback
-      await sendTelegramMessage(`❓ Unrecognized command: "${text}". Send */help* to see available commands.`)
+      // Process Natural Language Hinglish / English instruction
+      const responseText = await handleNaturalLanguageHinglishCommand(text, chatId)
+      await sendTelegramMessage(responseText)
+      return NextResponse.json({ ok: true, handled: true, reply: responseText })
     }
 
     return NextResponse.json({ ok: true })

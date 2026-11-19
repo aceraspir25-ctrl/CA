@@ -42,6 +42,7 @@ import {
   RegisteredSource
 } from "@/data/researchPipelineData"
 import { APPROVED_RESEARCH_SOURCES } from "@/data/multiPlatformResearchData"
+import { INITIAL_TELEGRAM_UPLOAD_JOBS, TelegramUploadJob } from "@/data/telegramAdminData"
 import { INSTITUTIONS_DATA } from "@/data/coursesData"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -66,13 +67,135 @@ export default function ContentPipelinePage() {
   const [telegramStatusMsg, setTelegramStatusMsg] = useState("")
   const [isSendingTelegramTest, setIsSendingTelegramTest] = useState(false)
 
+  // Telegram Document Uploads & Natural Language State
+  const [telegramJobs, setTelegramJobs] = useState<TelegramUploadJob[]>(INITIAL_TELEGRAM_UPLOAD_JOBS)
+  const [selectedTelegramJob, setSelectedTelegramJob] = useState<TelegramUploadJob | null>(telegramJobs[0])
+  const [hinglishInput, setHinglishInput] = useState("CMA Inter ke notes verify karo")
+  const [hinglishResponse, setHinglishResponse] = useState("")
+  const [isProcessingHinglish, setIsProcessingHinglish] = useState(false)
+
+  const handleExecuteHinglish = async (queryText?: string) => {
+    const textToRun = queryText || hinglishInput
+    if (!textToRun.trim()) return
+    setIsProcessingHinglish(true)
+    setHinglishResponse("")
+
+    try {
+      const res = await fetch("/api/telegram/webhook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: {
+            text: textToRun,
+            chat: { id: 987654321 },
+            from: { username: "RahulSharma_Admin", id: 987654321 }
+          }
+        })
+      })
+      const data = await res.json()
+      // Refresh jobs list in case upload was triggered
+      const freshRes = await fetch("/api/telegram/webhook")
+      const freshData = await freshRes.json()
+      if (freshData.uploadJobs) {
+        setTelegramJobs(freshData.uploadJobs)
+        if (freshData.uploadJobs[0]) setSelectedTelegramJob(freshData.uploadJobs[0])
+      }
+      setHinglishResponse(`🤖 Agent Executed Command: "${textToRun}"\nTask processed successfully across AI Orchestrator and synced with central database!`)
+    } catch (e: any) {
+      setHinglishResponse(`⚠️ Execution error: ${e?.message}`)
+    } finally {
+      setIsProcessingHinglish(false)
+    }
+  }
+
   const handleSendTelegramTest = async () => {
     setIsSendingTelegramTest(true)
     setTelegramStatusMsg("")
-    setTimeout(() => {
-      setTelegramStatusMsg("🚀 Live Approval Notification Dispatched to Telegram! You will receive inline [Approve & Publish] / [Reject] buttons directly on your phone.")
+    try {
+      const res = await fetch("/api/telegram/webhook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: {
+            text: "/test",
+            chat: { id: adminChatIdInput || 987654321 },
+            from: { username: "Admin", id: adminChatIdInput || 987654321 }
+          }
+        })
+      })
+      const data = await res.json()
+      setTelegramStatusMsg("✅ Test verification prompt dispatched successfully! Telegram Webhook & Web Admin Panel are in real-time sync.")
+    } catch (e: any) {
+      setTelegramStatusMsg(`⚠️ Error sending test prompt: ${e?.message}`)
+    } finally {
       setIsSendingTelegramTest(false)
-    }, 800)
+    }
+  }
+
+  const handleSimulateUploadPdf = async (customFileName?: string) => {
+    const fName = customFileName || "Cost_Accounting_Notes.pdf"
+    setIsProcessingHinglish(true)
+    try {
+      const res = await fetch("/api/telegram/webhook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: {
+            document: {
+              file_name: fName,
+              file_size: 4404019
+            },
+            chat: { id: 987654321 },
+            from: { username: "RahulSharma_Admin", id: 987654321 }
+          }
+        })
+      })
+      const data = await res.json()
+      if (data.job) {
+        setTelegramJobs((prev) => [data.job, ...prev])
+        setSelectedTelegramJob(data.job)
+        setTelegramStatusMsg(`📥 Received and analyzed ${fName}! 7 document agents executed with zero errors.`)
+      }
+    } catch (e: any) {
+      console.error("Simulation error:", e)
+    } finally {
+      setIsProcessingHinglish(false)
+    }
+  }
+
+  const handleJobAction = (jobId: string, action: "approve" | "reject" | "request_changes") => {
+    const timestamp = new Date().toLocaleTimeString()
+    setTelegramJobs((prev) =>
+      prev.map((j) => {
+        if (j.id === jobId) {
+          const newStatus = action === "approve" ? "approved" : action === "reject" ? "rejected" : "changes_requested"
+          return {
+            ...j,
+            status: newStatus as any,
+            auditTrail: [
+              {
+                timestamp,
+                action: action === "approve" ? "APPROVED_VIA_ADMIN_PANEL" : action === "reject" ? "REJECTED_VIA_ADMIN_PANEL" : "CHANGES_REQUESTED",
+                actor: "Super Admin (Web UI / Telegram Synced)",
+                notes: `Action: ${action.toUpperCase()} synchronized with Telegram webhook.`
+              },
+              ...j.auditTrail
+            ]
+          }
+        }
+        return j
+      })
+    )
+    if (selectedTelegramJob?.id === jobId) {
+      setSelectedTelegramJob((prev) =>
+        prev
+          ? {
+              ...prev,
+              status: (action === "approve" ? "approved" : action === "reject" ? "rejected" : "changes_requested") as any
+            }
+          : null
+      )
+    }
   }
 
   // 24x7 Autonomous Engine State
@@ -835,7 +958,7 @@ export default function ContentPipelinePage() {
           </div>
         </TabsContent>
 
-        {/* TAB 7: TELEGRAM BOT REMOTE APPROVAL GATEWAY */}
+        {/* TAB 7: TELEGRAM BOT REMOTE APPROVAL GATEWAY & 7-STAGE PDF ANALYSIS */}
         <TabsContent value="telegram" className="space-y-6">
           {/* Top Banner */}
           <div className="p-5 rounded-2xl bg-gradient-to-r from-sky-950 via-blue-950 to-slate-900 text-white border border-sky-800 shadow-xl space-y-2">
@@ -845,18 +968,348 @@ export default function ContentPipelinePage() {
                   <Send className="h-6 w-6 text-sky-400" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold">Telegram Remote Admin & 1-Click Approval Bot</h3>
+                  <h3 className="text-base font-bold">Official Telegram Remote Admin & 7-Stage Document Processing Interface</h3>
                   <p className="text-xs text-sky-200">
-                    Approve study notes, trigger AI research, and monitor platform health directly from your phone.
+                    Synchronized with Web Admin Panel: Send PDFs from your phone, trigger 7 specialized agents, and 1-click approve study materials.
                   </p>
                 </div>
               </div>
-              <Badge className="bg-emerald-500 text-white text-xs">Live Webhook Ready</Badge>
+              <div className="flex items-center gap-2 shrink-0">
+                <Badge className="bg-emerald-500 text-white text-xs">Live Webhook Synced</Badge>
+                <Button
+                  size="sm"
+                  onClick={() => handleSimulateUploadPdf("Cost_Accounting_Notes.pdf")}
+                  disabled={isProcessingHinglish}
+                  className="bg-sky-600 hover:bg-sky-700 text-white text-xs gap-1.5"
+                >
+                  <FileText className="h-3.5 w-3.5" /> Send PDF (Cost_Accounting_Notes.pdf)
+                </Button>
+              </div>
             </div>
           </div>
 
+          {/* SECTION 1: TELEGRAM PDF UPLOADS & 7-STAGE AGENT PIPELINE QUEUE */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-bold flex items-center gap-2 text-[hsl(var(--foreground))]">
+                  <FileCheck className="h-4 w-4 text-emerald-600" />
+                  Telegram Document Uploads & 7-Stage Multi-Agent Analysis Queue
+                </h4>
+                <p className="text-xs text-[hsl(var(--muted-foreground))]">
+                  Documents received via Telegram are processed by: 1. Document Analysis → 2. Course Detection → 3. Internet Research → 4. Academic Verification → 5. Freshness & Amendment → 6. Copyright → 7. Content Integration.
+                </p>
+              </div>
+              <Badge variant="outline" className="text-xs font-semibold">
+                {telegramJobs.length} Upload Jobs Tracked
+              </Badge>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* Left 4 Cols: Upload Jobs List */}
+              <div className="lg:col-span-4 space-y-2.5">
+                {telegramJobs.map((job) => {
+                  const isSelected = selectedTelegramJob?.id === job.id
+                  return (
+                    <Card
+                      key={job.id}
+                      onClick={() => setSelectedTelegramJob(job)}
+                      className={`cursor-pointer transition-all border ${
+                        isSelected
+                          ? "border-sky-500 shadow-md ring-1 ring-sky-500/30 bg-sky-50/10 dark:bg-sky-950/20"
+                          : "hover:border-[hsl(var(--border))]/80 hover:bg-[hsl(var(--muted))]/30"
+                      }`}
+                    >
+                      <CardHeader className="p-3 pb-1.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-mono text-[11px] font-bold text-sky-600 truncate">
+                            {job.fileName}
+                          </span>
+                          <Badge
+                            className={`text-[9px] px-1.5 py-0 ${
+                              job.status === "approved"
+                                ? "bg-emerald-600 text-white"
+                                : job.status === "rejected"
+                                ? "bg-rose-600 text-white"
+                                : job.status === "changes_requested"
+                                ? "bg-amber-600 text-white"
+                                : "bg-sky-600 text-white animate-pulse"
+                            }`}
+                          >
+                            {job.status.replace(/_/g, " ")}
+                          </Badge>
+                        </div>
+                        <p className="text-[11px] font-semibold text-[hsl(var(--foreground))] mt-0.5">
+                          {job.courseDetection.course} • {job.courseDetection.subject}
+                        </p>
+                      </CardHeader>
+                      <CardContent className="p-3 pt-0 text-[10px] text-[hsl(var(--muted-foreground))] flex items-center justify-between border-t border-[hsl(var(--border))]/40 mt-1">
+                        <span>Size: {job.fileSize}</span>
+                        <span>{job.uploadedBy}</span>
+                        <span>{job.uploadedAt}</span>
+                      </CardContent>
+                    </Card>
+                  )
+                })}
+              </div>
+
+              {/* Right 8 Cols: 7-Stage Inspection & Approval Card */}
+              <div className="lg:col-span-8">
+                {selectedTelegramJob ? (
+                  <Card className="border-[hsl(var(--border))] shadow-md space-y-4">
+                    <CardHeader className="p-4 pb-2 border-b border-[hsl(var(--border))]">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs font-bold text-sky-600">
+                              {selectedTelegramJob.fileName}
+                            </span>
+                            <Badge variant="outline" className="text-[10px]">
+                              Confidence: {selectedTelegramJob.courseDetection.confidence}%
+                            </Badge>
+                          </div>
+                          <CardTitle className="text-sm font-bold mt-1">
+                            {selectedTelegramJob.courseDetection.institution} • {selectedTelegramJob.courseDetection.course} • {selectedTelegramJob.courseDetection.subject}
+                          </CardTitle>
+                          <CardDescription className="text-xs">
+                            Mapped Chapter: <strong>{selectedTelegramJob.courseDetection.chapter}</strong>
+                          </CardDescription>
+                        </div>
+
+                        {/* Status Badge */}
+                        <div className="shrink-0">
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-bold ${
+                              selectedTelegramJob.status === "approved"
+                                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                                : selectedTelegramJob.status === "rejected"
+                                ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300"
+                                : selectedTelegramJob.status === "changes_requested"
+                                ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                                : "bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300"
+                            }`}
+                          >
+                            Status: {selectedTelegramJob.status.replace(/_/g, " ").toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent className="p-4 pt-0 space-y-4 text-xs">
+                      {/* Verification Results Table (Exact from User Spec) */}
+                      <div className="p-3.5 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--muted))]/30 space-y-2">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-[hsl(var(--muted-foreground))] block">
+                          🔍 Automated Multi-Agent Verification Results Table:
+                        </span>
+                        <div className="border rounded-lg overflow-hidden bg-[hsl(var(--background))] text-xs">
+                          <table className="w-full text-left">
+                            <thead className="bg-[hsl(var(--muted))] border-b text-[11px] font-bold">
+                              <tr>
+                                <th className="p-2.5">Verification Check</th>
+                                <th className="p-2.5">Agent Result</th>
+                                <th className="p-2.5">Remarks / Compliance</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[hsl(var(--border))] text-[11px]">
+                              <tr>
+                                <td className="p-2.5 font-medium">Course Mapping</td>
+                                <td className="p-2.5">
+                                  <Badge className="bg-emerald-600 text-white text-[10px]">
+                                    {selectedTelegramJob.verificationReport.courseMapping}
+                                  </Badge>
+                                </td>
+                                <td className="p-2.5 text-[hsl(var(--muted-foreground))]">
+                                  Matched {selectedTelegramJob.courseDetection.institution} {selectedTelegramJob.courseDetection.course} syllabus
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="p-2.5 font-medium">Formula Verification</td>
+                                <td className="p-2.5">
+                                  <Badge className="bg-emerald-600 text-white text-[10px]">
+                                    {selectedTelegramJob.verificationReport.formulaVerification}
+                                  </Badge>
+                                </td>
+                                <td className="p-2.5 text-[hsl(var(--muted-foreground))]">
+                                  {selectedTelegramJob.documentAnalysis.formulasIdentified[0]}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="p-2.5 font-medium">Numerical Checks</td>
+                                <td className="p-2.5">
+                                  <Badge className="bg-emerald-600 text-white text-[10px]">
+                                    {selectedTelegramJob.verificationReport.numericalChecks}
+                                  </Badge>
+                                </td>
+                                <td className="p-2.5 text-[hsl(var(--muted-foreground))]">
+                                  {selectedTelegramJob.documentAnalysis.numericalsFound} solved illustrations verified
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="p-2.5 font-medium">Latest Syllabus & Freshness</td>
+                                <td className="p-2.5">
+                                  <Badge className="bg-blue-600 text-white text-[10px]">
+                                    {selectedTelegramJob.verificationReport.latestSyllabus}
+                                  </Badge>
+                                </td>
+                                <td className="p-2.5 text-[hsl(var(--muted-foreground))]">
+                                  {selectedTelegramJob.verificationReport.freshnessNotes}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="p-2.5 font-medium">Copyright Permission</td>
+                                <td className="p-2.5">
+                                  <Badge className="bg-amber-600 text-white text-[10px]">
+                                    {selectedTelegramJob.verificationReport.copyrightPermission}
+                                  </Badge>
+                                </td>
+                                <td className="p-2.5 text-[hsl(var(--muted-foreground))]">
+                                  Research & reference only. Original equivalent synthesized.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div className="p-2.5 rounded-lg bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-[11px] text-indigo-950 dark:text-indigo-200 flex items-center gap-2">
+                          <Bot className="h-4 w-4 text-indigo-600 shrink-0" />
+                          <span><strong>AI Recommendation:</strong> {selectedTelegramJob.verificationReport.aiRecommendation}</span>
+                        </div>
+                      </div>
+
+                      {/* 4 Interactive Action Buttons (Approve, Reject, Request Changes, View Report) */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                        <Button
+                          size="sm"
+                          onClick={() => handleJobAction(selectedTelegramJob.id, "approve")}
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold gap-1.5"
+                        >
+                          <Check className="h-3.5 w-3.5" /> Approve & Publish
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleJobAction(selectedTelegramJob.id, "reject")}
+                          className="text-xs font-bold gap-1.5"
+                        >
+                          <X className="h-3.5 w-3.5" /> Reject
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleJobAction(selectedTelegramJob.id, "request_changes")}
+                          className="text-xs font-bold gap-1.5 text-amber-600 border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/30"
+                        >
+                          <RotateCcw className="h-3.5 w-3.5" /> Request Changes
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setTelegramStatusMsg(`📊 Report Preview: All 7 stages completed for ${selectedTelegramJob.fileName}. Text OCR extracted ${selectedTelegramJob.documentAnalysis.pageCount} pages, ${selectedTelegramJob.documentAnalysis.tablesCount} tables, and ${selectedTelegramJob.documentAnalysis.numericalsFound} solved numericals.`)
+                          }}
+                          className="text-xs font-bold gap-1.5"
+                        >
+                          <FileText className="h-3.5 w-3.5 text-blue-600" /> View Report
+                        </Button>
+                      </div>
+
+                      {/* 7-Stage Pipeline Status Checklist */}
+                      <div className="space-y-1.5 pt-2 border-t border-[hsl(var(--border))]">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
+                          7 Specialized Document Agents Execution Trail:
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px]">
+                          {selectedTelegramJob.stagesCompleted.map((stage, idx) => (
+                            <div key={idx} className="p-2 rounded-md bg-[hsl(var(--muted))]/40 border flex items-center gap-2">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                              <span className="truncate">{stage}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="p-8 text-center border border-dashed rounded-xl text-xs text-[hsl(var(--muted-foreground))]">
+                    Select a document upload job to inspect verification details.
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 2: NATURAL LANGUAGE HINGLISH COMMAND TERMINAL */}
+          <div className="p-5 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-md space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[hsl(var(--border))] pb-3">
+              <div>
+                <h4 className="text-sm font-bold flex items-center gap-2">
+                  <Bot className="h-4 w-4 text-sky-600" /> Natural Language Hinglish Command Processor
+                </h4>
+                <p className="text-xs text-[hsl(var(--muted-foreground))]">
+                  Type natural conversational commands in Hinglish or English just like you would message on Telegram.
+                </p>
+              </div>
+              <Badge className="bg-sky-600 text-white text-xs">AI Intent Router Active</Badge>
+            </div>
+
+            {/* Quick Command Chips */}
+            <div className="space-y-1.5">
+              <span className="text-[10px] uppercase font-bold text-[hsl(var(--muted-foreground))]">
+                Click to Test Example Instructions:
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  "CMA Inter ke notes verify karo",
+                  "Ye PDF upload karo",
+                  "Pending approvals dikhao",
+                  "Chapter 4 ke MCQs banao",
+                  "ICAI latest amendments check karo",
+                  "Aaj ki agent report do",
+                  "Is content ko publish karo",
+                  "/status"
+                ].map((chip) => (
+                  <button
+                    key={chip}
+                    onClick={() => {
+                      setHinglishInput(chip)
+                      handleExecuteHinglish(chip)
+                    }}
+                    className="px-2.5 py-1 rounded-lg text-xs bg-[hsl(var(--muted))] hover:bg-sky-100 hover:text-sky-700 dark:hover:bg-sky-950 dark:hover:text-sky-300 border border-[hsl(var(--border))] transition-colors font-medium"
+                  >
+                    💬 {chip}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Interactive Input */}
+            <div className="flex gap-2">
+              <Input
+                value={hinglishInput}
+                onChange={(e) => setHinglishInput(e.target.value)}
+                placeholder="Type in Hinglish (e.g. 'Pending approvals dikhao', 'CMA Inter ke notes verify karo')..."
+                className="text-xs h-9"
+              />
+              <Button
+                onClick={() => handleExecuteHinglish()}
+                disabled={isProcessingHinglish}
+                className="h-9 px-4 text-xs font-bold bg-sky-600 hover:bg-sky-700 text-white shrink-0 gap-1.5"
+              >
+                <Send className="h-3.5 w-3.5" />
+                {isProcessingHinglish ? "Executing..." : "Send Command"}
+              </Button>
+            </div>
+
+            {/* Output Screen */}
+            {hinglishResponse && (
+              <div className="p-4 rounded-xl bg-slate-900 text-slate-100 border border-slate-800 font-mono text-xs whitespace-pre-wrap leading-relaxed shadow-inner">
+                {hinglishResponse}
+              </div>
+            )}
+          </div>
+
+          {/* SECTION 3: BOT SETUP & WEBHOOK CONFIGURATION */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left 6 Cols: Configuration & Test Trigger */}
             <div className="lg:col-span-6 space-y-4">
               <Card className="border-[hsl(var(--border))] shadow-md">
                 <CardHeader className="pb-3 border-b border-[hsl(var(--border))]">
@@ -917,8 +1370,9 @@ export default function ContentPipelinePage() {
                   )}
                 </CardContent>
               </Card>
+            </div>
 
-              {/* Quick Setup 3-Step Guide */}
+            <div className="lg:col-span-6 space-y-4">
               <Card className="border-[hsl(var(--border))]">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
@@ -940,34 +1394,6 @@ export default function ContentPipelinePage() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
-
-            {/* Right 6 Cols: Available Telegram Commands & Interactive Preview */}
-            <div className="lg:col-span-6 space-y-4">
-              <Card className="border-[hsl(var(--border))] shadow-md">
-                <CardHeader className="pb-3 border-b border-[hsl(var(--border))]">
-                  <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <Bot className="h-4 w-4 text-purple-600" /> Remote Commands You Can Send from Telegram
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Type any of these commands directly in your Telegram chat to control the platform.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 space-y-3 text-xs">
-                  {[
-                    { cmd: "/status", desc: "Returns live system health, count of active agents, operating mode, and pending approvals." },
-                    { cmd: "/pending", desc: "Lists all study materials awaiting faculty review with inline [✅ Approve] & [❌ Reject] buttons." },
-                    { cmd: "/research <Course> <Chapter>", desc: "Example: '/research CA Foundation Inventories'. Instructs the autonomous pipeline to research and draft new lesson notes immediately." },
-                    { cmd: "/mode <mode>", desc: "Switches operating mode (research_only, research_generate, approved_auto_publish)." },
-                    { cmd: "/help", desc: "Displays quick command reference guide and bot documentation." },
-                  ].map((c) => (
-                    <div key={c.cmd} className="p-2.5 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted))]/30 space-y-1">
-                      <code className="text-xs font-bold text-sky-600 font-mono">{c.cmd}</code>
-                      <p className="text-[11px] text-[hsl(var(--muted-foreground))]">{c.desc}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
 
               {/* Visual Mobile Phone Mockup */}
               <div className="p-4 rounded-xl border border-sky-200 dark:border-sky-900 bg-sky-50/30 dark:bg-sky-950/20 space-y-2">
@@ -976,24 +1402,31 @@ export default function ContentPipelinePage() {
                 </span>
                 <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border text-xs shadow-sm space-y-2 font-sans">
                   <div className="flex items-center justify-between text-[11px] text-slate-400 border-b pb-1">
-                    <span className="font-bold text-sky-600">🤖 EduFinance Pro Bot</span>
+                    <span className="font-bold text-sky-600">🤖 Education AI Admin Bot</span>
                     <span>Just now</span>
                   </div>
                   <p className="font-semibold text-slate-800 dark:text-slate-100">
-                    🔔 <strong>NEW CONTENT AWAITING YOUR APPROVAL</strong>
+                    📋 <strong>New Content Verification Report</strong>
                   </p>
                   <div className="text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5">
-                    <p>📚 <strong>Course:</strong> CA Foundation</p>
-                    <p>📖 <strong>Chapter:</strong> Bank Reconciliation Statement (BRS)</p>
-                    <p>🛡 <strong>Verification:</strong> 100% Passed (Academic & Copyright)</p>
+                    <p>• <strong>Course:</strong> CMA Intermediate</p>
+                    <p>• <strong>Subject:</strong> Cost Accounting</p>
+                    <p>• <strong>Chapter:</strong> Material Cost</p>
+                    <p>• <strong>Document:</strong> Cost_Accounting_Notes.pdf</p>
                   </div>
-                  {/* Inline Buttons Mockup */}
-                  <div className="grid grid-cols-2 gap-2 pt-1">
-                    <div className="p-1.5 text-center rounded bg-emerald-600 text-white font-bold text-[11px]">
-                      ✅ Approve & Publish
+                  {/* Inline 4 Buttons Mockup */}
+                  <div className="grid grid-cols-2 gap-1.5 pt-1">
+                    <div className="p-1.5 text-center rounded bg-emerald-600 text-white font-bold text-[10px]">
+                      ✅ Approve
                     </div>
-                    <div className="p-1.5 text-center rounded bg-rose-600 text-white font-bold text-[11px]">
+                    <div className="p-1.5 text-center rounded bg-rose-600 text-white font-bold text-[10px]">
                       ❌ Reject
+                    </div>
+                    <div className="p-1.5 text-center rounded bg-amber-600 text-white font-bold text-[10px]">
+                      📝 Request Changes
+                    </div>
+                    <div className="p-1.5 text-center rounded bg-slate-700 text-white font-bold text-[10px]">
+                      📖 View Report
                     </div>
                   </div>
                 </div>

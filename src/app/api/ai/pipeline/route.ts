@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
           title: newItem.title,
           course: newItem.course,
           chapter: newItem.chapter
-        }).catch((e) => console.log("Telegram prompt dispatch notice:", e))
+        }).catch((e: unknown) => console.log("Telegram prompt dispatch notice:", e))
       }
 
       return NextResponse.json({ success: true, item: newItem })
