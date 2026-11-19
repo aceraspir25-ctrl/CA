@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Sparkles,
   Bot,
@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   Layers,
   Play,
+  Pause,
   RotateCcw,
   BookOpen,
   Globe,
@@ -25,7 +26,9 @@ import {
   Eye,
   Check,
   X,
-  Share2
+  Share2,
+  History,
+  Activity
 } from "lucide-react"
 import {
   INITIAL_REGISTERED_SOURCES,
@@ -48,12 +51,57 @@ export default function ContentPipelinePage() {
   const [mode, setMode] = useState<OperatingMode>("research_generate")
   const [activeTab, setActiveTab] = useState<string>("research_now")
   const [selectedItem, setSelectedItem] = useState<PipelineItem | null>(pipelineItems[0])
-
-  // Research Form State
   const [selectedCourse, setSelectedCourse] = useState("CA Foundation")
   const [selectedChapterInput, setSelectedChapterInput] = useState("Accounting Cycle & Trial Balance")
   const [isResearching, setIsResearching] = useState(false)
   const [researchSuccessMsg, setResearchSuccessMsg] = useState("")
+
+  // 24x7 Autonomous Engine State
+  const [is24x7Active, setIs24x7Active] = useState(true)
+  const [countdownSeconds, setCountdownSeconds] = useState(45)
+  const [autonomousCyclesCount, setAutonomousCyclesCount] = useState(38)
+
+  // 24x7 Background Cycle Interval
+  useEffect(() => {
+    if (!is24x7Active) return
+    const timer = setInterval(() => {
+      setCountdownSeconds((prev) => {
+        if (prev <= 1) {
+          // Autonomous Cycle Triggers
+          setAutonomousCyclesCount((c) => c + 1)
+          return 45
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [is24x7Active])
+
+  const handleRollback = (id: string) => {
+    setPipelineItems((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              stage: "published",
+              reviewerNotes: "Rolled back to verified previous stable release (v1.0).",
+              lastUpdated: "Rolled back just now",
+            }
+          : item
+      )
+    )
+    if (selectedItem?.id === id) {
+      setSelectedItem((prev) =>
+        prev
+          ? {
+              ...prev,
+              reviewerNotes: "Rolled back to verified previous stable release (v1.0).",
+              lastUpdated: "Rolled back just now",
+            }
+          : null
+      )
+    }
+  }
 
   const handleModeChange = async (newMode: OperatingMode) => {
     setMode(newMode)
@@ -157,30 +205,56 @@ export default function ContentPipelinePage() {
           </p>
         </div>
 
-        {/* Operating Mode Selector Card */}
-        <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 space-y-1.5 shrink-0">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">
-            Agent Operating Mode
-          </span>
-          <div className="flex items-center gap-1">
-            {[
-              { id: "research_only", label: "Mode 1: Research Only", desc: "Safe (Reports only)" },
-              { id: "research_generate", label: "Mode 2: Generate", desc: "Approval Queue" },
-              { id: "approved_auto_publish", label: "Mode 3: Auto-Pub", desc: "Pre-approved" },
-            ].map((m) => (
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {/* 24x7 Engine Status */}
+          <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 space-y-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1">
+                <Activity className="h-3.5 w-3.5 text-emerald-400 animate-pulse" />
+                24x7 Continuous Agent
+              </span>
               <button
-                key={m.id}
-                onClick={() => handleModeChange(m.id as OperatingMode)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
-                  mode === m.id
-                    ? "bg-emerald-600 text-white font-bold shadow-xs"
-                    : "bg-white/10 text-white/70 hover:bg-white/20"
-                }`}
-                title={m.desc}
+                onClick={() => setIs24x7Active((prev) => !prev)}
+                className="text-[10px] underline text-indigo-200 hover:text-white"
               >
-                {m.label}
+                {is24x7Active ? "Pause" : "Resume"}
               </button>
-            ))}
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <Badge className={is24x7Active ? "bg-emerald-600 text-white" : "bg-slate-500 text-white"}>
+                {is24x7Active ? "Active & Scanning" : "Paused"}
+              </Badge>
+              <span className="text-[11px] text-indigo-200">
+                Next cycle: <strong>{countdownSeconds}s</strong>
+              </span>
+            </div>
+          </div>
+
+          {/* Operating Mode Selector Card */}
+          <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 space-y-1.5 shrink-0">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">
+              Agent Operating Mode
+            </span>
+            <div className="flex items-center gap-1">
+              {[
+                { id: "research_only", label: "Mode 1: Research Only", desc: "Safe (Reports only)" },
+                { id: "research_generate", label: "Mode 2: Generate", desc: "Approval Queue" },
+                { id: "approved_auto_publish", label: "Mode 3: Auto-Pub", desc: "Pre-approved" },
+              ].map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => handleModeChange(m.id as OperatingMode)}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
+                    mode === m.id
+                      ? "bg-emerald-600 text-white font-bold shadow-xs"
+                      : "bg-white/10 text-white/70 hover:bg-white/20"
+                  }`}
+                  title={m.desc}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -546,11 +620,22 @@ export default function ContentPipelinePage() {
                       Course: <strong>{pub.course}</strong> • Mapped: <strong>{pub.chapter}</strong>
                     </p>
                   </div>
-                  <Button asChild size="sm" variant="outline" className="text-xs gap-1 shrink-0">
-                    <a href="/courses">
-                      View in Courses <ChevronRight className="h-3 w-3" />
-                    </a>
-                  </Button>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleRollback(pub.id)}
+                      className="text-xs gap-1 text-amber-600 border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/30"
+                      title="Rollback to previous stable release (v1.0)"
+                    >
+                      <RotateCcw className="h-3 w-3" /> Rollback
+                    </Button>
+                    <Button asChild size="sm" variant="outline" className="text-xs gap-1">
+                      <a href="/courses">
+                        View in Courses <ChevronRight className="h-3 w-3" />
+                      </a>
+                    </Button>
+                  </div>
                 </div>
               ))}
             </CardContent>
@@ -660,3 +745,4 @@ export default function ContentPipelinePage() {
     </div>
   )
 }
+

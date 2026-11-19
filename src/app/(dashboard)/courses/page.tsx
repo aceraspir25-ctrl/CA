@@ -386,11 +386,11 @@ function CoursesContent() {
                     Level 0 to Level 100 Universal Progression Path
                   </CardTitle>
                   <CardDescription>
-                    Your current competence: <strong>Level {studentLevel}</strong>. Pass quizzes and complete practical lab tasks to unlock higher milestones.
+                    All 100 levels and courses are 100% unlocked for open exploration and self-paced mastery. (सभी लेवल्स और कोर्सेज पूरी तरह खुले हैं)
                   </CardDescription>
                 </div>
                 <Badge variant="success" className="text-sm">
-                  Current: Level {studentLevel} / 100
+                  100% Unlocked (Open Access)
                 </Badge>
               </div>
             </CardHeader>

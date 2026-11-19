@@ -16,7 +16,6 @@ import {
   ArrowRight,
   BookMarked,
   Trophy,
-  Lock,
   Star,
   Calendar,
   Activity,
@@ -160,10 +159,10 @@ const achievements: Achievement[] = [
   { name: "First Lesson", emoji: "📖", unlocked: true },
   { name: "7-Day Streak", emoji: "🔥", unlocked: true },
   { name: "Quiz Master", emoji: "🧠", unlocked: true },
-  { name: "Chapter Champion", emoji: "🏆", unlocked: false },
-  { name: "Subject Expert", emoji: "🎓", unlocked: false },
-  { name: "Month Warrior", emoji: "⚔️", unlocked: false },
-  { name: "Top Scorer", emoji: "⭐", unlocked: false },
+  { name: "Chapter Champion", emoji: "🏆", unlocked: true },
+  { name: "Subject Expert", emoji: "🎓", unlocked: true },
+  { name: "Month Warrior", emoji: "⚔️", unlocked: true },
+  { name: "Top Scorer", emoji: "⭐", unlocked: true },
 ]
 
 function getGreeting(hour: number): string {
@@ -449,30 +448,27 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* F. Achievements */}
+      {/* F. Achievements - 100% Unlocked for all students */}
       <div>
-        <h2 className="text-lg font-semibold mb-3 text-[hsl(var(--foreground))]">Achievements</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-[hsl(var(--foreground))]">Achievements & Badges</h2>
+          <span className="text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+            All 8 Unlocked & Available
+          </span>
+        </div>
         <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
           {achievements.map((badge, i) => (
             <div
               key={i}
-              className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${
-                badge.unlocked
-                  ? "border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:shadow-md"
-                  : "border-dashed border-[hsl(var(--border))] bg-[hsl(var(--muted))] opacity-50"
-              }`}
+              className="flex flex-col items-center gap-2 p-3 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:shadow-md transition-all"
             >
               <span className="text-2xl" role="img" aria-label={badge.name}>
-                {badge.unlocked ? badge.emoji : "🔒"}
+                {badge.emoji}
               </span>
-              <span className="text-[10px] text-center font-medium text-[hsl(var(--muted-foreground))] leading-tight">
+              <span className="text-[10px] text-center font-medium text-[hsl(var(--foreground))] leading-tight">
                 {badge.name}
               </span>
-              {badge.unlocked ? (
-                <CheckCircle2 className="h-3 w-3 text-green-500" />
-              ) : (
-                <Lock className="h-3 w-3 text-[hsl(var(--muted-foreground))]" />
-              )}
+              <CheckCircle2 className="h-3 w-3 text-green-500" />
             </div>
           ))}
         </div>
