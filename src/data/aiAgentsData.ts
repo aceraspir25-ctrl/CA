@@ -182,6 +182,29 @@ export const INITIAL_AI_AGENTS: AIAgent[] = [
     logs: [
       { id: "log-14", timestamp: "3 hours ago", level: "SUCCESS", message: "Drafted teaching outline for CA Inter Costing: Standard Costing Variance Formulas." }
     ]
+  },
+  {
+    id: "agent-11",
+    name: "Multi-Platform Research & Knowledge Harvester",
+    code: "MPA-11",
+    role: "Cross-Platform Surveillance, Self-Training & Synthesis",
+    description: "Surveys 7 approved educational platforms (BYJU'S, PW, Aakash, EduRev, StudyX, Toppr, Vedantu) + official bodies under strict copyright boundaries. Discovers learning gaps, trains internal pedagogical models, and compiles original study dossiers directly into the student library.",
+    institutions: ["BYJU'S", "PW", "Aakash", "EduRev", "StudyX", "Toppr", "Vedantu", "ICAI", "MCA", "CBDT"],
+    status: "running",
+    lastRunTime: "Just now",
+    tasksCompleted: 980,
+    successRate: 99.9,
+    permissions: [
+      "Permitted Multi-Platform Research (No Paywall Bypass)",
+      "Strict Copyright Rights & Permissions Verification",
+      "Self-Training Heuristic Weight Updates",
+      "Non-Destructive Dossier Append to Library"
+    ],
+    logs: [
+      { id: "log-15", timestamp: "Just now", level: "SUCCESS", message: "Completed self-training cycle 22: Synthesized Corporate Law CSR Dossier with 99.9% originality." },
+      { id: "log-16", timestamp: "12 mins ago", level: "VERIFIED", message: "Cross-platform gap analysis completed: Verified BRS Adjusted Cash Book mechanics across PW, BYJU'S, and ICAI BoS." },
+      { id: "log-17", timestamp: "45 mins ago", level: "INFO", message: "Rights Registry updated: Categorized 7 educational platform sources as REFERENCE_ONLY." }
+    ]
   }
 ]
 

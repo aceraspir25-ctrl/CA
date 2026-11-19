@@ -75,7 +75,7 @@ export default function AIAgentsPage() {
               <Cpu className="h-6 w-6 text-indigo-300" />
             </div>
             <h1 className="text-2xl font-bold">Academic AI Agent Orchestration System</h1>
-            <Badge className="bg-emerald-500 text-white">10 Autonomous Agents</Badge>
+            <Badge className="bg-emerald-500 text-white">11 Autonomous Agents</Badge>
           </div>
           <p className="text-indigo-200 text-sm max-w-2xl">
             Specialized autonomous academic agents operating under strict non-destructive permissions. Handling literature surveillance, question synthesis, peer review, and syllabus monitoring.

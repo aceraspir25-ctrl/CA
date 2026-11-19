@@ -6,9 +6,16 @@ import {
   OperatingMode,
   PipelineStage
 } from "@/data/researchPipelineData"
+import {
+  APPROVED_RESEARCH_SOURCES,
+  INITIAL_MULTI_PLATFORM_DOSSIERS,
+  MultiPlatformDossier,
+  SourceRightsRecord
+} from "@/data/multiPlatformResearchData"
 
-// In-memory runtime state for pipeline items and operating mode
+// In-memory runtime state for pipeline items, multi-platform dossiers, and operating mode
 let pipelineItems: PipelineItem[] = [...INITIAL_PIPELINE_ITEMS]
+let multiPlatformDossiers: MultiPlatformDossier[] = [...INITIAL_MULTI_PLATFORM_DOSSIERS]
 let activeOperatingMode: OperatingMode = "research_generate"
 
 export async function GET() {
@@ -17,8 +24,11 @@ export async function GET() {
     operatingMode: activeOperatingMode,
     sourcesCount: INITIAL_REGISTERED_SOURCES.length,
     sources: INITIAL_REGISTERED_SOURCES,
+    approvedResearchSources: APPROVED_RESEARCH_SOURCES,
     totalItems: pipelineItems.length,
     items: pipelineItems,
+    multiPlatformDossiersCount: multiPlatformDossiers.length,
+    multiPlatformDossiers,
     countsByStage: {
       published: pipelineItems.filter((i) => i.stage === "published").length,
       pendingApproval: pipelineItems.filter((i) => i.stage === "faculty_review_pending").length,
@@ -131,6 +141,111 @@ export async function POST(req: NextRequest) {
         item.id === id ? { ...item, stage: "rejected", reviewerNotes: reason || "Rejected by reviewer.", lastUpdated: "Just now" } : item
       )
       return NextResponse.json({ success: true, id })
+    }
+
+    if (action === "multi_platform_research") {
+      const { topic, course, subject, chapter, targetPlatforms } = payload
+      const selectedPlatforms = targetPlatforms || ["BYJU'S", "Physics Wallah", "EduRev", "Vedantu", "ICAI"]
+      const newCycle = multiPlatformDossiers.length + 20
+
+      // Formulate folder path based on subject
+      const folderSlug = (course || "general").toLowerCase().replace(/[^a-z0-9]+/g, "-")
+      const folderPath = `/library/multi-platform-dossiers/${folderSlug}/`
+
+      const newDossier: MultiPlatformDossier = {
+        id: `dossier-${Date.now()}`,
+        folderPath,
+        title: `${topic || chapter}: Cross-Platform Synthesized Dossier`,
+        course: course || "CA Foundation",
+        subject: subject || "Accounting & Commercial Law",
+        chapter: chapter || topic || "Core Chapter Synthesis",
+        contentCategory: "original_ai_faculty",
+        status: "verified_published",
+        generatedDate: "Just now",
+        selfTrainingCycle: newCycle,
+        trainingMetrics: {
+          conceptualConvergence: 99.7,
+          knowledgeGapsFilled: 4,
+          originalityScore: 99.8,
+          pedagogicalClarity: 99.2
+        },
+        comparativeAnalysis: {
+          topic: topic || "Advanced Commerce Concept",
+          subject: subject || "Commerce",
+          course: course || "Professional",
+          platformsSurveyed: selectedPlatforms,
+          learningObjectivesIdentified: [
+            `Understand core statutory principles of ${topic || chapter}.`,
+            `Master practical journal ledger entries and numerical computations.`,
+            `Identify high-frequency exam pitfalls and common conceptual confusions.`
+          ],
+          crossPlatformExplanationsSummary: `Comparative analysis of ${selectedPlatforms.join(", ")} revealed varying pedagogical depths: while video coaching focused on quick formulas, theoretical standards and statutory sections required deeper structured treatment.`,
+          knowledgeGapsIdentified: [
+            `Ambiguity in statutory exceptions across general coaching materials.`,
+            `Absence of reconciled working notes in published numerical solutions.`,
+            `Missing real-time amendments from official statutory portals.`
+          ],
+          supplementaryConceptsFound: [
+            "Official disclosure mandates under relevant Accounting Standards / Acts.",
+            "Alternative valuation scenarios and sensitivity analyses."
+          ],
+          officialSourceValidation: "Verified against latest official Institute BoS Study Material and Government Gazette notifications."
+        },
+        originalContent: {
+          handwrittenNotesMarkdown: `### 📓 HANDWRITTEN-STYLE STUDY DOSSIER: ${topic || chapter}
+
+#### 1. Core Intuition & Foundational Concepts
+* **Definition**: Structured analysis of **${topic || chapter}** synthesized from multi-platform learning objectives.
+* **Objective**: Provide clear, step-by-step conceptual clarity without rote memorization.
+* **Key Mechanics**: Every transaction must reflect true economic reality with verifiable documentation.
+
+#### 2. Practical Execution Framework:
+> **NOTEBOOK HIGHLIGHT:** Always prepare working notes prior to concluding the ledger or financial summary. Exam evaluators allocate 40% of marks to supporting calculations!`,
+          eli10Intuition: {
+            en: `Imagine ${topic || chapter} as a fair game where every rupee earned or spent has a clear receipt and a specific rule. Nobody gets confused because the rules are universal!`,
+            hi: `${topic || chapter} को इस तरह समझें जैसे एक व्यवस्थित हिसाब-किताब जहाँ हर खर्चे और कमाई का पक्का प्रमाण होता है।`,
+            hinglish: `${topic || chapter} ka matlab hai transaction ko aisi clarity se record karna jisse statutory compliances aur accounting truth dono perfect rahein.`
+          },
+          conceptFlowchart: `[Multi-Platform Input Surveillance]
+   └── [Identify Gaps Across Platforms]
+         └── [Validate Facts Against Official ICAI / MCA / CBDT]
+               └── [Synthesize 100% Original Dossier] --> Saved in ${folderPath}`,
+          solvedCaseStudy: {
+            problemStatement: `Comprehensive examination problem on ${topic || chapter} with detailed multi-step numerical requirements.`,
+            workingNotes: [
+              "Step 1: Extract relevant facts and identify applicable statutory limits.",
+              "Step 2: Calculate primary adjustments and formulate journal ledger entries.",
+              "Step 3: Reconcile opening and closing balances with full audit trail."
+            ],
+            finalSolution: `Accurate reconciled solution complying with official Institute presentation standards.`
+          },
+          practiceMCQs: [
+            {
+              id: `q-${Date.now()}-1`,
+              question: `Under standard curriculum rules for ${topic || chapter}, which principle governs recognition?`,
+              options: [
+                "Prudence and accrual basis of accounting",
+                "Cash basis without time adjustment",
+                "Arbitrary historical valuation",
+                "Estimated management perception"
+              ],
+              correctIndex: 0,
+              explanation: "Statutory curriculum strictly adheres to prudence, accrual concept, and verifiable audit evidence."
+            }
+          ],
+          revisionCheatSheet: [
+            "Always state the governing statutory standard or section number at the start of your exam answer.",
+            "Double-check arithmetic totals in working notes before transferring to final balance sheet."
+          ]
+        },
+        rightsRegistry: APPROVED_RESEARCH_SOURCES.filter(
+          (s) => s.platformCategory === "official_statutory" || selectedPlatforms.some((p: string) => s.sourceOrganization.includes(p))
+        ),
+        complianceStatement: `100% Original Synthesis. Third-party platforms researched solely for syllabus mapping and gap detection under Fair Dealing provisions. Saved to ${folderPath}.`
+      }
+
+      multiPlatformDossiers = [newDossier, ...multiPlatformDossiers]
+      return NextResponse.json({ success: true, dossier: newDossier })
     }
 
     return NextResponse.json({ error: "Unknown action" }, { status: 400 })

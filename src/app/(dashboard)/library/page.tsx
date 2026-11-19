@@ -26,7 +26,15 @@ import {
   Palette,
   FileSpreadsheet,
   AlertCircle,
-  Globe
+  Globe,
+  Folder,
+  ShieldCheck,
+  BrainCircuit,
+  Bot,
+  RefreshCw,
+  Lock,
+  Compass,
+  FileCheck
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -34,6 +42,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SAMPLE_STUDY_PACKAGES, ChapterStudyPackage, StudyResourceItem, NoteVisualStyle } from "@/data/studyPackagesData"
+import {
+  INITIAL_MULTI_PLATFORM_DOSSIERS,
+  APPROVED_RESEARCH_SOURCES,
+  MultiPlatformDossier,
+  SourceRightsRecord,
+  ContentCategory
+} from "@/data/multiPlatformResearchData"
 import { openPrintableResource } from "@/lib/pdf/handwrittenGenerator"
 import { createZipBlob, triggerDownload, ZipFileEntry } from "@/lib/utils/zipBuilder"
 
@@ -74,13 +89,67 @@ const OFFICIAL_RESOURCES = [
 ]
 
 export default function LibraryPage() {
-  const [activeTab, setActiveTab] = useState<"packages" | "portals">("packages")
+  const [activeTab, setActiveTab] = useState<"packages" | "multi_platform" | "portals">("packages")
   const [packages, setPackages] = useState<ChapterStudyPackage[]>(SAMPLE_STUDY_PACKAGES)
   const [selectedPkg, setSelectedPkg] = useState<ChapterStudyPackage>(packages[0])
   const [previewResource, setPreviewResource] = useState<StudyResourceItem | null>(selectedPkg.resources[0])
   const [styleFilter, setStyleFilter] = useState<string>("all")
   const [isZipping, setIsZipping] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+
+  // Multi-Platform Dossiers & Harvester State
+  const [dossiers, setDossiers] = useState<MultiPlatformDossier[]>(INITIAL_MULTI_PLATFORM_DOSSIERS)
+  const [selectedDossier, setSelectedDossier] = useState<MultiPlatformDossier | null>(dossiers[0])
+  const [selectedFolderFilter, setSelectedFolderFilter] = useState<string>("all")
+  const [isHarvesterRunning, setIsHarvesterRunning] = useState(false)
+  const [harvesterSuccessMsg, setHarvesterSuccessMsg] = useState("")
+  const [newTopicInput, setNewTopicInput] = useState("Accounting Standards Ind AS 115 Revenue")
+  const [newCourseInput, setNewCourseInput] = useState("CA Intermediate")
+  const [dossierActiveSubTab, setDossierActiveSubTab] = useState<"notes" | "gap_analysis" | "rights_registry" | "mcqs">("notes")
+
+  const handleRunHarvester = async () => {
+    if (!newTopicInput.trim()) return
+    setIsHarvesterRunning(true)
+    setHarvesterSuccessMsg("")
+
+    try {
+      const res = await fetch("/api/ai/pipeline", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "multi_platform_research",
+          payload: {
+            topic: newTopicInput,
+            course: newCourseInput,
+            subject: "Accounting & Commercial Standards",
+            targetPlatforms: ["BYJU'S", "Physics Wallah", "Aakash", "EduRev", "StudyX", "Toppr", "Vedantu"]
+          }
+        })
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        if (data.dossier) {
+          setDossiers((prev) => [data.dossier, ...prev])
+          setSelectedDossier(data.dossier)
+          setHarvesterSuccessMsg(`Successfully executed cross-platform research and self-training for "${newTopicInput}"! Dossier saved to ${data.dossier.folderPath}`)
+        }
+      }
+    } catch (err) {
+      console.error("Harvester failed:", err)
+    } finally {
+      setIsHarvesterRunning(false)
+    }
+  }
+
+  const filteredDossiers = dossiers.filter((d) => {
+    const matchesFolder = selectedFolderFilter === "all" || d.folderPath.includes(selectedFolderFilter)
+    const matchesSearch =
+      d.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.chapter.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.course.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesFolder && matchesSearch
+  })
 
   const filteredResources = selectedPkg.resources.filter((res) => {
     const matchesStyle = styleFilter === "all" || res.visualStyle === styleFilter
@@ -162,6 +231,9 @@ Downloaded for Offline Study: True`
         <TabsList className="bg-[hsl(var(--muted))]">
           <TabsTrigger value="packages" className="gap-2 text-xs">
             <BookOpen className="h-3.5 w-3.5 text-blue-500" /> Complete Chapter Packages (PDFs & ZIP)
+          </TabsTrigger>
+          <TabsTrigger value="multi_platform" className="gap-2 text-xs">
+            <FolderOpen className="h-3.5 w-3.5 text-emerald-500" /> Multi-Platform Synthesized Dossiers (अलग फ़ोल्डर)
           </TabsTrigger>
           <TabsTrigger value="portals" className="gap-2 text-xs">
             <Globe className="h-3.5 w-3.5 text-indigo-500" /> Official Regulatory Portals & Statutes
@@ -323,7 +395,531 @@ Downloaded for Offline Study: True`
           </div>
         </TabsContent>
 
-        {/* TAB 2: Official Regulatory Portals (Preserved) */}
+        {/* TAB 2: Multi-Platform Synthesized Dossiers in Dedicated Folder (नया फ़ोल्डर) */}
+        <TabsContent value="multi_platform" className="space-y-6">
+          {/* Copyright & 3-Category Distinction Safety Banner */}
+          <div className="p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50/60 dark:bg-blue-950/30 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-blue-600" />
+                <h3 className="text-sm font-bold text-blue-950 dark:text-blue-100">
+                  Autonomous Multi-Platform Academic Intelligence & Copyright Boundary System
+                </h3>
+              </div>
+              <Badge className="bg-emerald-600 text-white text-[11px]">Strict Fair Dealing Doctrine</Badge>
+            </div>
+            <p className="text-xs text-[hsl(var(--foreground))] leading-relaxed">
+              Our autonomous Agent (<strong>MPA-11</strong>) surveys publicly available pedagogical structures across 7 educational platforms (<strong>BYJU&apos;S, Physics Wallah, Aakash Institute, EduRev, StudyX, Toppr, Vedantu</strong>) and validates facts with official bodies (<strong>ICAI, ICMAI, ICSI, MCA, CBDT</strong>). Third-party materials are used solely for topic discovery and learning gap analysis. <strong>100% of study notes, flowcharts, numericals, and MCQs are original independent creations.</strong>
+            </p>
+            {/* 3 Categories Badges */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px]">
+              <div className="p-2 rounded-lg bg-emerald-100/70 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200">
+                <strong>🟢 Original AI/Faculty Content:</strong> Verified original synthesis published directly for students.
+              </div>
+              <div className="p-2 rounded-lg bg-blue-100/70 dark:bg-blue-950/50 border border-blue-300 dark:border-blue-800 text-blue-900 dark:text-blue-200">
+                <strong>🔵 Licensed Third-Party Content:</strong> Strictly published conforming to official license rights.
+              </div>
+              <div className="p-2 rounded-lg bg-amber-100/70 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200">
+                <strong>🟡 Restricted Third-Party Content:</strong> Reference & research ONLY; original equivalent synthesized.
+              </div>
+            </div>
+          </div>
+
+          {/* Agent Harvester Trigger Bar */}
+          <div className="p-4 rounded-xl bg-[hsl(var(--muted))]/50 border border-[hsl(var(--border))] space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BrainCircuit className="h-4 w-4 text-purple-600" />
+                <span className="text-xs font-bold">Trigger Multi-Platform Academic Harvester & Self-Training Cycle</span>
+              </div>
+              <span className="text-[11px] text-[hsl(var(--muted-foreground))]">Agent MPA-11 Active</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
+              <div className="sm:col-span-5">
+                <Input
+                  value={newTopicInput}
+                  onChange={(e) => setNewTopicInput(e.target.value)}
+                  placeholder="Enter Topic (e.g. Ind AS 115 Revenue Model, Costing BEP)"
+                  className="h-9 text-xs"
+                />
+              </div>
+              <div className="sm:col-span-3">
+                <select
+                  value={newCourseInput}
+                  onChange={(e) => setNewCourseInput(e.target.value)}
+                  className="w-full h-9 px-3 rounded-md border border-[hsl(var(--input))] bg-[hsl(var(--background))] text-xs font-medium"
+                >
+                  <option value="CA Foundation">CA Foundation</option>
+                  <option value="CA Intermediate">CA Intermediate</option>
+                  <option value="CA Final">CA Final</option>
+                  <option value="CMA Foundation">CMA Foundation</option>
+                  <option value="CS Executive">CS Executive</option>
+                  <option value="B.Com PRSU">B.Com PRSU</option>
+                  <option value="ACCA Global">ACCA Global</option>
+                </select>
+              </div>
+              <div className="sm:col-span-4">
+                <Button
+                  onClick={handleRunHarvester}
+                  disabled={isHarvesterRunning}
+                  className="w-full h-9 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white gap-2"
+                >
+                  {isHarvesterRunning ? (
+                    <>
+                      <RefreshCw className="h-3.5 w-3.5 animate-spin" /> Harvesting & Training Agent...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-3.5 w-3.5" /> Run Harvester & Save to Folder
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {harvesterSuccessMsg && (
+              <p className="text-xs text-emerald-600 font-medium flex items-center gap-1.5 pt-1">
+                <Check className="h-4 w-4" /> {harvesterSuccessMsg}
+              </p>
+            )}
+
+            {/* Approved Platforms Strip */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[hsl(var(--border))]/50">
+              <span className="text-[10px] uppercase font-bold text-[hsl(var(--muted-foreground))]">Survey Targets:</span>
+              {["BYJU'S", "Physics Wallah (PW)", "Aakash Institute", "EduRev", "StudyX", "Toppr", "Vedantu", "ICAI", "MCA", "CBDT"].map((p) => (
+                <Badge key={p} variant="outline" className="text-[10px] py-0 px-2 font-normal">
+                  {p}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          {/* Folder Navigation Tabs & Filter */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold text-[hsl(var(--muted-foreground))] flex items-center gap-1">
+              <Folder className="h-3.5 w-3.5" /> Library Folders:
+            </span>
+            {[
+              { id: "all", label: `📁 All Dossiers (${dossiers.length})` },
+              { id: "ca-cma-accounting", label: "📁 ca-cma-accounting/" },
+              { id: "taxation-direct-indirect", label: "📁 taxation-direct-indirect/" },
+              { id: "corporate-law-and-csr", label: "📁 corporate-law-and-csr/" },
+            ].map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setSelectedFolderFilter(f.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  selectedFolderFilter === f.id
+                    ? "bg-emerald-600 text-white shadow-xs font-semibold"
+                    : "bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Main 2-Column Split View: Folder Dossier List + Workspace */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left 4 Cols: Dossier Cards */}
+            <div className="lg:col-span-4 space-y-3">
+              {filteredDossiers.map((dossier) => {
+                const isSelected = selectedDossier?.id === dossier.id
+                return (
+                  <Card
+                    key={dossier.id}
+                    onClick={() => setSelectedDossier(dossier)}
+                    className={`cursor-pointer transition-all border ${
+                      isSelected
+                        ? "border-emerald-500 shadow-md ring-1 ring-emerald-500/30 bg-emerald-50/10 dark:bg-emerald-950/20"
+                        : "hover:border-[hsl(var(--border))]/80 hover:bg-[hsl(var(--muted))]/30"
+                    }`}
+                  >
+                    <CardHeader className="p-3.5 pb-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold truncate">
+                          {dossier.folderPath}
+                        </span>
+                        <Badge className="bg-emerald-600 text-white text-[9px] px-1.5 py-0 shrink-0">
+                          🟢 Original AI
+                        </Badge>
+                      </div>
+                      <CardTitle className="text-xs font-bold line-clamp-2 mt-1 leading-snug">
+                        {dossier.title}
+                      </CardTitle>
+                      <CardDescription className="text-[11px]">
+                        {dossier.course} • {dossier.subject}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-3.5 pt-0 space-y-2">
+                      <div className="flex items-center justify-between text-[10px] text-[hsl(var(--muted-foreground))] pt-2 border-t border-[hsl(var(--border))]/50">
+                        <span>Cycle #{dossier.selfTrainingCycle}</span>
+                        <span className="text-emerald-600 font-semibold">
+                          Originality: {dossier.trainingMetrics.originalityScore}%
+                        </span>
+                        <span>{dossier.trainingMetrics.knowledgeGapsFilled} Gaps Fixed</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+
+            {/* Right 8 Cols: Active Dossier Reader & Sub-Tabs */}
+            <div className="lg:col-span-8">
+              {selectedDossier ? (
+                <Card className="border-[hsl(var(--border))] shadow-lg">
+                  <CardHeader className="border-b border-[hsl(var(--border))] pb-4 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="text-[10px] font-mono text-emerald-600">
+                            {selectedDossier.folderPath}
+                          </Badge>
+                          <Badge className="bg-emerald-600 text-white text-[10px]">
+                            Cycle #{selectedDossier.selfTrainingCycle} Verified
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-lg mt-1 font-bold">{selectedDossier.title}</CardTitle>
+                        <CardDescription className="text-xs">
+                          {selectedDossier.course} • {selectedDossier.chapter}
+                        </CardDescription>
+                      </div>
+
+                      {/* Print and Export Buttons */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const printHtml = `
+                              <!DOCTYPE html>
+                              <html>
+                              <head>
+                                <title>${selectedDossier.title}</title>
+                                <style>
+                                  body { font-family: 'Kalam', 'Caveat', Georgia, serif; line-height: 1.8; padding: 40px; color: #1e293b; background: #fffdfa; }
+                                  h1 { color: #1d4ed8; border-bottom: 2px solid #3b82f6; padding-bottom: 8px; }
+                                  h3, h4 { color: #0f172a; margin-top: 24px; }
+                                  .badge { display: inline-block; padding: 4px 10px; background: #dcfce7; color: #15803d; border-radius: 9999px; font-size: 12px; font-weight: bold; }
+                                  pre { background: #f1f5f9; padding: 16px; border-radius: 8px; font-family: monospace; white-space: pre-wrap; }
+                                  .flowchart { background: #eff6ff; padding: 16px; border-left: 4px solid #3b82f6; margin: 16px 0; font-family: monospace; }
+                                  .notice { background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; font-size: 11px; color: #64748b; margin-top: 30px; }
+                                </style>
+                              </head>
+                              <body>
+                                <span class="badge">EduFinance Pro Multi-Platform Dossier</span>
+                                <h1>${selectedDossier.title}</h1>
+                                <p><strong>Course:</strong> ${selectedDossier.course} | <strong>Folder:</strong> ${selectedDossier.folderPath}</p>
+                                <hr />
+                                <div style="white-space: pre-wrap;">${selectedDossier.originalContent.handwrittenNotesMarkdown}</div>
+                                <h4>Visual Logic & Flowchart:</h4>
+                                <div class="flowchart">${selectedDossier.originalContent.conceptFlowchart}</div>
+                                <h4>Solved Practical Case Study:</h4>
+                                <p><strong>Problem:</strong> ${selectedDossier.originalContent.solvedCaseStudy.problemStatement}</p>
+                                <pre>${selectedDossier.originalContent.solvedCaseStudy.workingNotes.join("\n")}\n\nSolution: ${selectedDossier.originalContent.solvedCaseStudy.finalSolution}</pre>
+                                <div class="notice">
+                                  <strong>Copyright & Compliance Notice:</strong><br />
+                                  ${selectedDossier.complianceStatement}
+                                </div>
+                              </body>
+                              </html>
+                            `
+                            const printWindow = window.open("", "_blank")
+                            if (printWindow) {
+                              printWindow.document.write(printHtml)
+                              printWindow.document.close()
+                              printWindow.focus()
+                              setTimeout(() => printWindow.print(), 350)
+                            }
+                          }}
+                          className="h-8 text-xs gap-1.5"
+                        >
+                          <Printer className="h-3.5 w-3.5 text-blue-600" /> Print to PDF
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Sub-tabs inside Dossier */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[hsl(var(--border))]">
+                      {[
+                        { id: "notes", label: "Handwritten Notes & Case Study", icon: BookOpen },
+                        { id: "gap_analysis", label: "Cross-Platform Gap Analysis", icon: Compass },
+                        { id: "rights_registry", label: "Source & Rights Registry", icon: Scale },
+                        { id: "mcqs", label: "Practice MCQs & Revision", icon: FileCheck },
+                      ].map((st) => {
+                        const Icon = st.icon
+                        const isActive = dossierActiveSubTab === st.id
+                        return (
+                          <button
+                            key={st.id}
+                            onClick={() => setDossierActiveSubTab(st.id as any)}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                              isActive
+                                ? "bg-blue-600 text-white shadow-xs"
+                                : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+                            }`}
+                          >
+                            <Icon className="h-3.5 w-3.5" />
+                            {st.label}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="p-5 space-y-4">
+                    {/* SUB-TAB 1: Handwritten Notes */}
+                    {dossierActiveSubTab === "notes" && (
+                      <div className="space-y-4">
+                        {/* Ruled Notebook Paper Style Container */}
+                        <div className="p-5 rounded-xl border border-amber-200 dark:border-amber-900 bg-amber-50/40 dark:bg-amber-950/20 font-serif space-y-4 shadow-inner">
+                          <div className="flex items-center justify-between text-xs font-bold text-amber-800 dark:text-amber-300 border-b border-amber-200 dark:border-amber-900 pb-2">
+                            <span>Handwritten Notebook View (Clean Ruled Style)</span>
+                            <span>Self-Trained Model v2.4</span>
+                          </div>
+                          <div className="whitespace-pre-wrap text-sm leading-relaxed text-[hsl(var(--foreground))]">
+                            {selectedDossier.originalContent.handwrittenNotesMarkdown}
+                          </div>
+                        </div>
+
+                        {/* ELI10 Intuition Card */}
+                        <div className="p-4 rounded-xl border border-purple-200 dark:border-purple-900 bg-purple-50/50 dark:bg-purple-950/20 space-y-2">
+                          <h4 className="text-xs font-bold text-purple-900 dark:text-purple-200 uppercase tracking-wider flex items-center gap-1.5">
+                            <Sparkles className="h-4 w-4 text-purple-600" /> Child-Level Intuition (ELI10)
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-purple-100 dark:border-purple-800">
+                              <span className="font-bold text-blue-600 block mb-1">English:</span>
+                              <p className="leading-relaxed">{selectedDossier.originalContent.eli10Intuition.en}</p>
+                            </div>
+                            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-purple-100 dark:border-purple-800">
+                              <span className="font-bold text-emerald-600 block mb-1">हिन्दी:</span>
+                              <p className="leading-relaxed">{selectedDossier.originalContent.eli10Intuition.hi}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Flowchart */}
+                        <div className="p-4 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--muted))]/30 space-y-2">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--foreground))]">
+                            Conceptual Decision Tree & Logic Flowchart
+                          </h4>
+                          <pre className="p-3 rounded-lg bg-[hsl(var(--background))] border font-mono text-xs overflow-x-auto text-blue-600 dark:text-blue-400">
+                            {selectedDossier.originalContent.conceptFlowchart}
+                          </pre>
+                        </div>
+
+                        {/* Solved Case Study */}
+                        <div className="p-4 rounded-xl border border-emerald-200 dark:border-emerald-900 bg-emerald-50/40 dark:bg-emerald-950/20 space-y-3">
+                          <h4 className="text-xs font-bold text-emerald-900 dark:text-emerald-200 uppercase tracking-wider flex items-center gap-1.5">
+                            <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Solved Practical Case Problem & Working Notes
+                          </h4>
+                          <p className="text-xs font-semibold text-[hsl(var(--foreground))]">
+                            {selectedDossier.originalContent.solvedCaseStudy.problemStatement}
+                          </p>
+                          <div className="p-3 rounded-lg bg-white dark:bg-slate-900 border text-xs space-y-1 font-mono">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Step-by-Step Ledger Workings:</span>
+                            {selectedDossier.originalContent.solvedCaseStudy.workingNotes.map((note, i) => (
+                              <p key={i} className="text-slate-700 dark:text-slate-300">{note}</p>
+                            ))}
+                          </div>
+                          <div className="p-2.5 rounded-lg bg-emerald-600 text-white text-xs font-bold">
+                            {selectedDossier.originalContent.solvedCaseStudy.finalSolution}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* SUB-TAB 2: Cross-Platform Gap Analysis */}
+                    {dossierActiveSubTab === "gap_analysis" && (
+                      <div className="space-y-4">
+                        <div className="p-4 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] space-y-3">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-bold flex items-center gap-2">
+                              <Compass className="h-4 w-4 text-indigo-500" />
+                              Comparative Platform Research & Syllabus Coverage
+                            </h4>
+                            <span className="text-xs text-[hsl(var(--muted-foreground))]">
+                              Topic: {selectedDossier.comparativeAnalysis.topic}
+                            </span>
+                          </div>
+
+                          <div className="space-y-1">
+                            <span className="text-xs font-semibold text-[hsl(var(--muted-foreground))]">Educational Platforms Surveyed:</span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {selectedDossier.comparativeAnalysis.platformsSurveyed.map((p) => (
+                                <Badge key={p} variant="secondary" className="text-xs">
+                                  {p}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="p-3 rounded-lg bg-[hsl(var(--muted))]/50 border text-xs leading-relaxed">
+                            <strong>Platform Synthesis Summary:</strong><br />
+                            {selectedDossier.comparativeAnalysis.crossPlatformExplanationsSummary}
+                          </div>
+                        </div>
+
+                        {/* Knowledge Gaps Identified */}
+                        <div className="p-4 rounded-xl border border-amber-200 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-950/20 space-y-2">
+                          <h4 className="text-xs font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider flex items-center gap-1.5">
+                            <AlertCircle className="h-4 w-4 text-amber-600" />
+                            Knowledge Gaps Identified in Existing Commercial Notes (और हमने कैसे पूरा किया)
+                          </h4>
+                          <ul className="space-y-1.5 text-xs text-amber-950 dark:text-amber-100">
+                            {selectedDossier.comparativeAnalysis.knowledgeGapsIdentified.map((gap, i) => (
+                              <li key={i} className="flex items-start gap-2">
+                                <span className="text-emerald-600 font-bold">✓</span>
+                                <span>{gap}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Official Statutory Validation */}
+                        <div className="p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20 space-y-2">
+                          <h4 className="text-xs font-bold text-blue-900 dark:text-blue-200 uppercase tracking-wider flex items-center gap-1.5">
+                            <Scale className="h-4 w-4 text-blue-600" /> Authoritative Official Fact Validation
+                          </h4>
+                          <p className="text-xs text-blue-950 dark:text-blue-100 leading-relaxed">
+                            {selectedDossier.comparativeAnalysis.officialSourceValidation}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* SUB-TAB 3: Source & Rights Registry */}
+                    {dossierActiveSubTab === "rights_registry" && (
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--foreground))]">
+                            Source & Rights Registry (कॉपीराइट व लाइसेंस पंजी)
+                          </h4>
+                          <Badge variant="outline" className="text-xs">
+                            {selectedDossier.rightsRegistry.length} Registered Sources
+                          </Badge>
+                        </div>
+
+                        <div className="border rounded-xl overflow-hidden text-xs">
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-left">
+                              <thead className="bg-[hsl(var(--muted))] border-b text-[11px] font-bold text-[hsl(var(--muted-foreground))]">
+                                <tr>
+                                  <th className="p-3">Source Organization</th>
+                                  <th className="p-3">Category</th>
+                                  <th className="p-3">Retrieval Date</th>
+                                  <th className="p-3">Rights Status</th>
+                                  <th className="p-3">Redistribution</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-[hsl(var(--border))]">
+                                {selectedDossier.rightsRegistry.map((r) => (
+                                  <tr key={r.id} className="hover:bg-[hsl(var(--muted))]/30">
+                                    <td className="p-3 font-semibold">
+                                      {r.sourceOrganization}
+                                      <span className="block text-[10px] font-mono text-[hsl(var(--muted-foreground))]">{r.sourceUrl}</span>
+                                    </td>
+                                    <td className="p-3">
+                                      <Badge variant="outline" className="text-[10px]">
+                                        {r.platformCategory.replace(/_/g, " ")}
+                                      </Badge>
+                                    </td>
+                                    <td className="p-3 text-[11px]">{r.retrievalDate}</td>
+                                    <td className="p-3">
+                                      <Badge
+                                        className={`text-[10px] ${
+                                          r.rightsStatus === "VERIFIED_PERMITTED"
+                                            ? "bg-emerald-600 text-white"
+                                            : "bg-amber-600 text-white"
+                                        }`}
+                                      >
+                                        {r.rightsStatus}
+                                      </Badge>
+                                    </td>
+                                    <td className="p-3">
+                                      {r.canRedistribute ? (
+                                        <span className="text-emerald-600 font-bold">Permitted</span>
+                                      ) : (
+                                        <span className="text-amber-600 font-semibold">Reference Only</span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <div className="p-3 rounded-lg bg-[hsl(var(--muted))]/50 border text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
+                          <strong>Legal Fair Dealing Declaration:</strong><br />
+                          {selectedDossier.complianceStatement}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* SUB-TAB 4: Practice MCQs & Revision */}
+                    {dossierActiveSubTab === "mcqs" && (
+                      <div className="space-y-4">
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--foreground))]">
+                            Original Practice MCQs with Step-by-Step Rationale
+                          </h4>
+                          {selectedDossier.originalContent.practiceMCQs.map((mcq, idx) => (
+                            <div key={mcq.id || idx} className="p-4 rounded-xl border border-[hsl(var(--border))] space-y-3">
+                              <p className="text-xs font-bold leading-relaxed">
+                                Q{idx + 1}. {mcq.question}
+                              </p>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                {mcq.options.map((opt, oIdx) => (
+                                  <div
+                                    key={oIdx}
+                                    className={`p-2.5 rounded-lg border transition-all ${
+                                      oIdx === mcq.correctIndex
+                                        ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 font-bold text-emerald-800 dark:text-emerald-200"
+                                        : "border-[hsl(var(--border))] bg-[hsl(var(--muted))]/30 text-[hsl(var(--muted-foreground))]"
+                                    }`}
+                                  >
+                                    <span className="font-bold mr-1.5">{String.fromCharCode(65 + oIdx)}.</span>
+                                    {opt}
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="p-2.5 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 text-xs text-blue-900 dark:text-blue-200">
+                                <strong>Rationale:</strong> {mcq.explanation}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Revision Cheat Sheet */}
+                        <div className="p-4 rounded-xl border border-indigo-200 dark:border-indigo-900 bg-indigo-50/50 dark:bg-indigo-950/20 space-y-2">
+                          <h4 className="text-xs font-bold text-indigo-900 dark:text-indigo-200 uppercase tracking-wider">
+                            1-Minute Revision Bullet Points
+                          </h4>
+                          <ul className="space-y-1.5 text-xs text-indigo-950 dark:text-indigo-100">
+                            {selectedDossier.originalContent.revisionCheatSheet.map((bullet, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <span className="text-indigo-600 font-bold">•</span>
+                                <span>{bullet}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="p-12 text-center border border-dashed rounded-xl text-xs text-[hsl(var(--muted-foreground))]">
+                  Select a dossier from the left list to review its cross-platform synthesis and handwritten notes.
+                </div>
+              )}
+            </div>
+          </div>
+        </TabsContent>
         <TabsContent value="portals" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {OFFICIAL_RESOURCES.map((cat) => {

@@ -38,6 +38,7 @@ import {
   PipelineStage,
   RegisteredSource
 } from "@/data/researchPipelineData"
+import { APPROVED_RESEARCH_SOURCES } from "@/data/multiPlatformResearchData"
 import { INSTITUTIONS_DATA } from "@/data/coursesData"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -674,6 +675,77 @@ export default function ContentPipelinePage() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+
+          {/* Approved Educational Platforms Rights Registry */}
+          <div className="pt-4 border-t border-[hsl(var(--border))] space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-bold flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-blue-600" />
+                  Multi-Platform Rights Registry (Educational Platforms Surveillance)
+                </h4>
+                <p className="text-xs text-[hsl(var(--muted-foreground))]">
+                  Restricted third-party materials (BYJU&apos;S, PW, Aakash, EduRev, StudyX, Toppr, Vedantu) are surveyed strictly for concept discovery and learning gap identification under Fair Dealing. Redistribution is disabled; 100% original synthesis is enforced.
+                </p>
+              </div>
+              <Badge className="bg-emerald-600 text-white text-xs">Zero Copyright Infringement Policy</Badge>
+            </div>
+
+            <div className="border rounded-xl overflow-hidden text-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-[hsl(var(--muted))] border-b text-[11px] font-bold text-[hsl(var(--muted-foreground))]">
+                    <tr>
+                      <th className="p-3">Platform</th>
+                      <th className="p-3">Category</th>
+                      <th className="p-3">Surveillance URL</th>
+                      <th className="p-3">Rights Status</th>
+                      <th className="p-3">Processing</th>
+                      <th className="p-3">Redistribute</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[hsl(var(--border))]">
+                    {APPROVED_RESEARCH_SOURCES.map((plat) => (
+                      <tr key={plat.id} className="hover:bg-[hsl(var(--muted))]/30">
+                        <td className="p-3 font-semibold text-[hsl(var(--foreground))]">
+                          {plat.sourceOrganization}
+                        </td>
+                        <td className="p-3">
+                          <Badge variant="outline" className="text-[10px]">
+                            {plat.platformCategory === "official_statutory" ? "Official Statutory" : "Approved EdTech"}
+                          </Badge>
+                        </td>
+                        <td className="p-3 font-mono text-[11px] text-blue-600 truncate max-w-[200px]">
+                          {plat.sourceUrl}
+                        </td>
+                        <td className="p-3">
+                          <Badge
+                            className={`text-[10px] ${
+                              plat.rightsStatus === "VERIFIED_PERMITTED"
+                                ? "bg-emerald-600 text-white"
+                                : "bg-amber-600 text-white"
+                            }`}
+                          >
+                            {plat.rightsStatus}
+                          </Badge>
+                        </td>
+                        <td className="p-3">
+                          <span className="text-emerald-600 font-bold">✓ Permitted (Topic Discovery)</span>
+                        </td>
+                        <td className="p-3">
+                          {plat.canRedistribute ? (
+                            <span className="text-emerald-600 font-semibold">Allowed</span>
+                          ) : (
+                            <span className="text-red-500 font-bold">🚫 Prohibited (Original Synth Only)</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </TabsContent>
 
