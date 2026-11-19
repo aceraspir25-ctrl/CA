@@ -44,6 +44,8 @@ function AITutorContent() {
     studentName,
     studentLevel,
     activeLanguage,
+    geminiApiKey,
+    openaiApiKey,
     aiMessages,
     weakConcepts,
     studiedTopics,
@@ -90,6 +92,8 @@ function AITutorContent() {
           capability: "teacher",
           studentLevel,
           language: activeLanguage,
+          geminiKey: geminiApiKey,
+          openaiKey: openaiApiKey,
         }),
       })
 

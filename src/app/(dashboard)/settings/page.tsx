@@ -12,7 +12,10 @@ import {
   RotateCcw,
   CheckCircle2,
   User,
-  GraduationCap
+  GraduationCap,
+  Key,
+  Bot,
+  Sparkles
 } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { useTheme } from "next-themes"
@@ -22,14 +25,20 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 
 export default function SettingsPage() {
-  const { studentName, activeLanguage, setLanguage } = useAppStore()
+  const { studentName, activeLanguage, setLanguage, geminiApiKey, openaiApiKey, setApiKeys } = useAppStore()
   const { theme, setTheme } = useTheme()
 
   const [savedStatus, setSavedStatus] = useState(false)
   const [dailyGoalMinutes, setDailyGoalMinutes] = useState(120)
   const [targetExam, setTargetExam] = useState("CA Foundation - May 2027")
+  const [geminiKeyInput, setGeminiKeyInput] = useState(geminiApiKey || "")
+  const [openaiKeyInput, setOpenaiKeyInput] = useState(openaiApiKey || "")
 
   const handleSave = () => {
+    setApiKeys({
+      geminiKey: geminiKeyInput,
+      openaiKey: openaiKeyInput,
+    })
     setSavedStatus(true)
     setTimeout(() => setSavedStatus(false), 3000)
   }
@@ -153,6 +162,54 @@ export default function SettingsPage() {
                 System Default
               </Button>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* AI Gateway & Custom API Keys */}
+        <Card className="border-[hsl(var(--border))]">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Bot className="h-4 w-4 text-indigo-500" /> AI Gateway & Live Provider Keys (Optional)
+            </CardTitle>
+            <CardDescription>
+              Connect your own Google Gemini or OpenAI API key for live GPT-4o / Gemini 2.5 Pro inference. If left empty, our built-in offline Commerce Knowledge Engine operates automatically.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 text-xs">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="font-semibold flex items-center gap-1.5">
+                  <Key className="h-3.5 w-3.5 text-blue-500" /> Google Gemini API Key
+                </label>
+                <span className="text-[10px] text-[hsl(var(--muted-foreground))]">gemini-2.5-flash / pro</span>
+              </div>
+              <Input
+                type="password"
+                value={geminiKeyInput}
+                onChange={(e) => setGeminiKeyInput(e.target.value)}
+                placeholder="AIzaSy..."
+                className="font-mono text-xs"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="font-semibold flex items-center gap-1.5">
+                  <Key className="h-3.5 w-3.5 text-purple-500" /> OpenAI API Key
+                </label>
+                <span className="text-[10px] text-[hsl(var(--muted-foreground))]">gpt-4o / gpt-4o-mini</span>
+              </div>
+              <Input
+                type="password"
+                value={openaiKeyInput}
+                onChange={(e) => setOpenaiKeyInput(e.target.value)}
+                placeholder="sk-proj-..."
+                className="font-mono text-xs"
+              />
+            </div>
+            <p className="text-[10px] text-emerald-600 dark:text-emerald-400">
+              ✓ Keys are stored locally on your device and sent only to server-side inference handlers.
+            </p>
           </CardContent>
         </Card>
 

@@ -40,6 +40,9 @@ export interface AIChatRequest {
   studentLevel?: number
   courseContext?: string
   language?: "en" | "hi" | "hinglish"
+  apiKey?: string
+  geminiKey?: string
+  openaiKey?: string
 }
 
 export interface AIChatResponse {
@@ -54,3 +57,4 @@ export interface AIChatResponse {
   cached: boolean
   timestamp: string
 }
+

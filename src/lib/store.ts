@@ -75,6 +75,11 @@ interface AppState {
   // Certificates & Tests
   certificates: CertificateRecord[]
   issueCertificate: (cert: Omit<CertificateRecord, "id" | "verificationCode" | "completionDate">) => CertificateRecord
+
+  // AI API Keys
+  geminiApiKey?: string
+  openaiApiKey?: string
+  setApiKeys: (keys: { geminiKey?: string; openaiKey?: string }) => void
 }
 
 export const useAppStore = create<AppState>()(
@@ -85,6 +90,12 @@ export const useAppStore = create<AppState>()(
       studyStreakDays: 7,
       activeLanguage: "en",
       setLanguage: (lang) => set({ activeLanguage: lang }),
+      geminiApiKey: "",
+      openaiApiKey: "",
+      setApiKeys: (keys) => set((state) => ({
+        geminiApiKey: keys.geminiKey !== undefined ? keys.geminiKey : state.geminiApiKey,
+        openaiApiKey: keys.openaiKey !== undefined ? keys.openaiKey : state.openaiApiKey,
+      })),
 
       // AI Tutor Memory Initial State
       aiMessages: [

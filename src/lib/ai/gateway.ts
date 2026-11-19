@@ -21,8 +21,6 @@ function updateMetrics(provider: AIProvider, promptTokens: number, completionTok
   aiUsageMetrics.totalPromptTokens += promptTokens
   aiUsageMetrics.totalCompletionTokens += completionTokens
 
-  // Approx cost: OpenAI gpt-4o-mini (~$0.15/1M prompt, $0.60/1M completion)
-  // Gemini 2.5 Flash (~$0.075/1M prompt, $0.30/1M completion)
   const cost =
     provider === "openai"
       ? (promptTokens * 0.15 + completionTokens * 0.6) / 1000000
@@ -190,7 +188,7 @@ async function callOpenAI(request: AIChatRequest, apiKey: string): Promise<AICha
 }
 
 /**
- * Intelligent Academic Offline / Fallback Generator
+ * Deep Commerce Knowledge Engine - Contextual Academic Fallback
  */
 function generateContextualAcademicResponse(request: AIChatRequest): AIChatResponse {
   const lastMsg = request.messages[request.messages.length - 1]?.content || ""
@@ -199,25 +197,96 @@ function generateContextualAcademicResponse(request: AIChatRequest): AIChatRespo
 
   let responseText = ""
 
-  if (q.includes("depreciation") || q.includes("ह्रास") || q.includes("slm") || q.includes("wdv")) {
+  // 1. Bank Reconciliation Statement (BRS)
+  if (q.includes("brs") || q.includes("bank reconciliation") || q.includes("समाधान विवरण")) {
     responseText =
       lang === "hi"
-        ? `### 🇮🇳 Depreciation (ह्रास): सरल एवं व्यावहारिक समझ
+        ? `### 🏦 बैंक समाधान विवरण (BRS): विस्तृत एवं परीक्षा-उपयोगी समझ
 
-**ह्रास क्या है?**
-समय बीतने, टूट-फूट या अप्रचलन (Obsolescence) के कारण किसी स्थायी संपत्ति (Fixed Asset) के मूल्य में आने वाली स्थायी और निरंतर कमी को **ह्रास (Depreciation)** कहते हैं।
+**BRS क्या है?**
+रोकड़ बही (Cash Book) के बैंक कॉलम और बैंक पासबुक (Pass Book) के शेष में समय-समय पर अंतर आ जाता है। इस अंतर के कारणों को स्पष्ट करने और दोनों के शेष का मिलान करने के लिए जो विवरण बनाया जाता है, उसे **Bank Reconciliation Statement (BRS)** कहते हैं।
 
-#### 1. Straight Line Method (सरल रेखा पद्धति - SLM)
-- हर वर्ष एक समान राशि संपत्ति के मूल लागत (Original Cost) पर घटाई जाती है।
-- **फॉर्मूला:** \`वार्षिक ह्रास = (लागत - अवशिष्ट मूल्य) ÷ उपयोगी जीवनकाल\`
-- **फायदा:** गणना में अत्यंत सरल।
+#### ⏱️ अंतर के प्रमुख कारण:
+1. **चेक जारी किए गए परंतु भुगतान हेतु प्रस्तुत नहीं हुए:** रोकड़ बही में तुरंत घटा दिया गया, परंतु बैंक में नहीं घटा।
+2. **चेक जमा किए गए परंतु संग्रहित (Clearing) नहीं हुए:** रोकड़ बही में जोड़ दिया गया, पर बैंक में अभी तक जमा नहीं हुआ।
+3. **बैंक द्वारा सीधे लगाए गए प्रभार / ब्याज:** बैंक शुल्क (Bank Charges) पासबुक में कट गए, रोकड़ बही में प्रविष्टि बाकी है।
+4. **ग्राहकों द्वारा सीधे बैंक खाते में जमा राशि:** पासबुक का बैलेंस बढ़ गया, पर व्यापारी को सूचना बाद में मिली।
 
-#### 2. Written Down Value Method (अपलिखित मूल्य पद्धति - WDV)
-- ह्रास संपत्ति के प्रारंभिक घटते शेष (Book Value at opening) पर लगाया जाता है।
-- **Income Tax Act 1961 (धारा 32):** भारत का आयकर कानून ब्लॉक ऑफ एसेट्स के लिए केवल **WDV पद्धति** को ही मान्यता देता है (विद्युत उत्पादन इकाइयों को छोड़कर)।
+#### 💡 गोल्डन नियम (Starting Point Rule):
+- यदि **Cash Book के अनुकूल शेष** से शुरू कर रहे हैं, तो जो भी बैंक पासबुक में जुड़ चुका है उसे **जोड़ें (+)**, और जो पासबुक में घट चुका है उसे **घटाएं (-)**।`
+        : `### 🏦 Bank Reconciliation Statement (BRS): Complete Conceptual & Exam Analysis
 
-**लेखांकन मानक (AS 10 / Ind AS 16):** ह्रास पद्धति में परिवर्तन अब 'Change in Accounting Estimate' माना जाता है और इसे **भविष्यलक्षी प्रभाव (Prospective Effect)** से लागू किया जाता है।`
-        : `### 📊 Depreciation: Comprehensive Academic & Professional Analysis
+**Core Definition:**
+A Bank Reconciliation Statement (BRS) is a schedule prepared periodically by a business to reconcile the difference between the bank balance as shown by the **Cash Book (Bank Column)** and the balance shown by the **Bank Pass Book / Bank Statement**.
+
+#### ⏱️ The 4 Major Causes of Differences:
+| Transaction | Cash Book Impact | Bank Pass Book Impact | Adjustment (If starting from Cash Book) |
+|---|---|---|---|
+| **Cheques issued but not presented for payment** | Decreased (-) | Unchanged | **ADD (+)** |
+| **Cheques deposited but not cleared** | Increased (+) | Unchanged | **LESS (-)** |
+| **Direct payment by bank (Standing Order, Bank Charges)** | Unchanged | Decreased (-) | **LESS (-)** |
+| **Direct collection by bank / Dividend received** | Unchanged | Increased (+) | **ADD (+)** |
+
+#### ⚠️ Exam Trap to Avoid:
+Always check whether you are asked to prepare an **Adjusted Cash Book** first. If required, record all cash book omissions and entity errors in the Cash Book first; only timing differences (unpresented/uncleared cheques) appear in the BRS!`
+  }
+  // 2. Journal Entries & Golden Rules
+  else if (q.includes("journal") || q.includes("golden rule") || q.includes("swarnim") || q.includes("रोजनामचा")) {
+    responseText = `### 📒 Golden Rules of Accounting & Standard Journal Entries
+
+All accounts in financial accounting are classified into **3 Classic Types**:
+
+#### 1. The Three Golden Rules:
+1. **Personal Accounts (व्यक्तिगत खाते):**
+   - Rule: *Debit the Receiver, Credit the Giver* (पाने वाले को नाम, देने वाले को जमा)
+   - Examples: Ram A/c, Tata Consultancy Services Ltd A/c, Bank A/c, Capital A/c.
+2. **Real Accounts (वास्तविक खाते):**
+   - Rule: *Debit what comes in, Credit what goes out* (जो वस्तु व्यापार में आए उसे नाम, जो जाए उसे जमा)
+   - Examples: Cash A/c, Plant & Machinery A/c, Furniture A/c, Building A/c.
+3. **Nominal Accounts (नाममात्र खाते):**
+   - Rule: *Debit all expenses & losses, Credit all incomes & gains* (समस्त व्यय व हानियों को नाम, समस्त आय व लाभों को जमा)
+   - Examples: Rent A/c, Salary A/c, Commission Received A/c, Depreciation A/c.
+
+#### 📝 Practical Example (3 Classic Transactions):
+\`\`\`text
+1. Capital introduced into business in cash ₹5,00,000:
+   Cash A/c ..................................... Dr.  ₹5,00,000
+       To Capital A/c                                         ₹5,00,000
+   (Being capital introduced by proprietor)
+
+2. Purchased goods for ₹1,00,000 + 18% GST on credit from Apex Ltd:
+   Purchases A/c ................................. Dr.  ₹1,00,000
+   Input CGST A/c (9%) ........................... Dr.     ₹9,000
+   Input SGST A/c (9%) ........................... Dr.     ₹9,000
+       To Apex Ltd A/c                                        ₹1,18,000
+   (Being goods purchased on credit with GST)
+
+3. Sold goods costing ₹60,000 for ₹80,000 cash:
+   Cash A/c ..................................... Dr.    ₹80,000
+       To Sales A/c                                           ₹80,000
+   (Being goods sold for cash)
+\`\`\``
+  }
+  // 3. Accounting Equation
+  else if (q.includes("equation") || q.includes("समीकरण") || q.includes("assets = liabilities")) {
+    responseText = `### ⚖️ The Fundamental Accounting Equation
+
+**The Equation:**
+$$\\text{Assets} = \\text{Liabilities} + \\text{Owner's Equity (Capital)}$$
+
+#### 👶 Intuitive Example (Explain Like I'm 10):
+Think of a **School Backpack**:
+- What is inside? Books (₹300), Pen Box (₹100), Calculator (₹600) ➔ **Total Assets = ₹1,000**.
+- Who provided the money?
+  - Your Dad gave you ₹800 ➔ **Capital (Owner's Equity)**.
+  - You borrowed ₹200 from your friend ➔ **Liability (Loan)**.
+- Notice: ₹1,000 (Assets) = ₹200 (Liabilities) + ₹800 (Capital)!
+
+Every single business transaction in the world preserves this equality without exception.`
+  }
+  // 4. Depreciation (SLM vs WDV)
+  else if (q.includes("depreciation") || q.includes("ह्रास") || q.includes("slm") || q.includes("wdv")) {
+    responseText = `### 📊 Depreciation: Comprehensive Academic & Professional Analysis
 
 **Core Definition (Ind AS 16 / AS 10):**
 Depreciation is the systematic allocation of the depreciable amount of an asset over its estimated useful economic life.
@@ -229,30 +298,36 @@ Depreciation is the systematic allocation of the depreciable amount of an asset 
 | **P&L Total Burden (Dep + Repair)** | Increases as asset ages | Equalized (High Dep + Low Repair initially; Low Dep + High Repair later) |
 | **Income Tax Recognition** | Allowed only for Power Generating units | **Mandatory under Section 32** for all asset blocks |
 
-**Golden Journal Entry:**
-- Depreciation A/c Dr. (Nominal - Expense)
-- To Accumulated Depreciation A/c / Asset A/c Cr.`
-  } else if (q.includes("115bac") || q.includes("tax regime") || q.includes("income tax")) {
+**Formula for SLM:**
+$$\\text{Annual Depreciation} = \\frac{\\text{Cost of Asset} - \\text{Estimated Scrap Value}}{\\text{Useful Life in Years}}$$
+
+**Accounting Standard Requirement (Ind AS 8 / AS 10):**
+A change in depreciation method is treated as a **Change in Accounting Estimate** applied with **prospective effect** only.`
+  }
+  // 5. Taxation (Section 115BAC & Slabs)
+  else if (q.includes("115bac") || q.includes("tax regime") || q.includes("income tax") || q.includes("आयकर")) {
     responseText = `### ⚖️ Income Tax: Old Regime vs New Regime (Section 115BAC)
 
 As per the Finance Act / Budget 2024 updates:
 
 #### 1. Default Tax Regime: Section 115BAC
-- New Regime is now the **Default Tax Regime** for Individuals, HUFs, AOPs, and BOIs.
+- New Regime is the **Default Tax Regime** for Individuals, HUFs, AOPs, and BOIs.
 - **Salaried Standard Deduction:** Increased from ₹50,000 to **₹75,000**.
 - **Section 87A Rebate:** Taxable income up to **₹7,00,000** pays ₹0 net income tax.
-- **Slabs (Budget 2024):**
-  - Up to ₹3,00,000: Nil
-  - ₹3,00,001 to ₹7,00,000: 5%
-  - ₹7,00,001 to ₹10,00,000: 10%
-  - ₹10,00,001 to ₹12,00,000: 15%
-  - ₹12,00,001 to ₹15,00,000: 20%
-  - Above ₹15,00,000: 30%
+- **Revised Slabs (Budget 2024):**
+  - Up to ₹3,00,000: **Nil**
+  - ₹3,00,001 to ₹7,00,000: **5%**
+  - ₹7,00,001 to ₹10,00,000: **10%**
+  - ₹10,00,001 to ₹12,00,000: **15%**
+  - ₹12,00,001 to ₹15,00,000: **20%**
+  - Above ₹15,00,000: **30%**
 
 #### 2. Old Regime Key Features
 - Allows Chapter VI-A deductions: Section 80C (up to ₹1.5L), Section 80D (Health Insurance), Section 24(b) (Home loan interest up to ₹2L), HRA exemption under Section 10(13A).
 - Standard deduction for salary remains ₹50,000.`
-  } else if (q.includes("bep") || q.includes("break-even") || q.includes("marginal costing")) {
+  }
+  // 6. Marginal Costing & Break-Even Point
+  else if (q.includes("bep") || q.includes("break-even") || q.includes("marginal costing") || q.includes("p/v ratio")) {
     responseText = `### 📈 Marginal Costing: Break-Even Point (BEP) Mastery
 
 **Fundamental Marginal Costing Equation:**
@@ -260,33 +335,84 @@ $$\\text{Sales} - \\text{Variable Cost} = \\text{Contribution} = \\text{Fixed Co
 
 **Key Formulas:**
 1. **P/V Ratio (Profit-Volume Ratio):**
-   $$\\text{P/V Ratio} = \\frac{\\text{Contribution}}{\\text{Sales}} \\times 100$$
+   $$\\text{P/V Ratio} = \\frac{\\text{Contribution}}{\\text{Sales}} \\times 100 = \\frac{\\text{Change in Profit}}{\\text{Change in Sales}} \\times 100$$
 2. **Break-Even Point (in Units):**
    $$\\text{BEP (Units)} = \\frac{\\text{Fixed Cost}}{\\text{Contribution per Unit}}$$
 3. **Break-Even Point (in Value ₹):**
    $$\\text{BEP (₹)} = \\frac{\\text{Fixed Cost}}{\\text{P/V Ratio}}$$
 4. **Margin of Safety (MOS):**
-   $$\\text{MOS} = \\text{Actual Sales} - \\text{Break-Even Sales} = \\frac{\\text{Profit}}{\\text{P/V Ratio}}$$
+   $$\\text{MOS} = \\text{Actual Sales} - \\text{Break-Even Sales} = \\frac{\\text{Profit}}{\\text{P/V Ratio}}$$`
+  }
+  // 7. Companies Act 2013 / Corporate Law
+  else if (q.includes("companies act") || q.includes("company law") || q.includes("csr") || q.includes("quorum") || q.includes("board meeting")) {
+    responseText = `### 🏢 Companies Act 2013: Essential Examination Sections
 
-*Exam Tip:* Higher P/V Ratio and wider Margin of Safety reflect financial resilience against demand downturns.`
-  } else {
-    responseText = `### 🎓 Academic Concept Breakdown
+#### 1. Corporate Social Responsibility (CSR) — Section 135:
+- **Applicability:** Any company fulfilling ANY of the following in immediately preceding financial year:
+  - Net Worth $\\ge$ ₹500 Crore, OR
+  - Turnover $\\ge$ ₹1,000 Crore, OR
+  - Net Profit $\\ge$ ₹5 Crore.
+- **Mandatory Spend:** At least **2% of average net profits** of immediately preceding 3 financial years.
 
-**Question / Topic:** "${lastMsg}"
+#### 2. Board Meetings & Quorum — Section 173 & 174:
+- **Frequency (Sec 173):** First Board meeting within 30 days of incorporation; minimum 4 meetings every year with not more than 120 days between two consecutive meetings.
+- **Quorum (Sec 174):** **1/3rd of total strength** OR **2 directors**, whichever is HIGHER. Participation by video conferencing is counted towards quorum.`
+  }
+  // 8. Goods & Services Tax (GST)
+  else if (q.includes("gst") || q.includes("itc") || q.includes("input tax credit") || q.includes("goods and services tax")) {
+    responseText = `### 🧾 Goods & Services Tax (GST): Input Tax Credit (ITC) Mechanics
 
-#### 1. Fundamental Conceptual Premise
-In commerce, accountancy and business governance, every transaction and decision must be anchored on verifiable source documentation (Audit Trail), legal compliance, and economic reality.
+#### 1. Dual GST Architecture:
+- **Intra-State Supply (Within same State):** CGST (Central Tax) + SGST (State Tax).
+- **Inter-State Supply (Between different States):** IGST (Integrated Tax).
 
-#### 2. Key Professional & Statutory Principles
-- **Dual Aspect Concept:** Every debit requires an equal and corresponding credit ($$Assets = Liabilities + Equity$$).
-- **Substance over Form:** Accounting treatment must reflect financial reality rather than mere legal form.
-- **Prudence Principle:** Anticipate no profits, but provide for all probable losses.
+#### 2. Eligibility & Conditions for claiming ITC (Section 16):
+1. Possession of tax invoice or debit note issued by supplier.
+2. Details of invoice uploaded by supplier in **GSTR-1** and reflected in recipient's **GSTR-2B**.
+3. Goods or services have actually been received.
+4. Tax charged in respect of supply has been paid to the Government.
+5. Recipient has furnished return under Section 39 (GSTR-3B).
 
-#### 3. Practical Industry Application
-Corporate controllers and audit committees apply these tenets to ensure financial statements provide a **true and fair view** under Section 129 of the Companies Act 2013 and applicable Accounting Standards (Ind AS / AS).
+#### 3. Blocked Credits (Section 17(5)):
+ITC cannot be claimed on motor vehicles (seating $\\le$ 13 persons, with exceptions), food & beverages, club memberships, goods lost/stolen/destroyed or written off.`
+  }
+  // 9. Inventories (FIFO, Weighted Average, AS 2)
+  else if (q.includes("inventory") || q.includes("fifo") || q.includes("stock") || q.includes("रहतिया")) {
+    responseText = `### 📦 Inventory Valuation (AS 2 / Ind AS 2)
 
-#### 4. Exam & Practical Advice
-Review related illustrations in your Institute study module, verify journal entries with narration, and double-check statutory threshold dates.`
+**Golden Valuation Principle:**
+Inventories must be valued at **Cost** OR **Net Realisable Value (NRV)**, whichever is **LOWER**.
+
+#### 1. Permitted Cost Formulas:
+- **FIFO (First-In, First-Out):** Assumes earliest acquired goods are sold first. Ending inventory reflects most recent purchase costs.
+- **Weighted Average Cost:** Unit cost is recomputed by dividing total cost of goods by total units available.
+
+#### ⚠️ Prohibited Methods:
+- **LIFO (Last-In, First-Out):** Strictly **prohibited** under Ind AS 2, AS 2, and IFRS because it understates current asset valuation in periods of inflation.`
+  }
+  // 10. Dynamic Comprehensive Fallback for Any Other Topic
+  else {
+    responseText = `### 🎓 Comprehensive Academic Guide: ${lastMsg}
+
+#### 1. Core Conceptual Foundation
+Every concept in commerce, professional finance, and corporate management is designed around **economic truth, fiduciary responsibility, and regulatory compliance**.
+- **Nature of the Subject:** Addresses commercial valuation, legal obligation, and stakeholder transparency.
+- **Prudence Principle:** Anticipate potential losses and liabilities promptly; record gains only upon realization.
+
+#### 2. Statutory Context & Legal Authority
+- Governed by applicable **Indian Accounting Standards (Ind AS / AS)** or **International Financial Reporting Standards (IFRS)**.
+- Complies with statutory mandates under the **Companies Act 2013**, **Income Tax Act 1961**, or regulatory circulars from **SEBI, MCA, and RBI**.
+
+#### 3. Practical Numerical & Real-World Application
+1. **Identify the transaction facts:** Gather invoices, contractual agreements, and financial data.
+2. **Classify:** Determine whether the transaction affects Assets, Liabilities, Incomes, or Expenses.
+3. **Execute:** Apply the relevant statutory rate, equation, or journal entries with full supporting narration.
+
+#### 4. Common Examination Mistakes & Tips
+- Double check date thresholds (e.g. 180 days for depreciation, 120 days for board meetings).
+- Always show full working notes in CA, CMA, CS and University examination papers — marks are allocated per working step!
+
+*Tip:* You can ask me to explain this with **journal entries**, as an **ELI10 analogy**, or generate **mock test questions**!`
   }
 
   updateMetrics("simulated", 150, 350)
@@ -305,8 +431,8 @@ Review related illustrations in your Institute study module, verify journal entr
  * Main Centralized AI Gateway Entry Point with Automatic Provider Fallback
  */
 export async function executeAIChat(request: AIChatRequest): Promise<AIChatResponse> {
-  const geminiKey = process.env.GEMINI_API_KEY
-  const openaiKey = process.env.OPENAI_API_KEY
+  const geminiKey = request.geminiKey || request.apiKey || process.env.GEMINI_API_KEY
+  const openaiKey = request.openaiKey || process.env.OPENAI_API_KEY
 
   const preferred = request.preferredProvider || "gemini"
 
@@ -314,7 +440,6 @@ export async function executeAIChat(request: AIChatRequest): Promise<AIChatRespo
   if (preferred === "gemini" && geminiKey) {
     const res = await callGemini(request, geminiKey)
     if (res) return res
-    // Fallback to OpenAI if configured
     if (openaiKey) {
       const fallbackRes = await callOpenAI(request, openaiKey)
       if (fallbackRes) return fallbackRes
@@ -322,7 +447,6 @@ export async function executeAIChat(request: AIChatRequest): Promise<AIChatRespo
   } else if (preferred === "openai" && openaiKey) {
     const res = await callOpenAI(request, openaiKey)
     if (res) return res
-    // Fallback to Gemini if configured
     if (geminiKey) {
       const fallbackRes = await callGemini(request, geminiKey)
       if (fallbackRes) return fallbackRes
@@ -339,6 +463,6 @@ export async function executeAIChat(request: AIChatRequest): Promise<AIChatRespo
     }
   }
 
-  // Fallback to rich, context-aware academic generator if both fail or keys are absent
+  // Fallback to rich, context-aware academic generator if keys are absent or failed
   return generateContextualAcademicResponse(request)
 }
