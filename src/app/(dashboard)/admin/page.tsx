@@ -69,8 +69,14 @@ export default function AdminFacultyHub() {
           </p>
         </div>
 
-        {/* Quick Nav to Agents */}
+        {/* Quick Nav to Agents & Content Pipeline */}
         <div className="flex items-center gap-2 shrink-0">
+          <Button asChild variant="outline" className="text-white border-white/30 hover:bg-white/10 text-xs gap-1.5">
+            <Link href="/admin/pipeline">
+              <Sparkles className="h-4 w-4 text-amber-400" />
+              Content Pipeline
+            </Link>
+          </Button>
           <Button asChild variant="outline" className="text-white border-white/30 hover:bg-white/10 text-xs gap-1.5">
             <Link href="/admin/agents">
               <Cpu className="h-4 w-4 text-emerald-400" />
