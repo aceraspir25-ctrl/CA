@@ -35,8 +35,8 @@ export interface TelegramConfig {
 
 // In-memory runtime config & upload jobs store (synchronized with Web Admin Panel)
 export const telegramConfigState: TelegramConfig = {
-  botToken: process.env.TELEGRAM_BOT_TOKEN || "9270115302:AAFyGSkjS_DZ_yrDwCVdpfxMgd2sENKtIo8",
-  adminChatId: process.env.TELEGRAM_ADMIN_CHAT_ID && process.env.TELEGRAM_ADMIN_CHAT_ID !== "9270115302" ? process.env.TELEGRAM_ADMIN_CHAT_ID : "9238250026",
+  botToken: process.env.TELEGRAM_BOT_TOKEN || "",
+  adminChatId: process.env.TELEGRAM_ADMIN_CHAT_ID && process.env.TELEGRAM_ADMIN_CHAT_ID !== "9270115302" ? process.env.TELEGRAM_ADMIN_CHAT_ID : "",
   isWebhookActive: true,
   lastPingTime: "Ready"
 }
@@ -966,8 +966,8 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
  * Send simple text message to Telegram Admin (with auto-chunking & safe parsing)
  */
 export async function sendTelegramMessage(text: string, targetChatId?: string) {
-  const token = telegramConfigState.botToken || process.env.TELEGRAM_BOT_TOKEN || "9270115302:AAFyGSkjS_DZ_yrDwCVdpfxMgd2sENKtIo8"
-  const chatId = targetChatId || telegramConfigState.adminChatId || (process.env.TELEGRAM_ADMIN_CHAT_ID !== "9270115302" ? process.env.TELEGRAM_ADMIN_CHAT_ID : "9238250026")
+  const token = telegramConfigState.botToken || process.env.TELEGRAM_BOT_TOKEN || ""
+  const chatId = targetChatId || telegramConfigState.adminChatId || (process.env.TELEGRAM_ADMIN_CHAT_ID !== "9270115302" ? process.env.TELEGRAM_ADMIN_CHAT_ID : "")
 
   if (!token || !chatId || chatId === "9270115302") return { success: false, simulated: true }
 

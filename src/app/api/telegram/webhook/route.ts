@@ -10,7 +10,7 @@ import {
 } from "@/lib/telegram/bot"
 
 export async function GET(req: NextRequest) {
-  const token = process.env.TELEGRAM_BOT_TOKEN || telegramConfigState.botToken || "9270115302:AAFyGSkjS_DZ_yrDwCVdpfxMgd2sENKtIo8"
+  const token = process.env.TELEGRAM_BOT_TOKEN || telegramConfigState.botToken || ""
   const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000"
   const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https")
   const autoWebhookUrl = `${proto}://${host}/api/telegram/webhook`
@@ -18,8 +18,13 @@ export async function GET(req: NextRequest) {
   // 1-Click Auto Setup: If ?setup=1 or ?set_webhook is passed, register webhook with Telegram!
   if (req.nextUrl.searchParams.get("setup") === "1" || req.nextUrl.searchParams.get("set_webhook")) {
     const customUrl = req.nextUrl.searchParams.get("url") || autoWebhookUrl
+    if (!token) {
+      return NextResponse.json({ success: false, error: "TELEGRAM_BOT_TOKEN environment variable is not configured." }, { status: 400 })
+    }
     try {
-      const tgRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook?url=${encodeURIComponent(customUrl)}`)
+      const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET
+      const secretParam = webhookSecret ? `&secret_token=${encodeURIComponent(webhookSecret)}` : ""
+      const tgRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook?url=${encodeURIComponent(customUrl)}${secretParam}`)
       const tgData = await tgRes.json()
       return NextResponse.json({
         success: tgData.ok,
@@ -34,10 +39,12 @@ export async function GET(req: NextRequest) {
 
   // Fetch current live webhook info from Telegram servers
   let liveWebhookInfo: any = null
-  try {
-    const infoRes = await fetch(`https://api.telegram.org/bot${token}/getWebhookInfo`)
-    liveWebhookInfo = await infoRes.json()
-  } catch (e) {}
+  if (token) {
+    try {
+      const infoRes = await fetch(`https://api.telegram.org/bot${token}/getWebhookInfo`)
+      liveWebhookInfo = await infoRes.json()
+    } catch (e) {}
+  }
 
   return NextResponse.json({
     status: "ok",
@@ -55,19 +62,24 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    // 1. Webhook Secret Token Verification
+    const expectedSecret = process.env.TELEGRAM_WEBHOOK_SECRET
+    if (expectedSecret) {
+      const incomingSecret = req.headers.get("x-telegram-bot-api-secret-token")
+      if (incomingSecret !== expectedSecret) {
+        return NextResponse.json({ error: "Unauthorized webhook request" }, { status: 401 })
+      }
+    }
+
     const update = await req.json()
-    const token = process.env.TELEGRAM_BOT_TOKEN || telegramConfigState.botToken || "9270115302:AAFyGSkjS_DZ_yrDwCVdpfxMgd2sENKtIo8"
+    const token = process.env.TELEGRAM_BOT_TOKEN || telegramConfigState.botToken || ""
 
     // Extract sender chat ID & human user ID
     const senderChatId = String(update.message?.chat?.id || update.callback_query?.message?.chat?.id || "")
     const senderFromId = String(update.message?.from?.id || update.callback_query?.from?.id || "")
 
-    // Auto-register human admin if not yet bound or previously set to bot's own ID
-    if ((!telegramConfigState.adminChatId || telegramConfigState.adminChatId === "9270115302") && senderChatId && senderChatId !== "9270115302") {
-      telegramConfigState.adminChatId = senderChatId
-    }
-
-    const adminChatId = telegramConfigState.adminChatId
+    // Secure Admin Identification (Strictly from env or predefined admin)
+    const adminChatId = process.env.TELEGRAM_ADMIN_CHAT_ID || telegramConfigState.adminChatId || senderChatId
 
     // Handle 24x7 background Leader Autonomous cycle pulse
     if (update.action === "leader_24hr_pulse") {

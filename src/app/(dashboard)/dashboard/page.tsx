@@ -26,7 +26,11 @@ import {
   Zap,
   Layers,
   ChevronRight,
-  Compass
+  Compass,
+  Scale,
+  Award,
+  Library,
+  Briefcase
 } from "lucide-react"
 
 // --- Types ---
@@ -327,7 +331,128 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 2. B.COM 6-SEMESTER NEP-2020 QUICK LAUNCHPAD */}
+      {/* 2. UNIFIED ACADEMIC INTELLIGENCE HUBS */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-black text-[hsl(var(--foreground))] flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-amber-500" />
+              Unified Academic Intelligence Hubs
+            </h2>
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+              Advanced statutory tracking, private document vault, real exam simulator & career pathways
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Link
+            href="/amendments"
+            className="p-4 rounded-3xl glass-panel border border-amber-500/30 hover:border-amber-500 bg-gradient-to-br from-amber-950/15 via-[hsl(var(--card))] to-[hsl(var(--card))] shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="p-2.5 rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                  <Scale className="h-5 w-5" />
+                </span>
+                <Badge variant="outline" className="text-[10px] font-bold border-amber-500/30 text-amber-500">
+                  Live Gazettes
+                </Badge>
+              </div>
+              <h3 className="text-sm font-black text-[hsl(var(--foreground))] group-hover:text-amber-500 transition-colors">
+                Statutory Amendment Tracker
+              </h3>
+              <p className="text-[11px] text-[hsl(var(--muted-foreground))] line-clamp-2">
+                Finance Act 2024, BNS 2023, Ind AS 116 side-by-side comparison & syllabus impact.
+              </p>
+            </div>
+            <div className="pt-3 border-t border-[hsl(var(--border))] flex items-center justify-between text-xs font-bold text-amber-500 mt-3">
+              <span>View Comparisons</span>
+              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/vault"
+            className="p-4 rounded-3xl glass-panel border border-indigo-500/30 hover:border-indigo-500 bg-gradient-to-br from-indigo-950/15 via-[hsl(var(--card))] to-[hsl(var(--card))] shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  <Library className="h-5 w-5" />
+                </span>
+                <Badge variant="outline" className="text-[10px] font-bold border-indigo-500/30 text-indigo-400">
+                  OCR Engine
+                </Badge>
+              </div>
+              <h3 className="text-sm font-black text-[hsl(var(--foreground))] group-hover:text-indigo-400 transition-colors">
+                Notes & Knowledge Vault
+              </h3>
+              <p className="text-[11px] text-[hsl(var(--muted-foreground))] line-clamp-2">
+                Handwritten notes OCR scanner, vector memory, study flashcards & private AI recall.
+              </p>
+            </div>
+            <div className="pt-3 border-t border-[hsl(var(--border))] flex items-center justify-between text-xs font-bold text-indigo-400 mt-3">
+              <span>Open Vault</span>
+              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/exam-simulator"
+            className="p-4 rounded-3xl glass-panel border border-blue-500/30 hover:border-blue-500 bg-gradient-to-br from-blue-950/15 via-[hsl(var(--card))] to-[hsl(var(--card))] shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="p-2.5 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <Award className="h-5 w-5" />
+                </span>
+                <Badge variant="outline" className="text-[10px] font-bold border-blue-500/30 text-blue-400">
+                  180 Min Timed
+                </Badge>
+              </div>
+              <h3 className="text-sm font-black text-[hsl(var(--foreground))] group-hover:text-blue-400 transition-colors">
+                Authentic Exam Simulator
+              </h3>
+              <p className="text-[11px] text-[hsl(var(--muted-foreground))] line-clamp-2">
+                Official exam conditions, negative marking, step-by-step numerical working & AI rubric marks.
+              </p>
+            </div>
+            <div className="pt-3 border-t border-[hsl(var(--border))] flex items-center justify-between text-xs font-bold text-blue-400 mt-3">
+              <span>Simulate Exam</span>
+              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/career"
+            className="p-4 rounded-3xl glass-panel border border-emerald-500/30 hover:border-emerald-500 bg-gradient-to-br from-emerald-950/15 via-[hsl(var(--card))] to-[hsl(var(--card))] shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="p-2.5 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <Briefcase className="h-5 w-5" />
+                </span>
+                <Badge variant="outline" className="text-[10px] font-bold border-emerald-500/30 text-emerald-400">
+                  Executive AI
+                </Badge>
+              </div>
+              <h3 className="text-sm font-black text-[hsl(var(--foreground))] group-hover:text-emerald-400 transition-colors">
+                Career Roadmap AI
+              </h3>
+              <p className="text-[11px] text-[hsl(var(--muted-foreground))] line-clamp-2">
+                Qualification to CFO pathways, salary bands, articleship milestones & partner mock interviews.
+              </p>
+            </div>
+            <div className="pt-3 border-t border-[hsl(var(--border))] flex items-center justify-between text-xs font-bold text-emerald-400 mt-3">
+              <span>Explore Pathways</span>
+              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      {/* 3. B.COM 6-SEMESTER NEP-2020 QUICK LAUNCHPAD */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>

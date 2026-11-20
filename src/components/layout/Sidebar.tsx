@@ -20,6 +20,9 @@ import {
   LogOut,
   X,
   User,
+  Scale,
+  Award,
+  Briefcase
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -40,10 +43,13 @@ interface NavGroup {
 const mainNav: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "My Courses", href: "/courses", icon: BookOpen },
-  { label: "Study Lab", href: "/lab", icon: FlaskConical },
-  { label: "Tests & Exams", href: "/tests", icon: ClipboardList },
-  { label: "PYQ & Exam Simulator", href: "/exams", icon: ClipboardList },
+  { label: "Amendment Tracker", href: "/amendments", icon: Scale },
+  { label: "Notes & Vault", href: "/vault", icon: Library },
+  { label: "Exam Simulator", href: "/exam-simulator", icon: Award },
+  { label: "Career Roadmap AI", href: "/career", icon: Briefcase },
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
+  { label: "Study Lab", href: "/lab", icon: FlaskConical },
+  { label: "Tests & Assessments", href: "/tests", icon: ClipboardList },
   { label: "Library", href: "/library", icon: Library },
   { label: "My Progress", href: "/progress", icon: BarChart2 },
   { label: "My Profile", href: "/profile", icon: User },
