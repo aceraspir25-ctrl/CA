@@ -19,7 +19,11 @@ import {
   GraduationCap,
   Cpu,
   Zap,
-  Check
+  Check,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX
 } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { Button } from "@/components/ui/button"
@@ -111,6 +115,61 @@ function AITutorContent() {
   const [inputQuery, setInputQuery] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const [activeTab, setActiveTab] = useState<"chat" | "memory" | "youtube">("chat")
+  const [isListening, setIsListening] = useState(false)
+  const [speakingText, setSpeakingText] = useState<string | null>(null)
+
+  const toggleListening = () => {
+    if (typeof window === "undefined") return
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      alert("Speech recognition is not supported in this browser. Please use Chrome or Edge.")
+      return
+    }
+
+    if (isListening) {
+      setIsListening(false)
+      return
+    }
+
+    try {
+      const recognition = new SpeechRecognition()
+      recognition.lang = "en-IN"
+      recognition.interimResults = false
+      recognition.maxAlternatives = 1
+
+      recognition.onstart = () => setIsListening(true)
+      recognition.onend = () => setIsListening(false)
+      recognition.onerror = () => setIsListening(false)
+      recognition.onresult = (event: any) => {
+        const transcript = event.results?.[0]?.[0]?.transcript
+        if (transcript) {
+          setInputQuery(prev => (prev ? prev + " " + transcript : transcript))
+        }
+      }
+      recognition.start()
+    } catch {
+      setIsListening(false)
+    }
+  }
+
+  const toggleSpeech = (text: string) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return
+
+    if (speakingText === text) {
+      window.speechSynthesis.cancel()
+      setSpeakingText(null)
+      return
+    }
+
+    window.speechSynthesis.cancel()
+    const cleanText = text.replace(/[*#`_\[\]]/g, "")
+    const utterance = new SpeechSynthesisUtterance(cleanText)
+    utterance.rate = 0.95
+    utterance.onend = () => setSpeakingText(null)
+    utterance.onerror = () => setSpeakingText(null)
+    setSpeakingText(text)
+    window.speechSynthesis.speak(utterance)
+  }
 
   const promptParam = searchParams.get("prompt") || searchParams.get("topic")
 
@@ -497,7 +556,15 @@ Would you like me to explain this step-by-step or test your knowledge with a moc
                     <div className="flex items-center justify-between pt-2 border-t border-black/5 dark:border-white/5 text-[11px] opacity-70">
                       <span>{new Date(msg.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                       {msg.role === "assistant" && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => toggleSpeech(msg.content)}
+                            className="hover:underline flex items-center gap-1 text-indigo-600 dark:text-indigo-400 font-medium"
+                            title="Listen to audio explanation"
+                          >
+                            {speakingText === msg.content ? <VolumeX className="h-3 w-3 text-red-500" /> : <Volume2 className="h-3 w-3" />}
+                            <span>{speakingText === msg.content ? "Stop" : "Listen"}</span>
+                          </button>
                           <button
                             onClick={() => recordWeakConcept("Topic from Chat", "General", msg.content.substring(0, 80))}
                             className="hover:underline flex items-center gap-1"
@@ -547,6 +614,15 @@ Would you like me to explain this step-by-step or test your knowledge with a moc
                   placeholder="Ask any concept from CA, CMA, CS or B.Com... (e.g. 'Explain Section 185 loan to directors' or 'How to calculate WACC?')"
                   className="flex-1 bg-[hsl(var(--background))]"
                 />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={toggleListening}
+                  className={`px-3 shrink-0 ${isListening ? "border-red-500 bg-red-500/10 text-red-500 animate-pulse" : "text-[hsl(var(--muted-foreground))]"}`}
+                  title={isListening ? "Listening... click to stop" : "Speak query (Speech-to-Text)"}
+                >
+                  {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
                 <Button type="submit" disabled={!inputQuery.trim() || isTyping} className="gap-2 bg-indigo-600 hover:bg-indigo-700">
                   <Send className="h-4 w-4" /> Send
                 </Button>

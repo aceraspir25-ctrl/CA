@@ -1,12 +1,13 @@
 {
-  "name": "EduFinance Pro",
-  "short_name": "EduFinance",
-  "description": "Master CA, CMA, CS & B.Com with AI tutoring and visual learning",
+  "name": "JARVIS CCA-04: India's Unified Academic Intelligence Ecosystem",
+  "short_name": "JARVIS CCA-04",
+  "description": "24×7 Autonomous Academic Intelligence for CA, CMA, CS, B.Com, Tech and Competitive Exams across India",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#0b132b",
-  "theme_color": "#2563eb",
+  "background_color": "#020617",
+  "theme_color": "#4f46e5",
   "orientation": "portrait-primary",
+  "categories": ["education", "finance", "productivity"],
   "icons": [
     {
       "src": "/favicon.ico",

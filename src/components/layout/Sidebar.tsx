@@ -24,7 +24,9 @@ import {
   Award,
   Briefcase,
   ShieldCheck,
-  Cpu
+  Cpu,
+  Users,
+  Building2
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -51,6 +53,9 @@ const mainNav: NavItem[] = [
   { label: "Career Roadmap AI", href: "/career", icon: Briefcase },
   { label: "FRIDAY Security", href: "/security", icon: ShieldCheck },
   { label: "Agent Workforce", href: "/agents", icon: Cpu },
+  { label: "Student Community", href: "/community", icon: Users },
+  { label: "Institutions & Batches", href: "/institution", icon: Building2 },
+  { label: "Faculty Studio", href: "/faculty", icon: GraduationCap },
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
   { label: "Study Lab", href: "/lab", icon: FlaskConical },
   { label: "Tests & Assessments", href: "/tests", icon: ClipboardList },
