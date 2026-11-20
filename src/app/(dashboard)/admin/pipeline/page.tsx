@@ -67,6 +67,7 @@ export default function ContentPipelinePage() {
   const [adminChatIdInput, setAdminChatIdInput] = useState("")
   const [telegramStatusMsg, setTelegramStatusMsg] = useState("")
   const [isSendingTelegramTest, setIsSendingTelegramTest] = useState(false)
+  const [isActivatingWebhook, setIsActivatingWebhook] = useState(false)
 
   // Telegram Document Uploads & Natural Language State
   const [telegramJobs, setTelegramJobs] = useState<TelegramUploadJob[]>(INITIAL_TELEGRAM_UPLOAD_JOBS)
@@ -130,6 +131,24 @@ export default function ContentPipelinePage() {
       setTelegramStatusMsg(`⚠️ Error sending test prompt: ${e?.message}`)
     } finally {
       setIsSendingTelegramTest(false)
+    }
+  }
+
+  const handleActivateCloudWebhook = async () => {
+    setIsActivatingWebhook(true)
+    setTelegramStatusMsg("")
+    try {
+      const res = await fetch("/api/telegram/webhook?setup=1")
+      const data = await res.json()
+      if (data.success) {
+        setTelegramStatusMsg(`🎉 24×7 Cloud Webhook Activated! Linked to ${data.targetWebhookUrl}. Bot will now answer even when PC is shutdown!`)
+      } else {
+        setTelegramStatusMsg(`⚠️ Webhook setup notice: ${data.message || JSON.stringify(data)}`)
+      }
+    } catch (e: any) {
+      setTelegramStatusMsg(`⚠️ Error activating cloud webhook: ${e?.message}`)
+    } finally {
+      setIsActivatingWebhook(false)
     }
   }
 
@@ -1413,7 +1432,7 @@ export default function ContentPipelinePage() {
                     </p>
                   </div>
 
-                  <div className="pt-2 flex flex-col sm:flex-row items-center gap-2">
+                  <div className="pt-2 flex flex-col sm:flex-row flex-wrap items-center gap-2">
                     <Button
                       onClick={handleSendTelegramTest}
                       disabled={isSendingTelegramTest}
@@ -1422,9 +1441,14 @@ export default function ContentPipelinePage() {
                       <BellRing className="h-3.5 w-3.5" />
                       {isSendingTelegramTest ? "Sending Test Ping..." : "Send Test Approval Prompt"}
                     </Button>
-                    <span className="text-[11px] text-emerald-600 font-semibold">
-                      Endpoint: /api/telegram/webhook
-                    </span>
+                    <Button
+                      onClick={handleActivateCloudWebhook}
+                      disabled={isActivatingWebhook}
+                      className="w-full sm:w-auto text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white gap-2 shadow-sm"
+                    >
+                      <Activity className="h-3.5 w-3.5" />
+                      {isActivatingWebhook ? "Activating..." : "⚡ Activate 24×7 Cloud Webhook (PC OFF Mode)"}
+                    </Button>
                   </div>
 
                   {telegramStatusMsg && (

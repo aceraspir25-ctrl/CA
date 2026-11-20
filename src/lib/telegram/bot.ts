@@ -22,8 +22,8 @@ export interface TelegramConfig {
 
 // In-memory runtime config & upload jobs store (synchronized with Web Admin Panel)
 export const telegramConfigState: TelegramConfig = {
-  botToken: process.env.TELEGRAM_BOT_TOKEN || "",
-  adminChatId: process.env.TELEGRAM_ADMIN_CHAT_ID && process.env.TELEGRAM_ADMIN_CHAT_ID !== "9270115302" ? process.env.TELEGRAM_ADMIN_CHAT_ID : "",
+  botToken: process.env.TELEGRAM_BOT_TOKEN || "9270115302:AAFyGSkjS_DZ_yrDwCVdpfxMgd2sENKtIo8",
+  adminChatId: process.env.TELEGRAM_ADMIN_CHAT_ID && process.env.TELEGRAM_ADMIN_CHAT_ID !== "9270115302" ? process.env.TELEGRAM_ADMIN_CHAT_ID : "9238250026",
   isWebhookActive: true,
   lastPingTime: "Ready"
 }

@@ -9,22 +9,54 @@ import {
   executeLeaderAutonomousCycle
 } from "@/lib/telegram/bot"
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const token = process.env.TELEGRAM_BOT_TOKEN || telegramConfigState.botToken || "9270115302:AAFyGSkjS_DZ_yrDwCVdpfxMgd2sENKtIo8"
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000"
+  const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https")
+  const autoWebhookUrl = `${proto}://${host}/api/telegram/webhook`
+
+  // 1-Click Auto Setup: If ?setup=1 or ?set_webhook is passed, register webhook with Telegram!
+  if (req.nextUrl.searchParams.get("setup") === "1" || req.nextUrl.searchParams.get("set_webhook")) {
+    const customUrl = req.nextUrl.searchParams.get("url") || autoWebhookUrl
+    try {
+      const tgRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook?url=${encodeURIComponent(customUrl)}`)
+      const tgData = await tgRes.json()
+      return NextResponse.json({
+        success: tgData.ok,
+        message: tgData.ok ? "🎉 Webhook successfully linked to Telegram! Bot will now answer 24×7 even with PC OFF!" : "Failed to link webhook",
+        targetWebhookUrl: customUrl,
+        telegramResponse: tgData
+      })
+    } catch (e: any) {
+      return NextResponse.json({ success: false, error: e?.message }, { status: 500 })
+    }
+  }
+
+  // Fetch current live webhook info from Telegram servers
+  let liveWebhookInfo: any = null
+  try {
+    const infoRes = await fetch(`https://api.telegram.org/bot${token}/getWebhookInfo`)
+    liveWebhookInfo = await infoRes.json()
+  } catch (e) {}
+
   return NextResponse.json({
     status: "ok",
     service: "Telegram Bot Remote Approval & Admin Gateway",
-    isConfigured: Boolean(telegramConfigState.botToken && telegramConfigState.adminChatId),
+    isConfigured: Boolean(token && telegramConfigState.adminChatId),
+    currentHost: host,
+    detectedWebhookUrl: autoWebhookUrl,
+    liveTelegramWebhook: liveWebhookInfo?.result || null,
+    isWebhookLiveOnCloud: Boolean(liveWebhookInfo?.result?.url),
+    oneClickSetupHint: `Visit ${proto}://${host}/api/telegram/webhook?setup=1 in browser to link Telegram directly to Vercel!`,
     uploadJobsCount: activeUploadJobs.length,
-    uploadJobs: activeUploadJobs,
-    pendingJobsCount: activeUploadJobs.filter((j) => j.status === "pending_review").length,
-    instructions: "Configure TELEGRAM_BOT_TOKEN and TELEGRAM_ADMIN_CHAT_ID in environment or via Admin UI."
+    pendingJobsCount: activeUploadJobs.filter((j) => j.status === "pending_review").length
   })
 }
 
 export async function POST(req: NextRequest) {
   try {
     const update = await req.json()
-    const token = telegramConfigState.botToken || process.env.TELEGRAM_BOT_TOKEN || ""
+    const token = process.env.TELEGRAM_BOT_TOKEN || telegramConfigState.botToken || "9270115302:AAFyGSkjS_DZ_yrDwCVdpfxMgd2sENKtIo8"
 
     // Extract sender chat ID & human user ID
     const senderChatId = String(update.message?.chat?.id || update.callback_query?.message?.chat?.id || "")
