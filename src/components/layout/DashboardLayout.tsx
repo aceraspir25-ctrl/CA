@@ -4,6 +4,7 @@ import { useState, Suspense } from "react"
 import Sidebar from "./Sidebar"
 import Navbar from "./Navbar"
 import MobileBottomNav from "./MobileBottomNav"
+import FloatingAIAssistant from "@/components/ui/FloatingAIAssistant"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -47,6 +48,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Quick Access Mobile Bottom Bar */}
       <MobileBottomNav />
+
+      {/* Floating AI Doubt Solver */}
+      <FloatingAIAssistant />
     </div>
   )
 }
