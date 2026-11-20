@@ -232,6 +232,138 @@ export const COMPREHENSIVE_CHAPTER_LESSONS: Record<string, ChapterLessonDetail> 
     practiceQuestions: [
       { q: "What is the maximum discount permitted on re-issue of forfeited shares?", a: "The discount on re-issue cannot exceed the amount already forfeited on those specific shares." }
     ]
+  },
+
+  // 4. PRSU B.Com Semester 1: Financial Accounting - Accounting Standards
+  "prsu-s1-p1-ch1": {
+    id: "lesson-prsu-s1-p1-ch1",
+    chapterId: "prsu-s1-p1-ch1",
+    title: "Meaning, Principles & Accounting Standards (AS-1, AS-10)",
+    hindiTitle: "लेखांकन के सिद्धांत एवं मानक (AS-1, AS-10)",
+    overview: "Financial accounting is the systematic process of identifying, measuring, recording, and summarizing financial transactions according to GAAP and mandatory Accounting Standards (AS-1 Disclosure of Accounting Policies, AS-10 Property, Plant and Equipment).",
+    eli10: {
+      en: "Imagine you have a piggy bank and a notebook. Every time you get pocket money or buy chocolates, you write the date and exact amount. Accounting is just that notebook, but with strict rules so nobody can cheat and everyone knows your exact financial health!",
+      hi: "मान लीजिए आपके पास एक गुल्लक और एक डायरी है। जब भी आपको पैसे मिलते हैं या आप कोई खर्च करते हैं, तो आप डायरी में तारीख और रकम लिखते हैं। लेखांकन (Accounting) बस वही नियमबद्ध डायरी है जिससे व्यापार का सही लाभ-हानि पता चलता है।",
+      hinglish: "Socho aapke paas ek diary hai jisme aap roz ka aana-jaana paisa likhte ho. Accounting bas wahi system hai jo official rules (GAAP aur Accounting Standards) follow karta hai taaki business ka exact profit aur balance sheet pata chale."
+    },
+    statutoryContext: {
+      standards: "AS 1 (Disclosure of Accounting Policies) & AS 10 (Property, Plant and Equipment)",
+      sections: "Section 128, 129 & 133 of Companies Act 2013",
+      provisions: "Requires books of accounts to be maintained on accrual basis under double-entry system, presenting a true and fair view of state of affairs."
+    },
+    practicalIllustration: {
+      problemStatement: "M/s Raipur Traders purchased machinery costing ₹5,00,000 on 1st April 2024. Installation expenses incurred were ₹50,000. Under AS-10, determine the total capitalized cost of machinery and record the journal entry.",
+      solutionSteps: [
+        "Step 1: Identify purchase price (₹5,00,000) and directly attributable costs (Installation ₹50,000).",
+        "Step 2: Under AS-10, all expenses incurred to bring the asset to its working condition must be capitalized.",
+        "Step 3: Total capitalized cost = ₹5,00,000 + ₹50,000 = ₹5,50,000."
+      ],
+      journalEntries: [
+        { particulars: "Machinery Account ...................................... Dr.", debit: "₹5,50,000", credit: "" },
+        { particulars: "   To Bank Account", debit: "", credit: "₹5,00,000" },
+        { particulars: "   To Cash Account (Installation Expenses)", debit: "", credit: "₹50,000" }
+      ]
+    },
+    commonMistakes: [
+      "Treating machinery installation charges as revenue expenditure instead of capitalizing under AS-10.",
+      "Omitting fundamental accounting assumptions (Going Concern, Consistency, Accrual) without required AS-1 disclosures."
+    ],
+    memoryTrick: "Golden Rule of Asset Capitalization: 'Buy Price + Fit Price = Total Asset Cost' (B + F = T).",
+    practiceQuestions: [
+      { q: "What are the three fundamental accounting assumptions under AS-1?", a: "Going Concern, Consistency, and Accrual. If they are followed, no specific disclosure is required. If not followed, the fact must be disclosed." },
+      { q: "Can installation charges of plant be debited to Profit & Loss Account?", a: "No. Under AS-10, installation charges are directly attributable costs and must be debited to Plant/Machinery Account." }
+    ]
+  },
+
+  // 5. PRSU B.Com Semester 1: Financial Accounting - Royalty Accounts
+  "prsu-s1-p1-ch2": {
+    id: "lesson-prsu-s1-p1-ch2",
+    chapterId: "prsu-s1-p1-ch2",
+    title: "Royalty Accounts: Minimum Rent & Shortworkings",
+    hindiTitle: "रॉयल्टी (अधिकार शुल्क) खाते: न्यूनतम किराया एवं लघुकार्य",
+    overview: "Royalty is periodic consideration paid by a lessee (user) to a lessor (owner) for exploiting special rights like coal mines, patents, or copyright books. Features Minimum Rent, Shortworkings, and Recoupment clauses.",
+    eli10: {
+      en: "Imagine you borrow your friend's bicycle to deliver newspapers. You promise him ₹10 for every newspaper delivered, but at least ₹50 per day no matter what. That ₹50 guarantee is 'Minimum Rent'. If you deliver only 3 papers (₹30 earned), the extra ₹20 you have to pay from your pocket is 'Shortworkings'!",
+      hi: "मान लीजिए आप किसी लेखक की किताब छापने का अधिकार लेते हैं। आप प्रति किताब ₹20 देने का वादा करते हैं, लेकिन साल का कम से कम ₹10,000 जरूर देंगे (न्यूनतम किराया)। यदि किसी साल केवल 300 किताबें बिकीं (₹6,000), तो बाकी के ₹4,000 जो आपको अपनी जेब से भरने पड़े, उसे 'लघुकार्य (Shortworkings)' कहते हैं।",
+      hinglish: "Agar aap kisi ki mine ya book right use karte ho aur per-unit payment ke saath ek minimum guarantee (Minimum Rent) dete ho, toh production kam hone par jo deficit hota hai use Shortworkings bolte hain, jise aage chal kar recover kiya ja sakta hai."
+    },
+    statutoryContext: {
+      standards: "Guidance Note on Accounting for Mineral Rights & Royalties",
+      sections: "Mines and Minerals (Development and Regulation) Act & Indian Contract Act 1872",
+      provisions: "Royalty based on actual output/sales, subject to agreed minimum dead rent and recoupment terms within lease deed."
+    },
+    practicalIllustration: {
+      problemStatement: "A lessee took a coal mine on royalty of ₹5 per tonne of coal extracted, with Minimum Rent of ₹40,000 p.a. Shortworkings can be recouped in first 3 years. Year 1 Output: 6,000 tonnes. Year 2 Output: 10,000 tonnes. Pass journal entries in lessee's books.",
+      solutionSteps: [
+        "Step 1: Year 1 Actual Royalty = 6,000 * ₹5 = ₹30,000. Minimum Rent = ₹40,000. Shortworking = ₹10,000. Payment = ₹40,000.",
+        "Step 2: Year 2 Actual Royalty = 10,000 * ₹5 = ₹50,000. Excess = ₹10,000. Recoup Year 1 shortworking ₹10,000. Payment = ₹40,000."
+      ],
+      journalEntries: [
+        { date: "Year 1", particulars: "Royalty A/c ............................................. Dr.", debit: "₹30,000", credit: "" },
+        { date: "Year 1", particulars: "Shortworkings A/c ................................. Dr.", debit: "₹10,000", credit: "" },
+        { date: "Year 1", particulars: "   To Landlord A/c", debit: "", credit: "₹40,000" },
+        { date: "Year 1", particulars: "Landlord A/c ........................................... Dr.", debit: "₹40,000", credit: "" },
+        { date: "Year 1", particulars: "   To Bank A/c", debit: "", credit: "₹40,000" },
+        { date: "Year 2", particulars: "Royalty A/c ............................................. Dr.", debit: "₹50,000", credit: "" },
+        { date: "Year 2", particulars: "   To Shortworkings A/c (Recouped)", debit: "", credit: "₹10,000" },
+        { date: "Year 2", particulars: "   To Landlord A/c (Net Payable)", debit: "", credit: "₹40,000" }
+      ]
+    },
+    commonMistakes: [
+      "Recouping shortworkings beyond the expiry period allowed in the lease agreement.",
+      "Failing to transfer unrecouped shortworkings to Profit & Loss Account in the year of forfeiture."
+    ],
+    memoryTrick: "Formula: 'Payment to Landlord = Higher of Actual Royalty or Minimum Rent (Minus Recouped Shortworkings)'.",
+    practiceQuestions: [
+      { q: "What is Shortworkings in Royalty Accounts?", a: "Shortworkings is the excess of Minimum Rent over the Actual Royalty when output/sales are lower than the threshold level." },
+      { q: "Where does Unrecouped Shortworkings appear at the end of the year?", a: "It is written off as a loss to the debit side of the Profit & Loss Account." }
+    ]
+  },
+
+  // 6. PRSU B.Com Semester 6: Goods & Services Tax (GST) - Supply Concept
+  "prsu-s6-p1-ch1": {
+    id: "lesson-prsu-s6-p1-ch1",
+    chapterId: "prsu-s6-p1-ch1",
+    title: "Constitutional Framework, CGST/SGST/IGST & Supply Concept",
+    hindiTitle: "जीएसटी का संवैधानिक ढांचा एवं आपूर्ति की अवधारणा (Sec 7)",
+    overview: "Goods and Services Tax (GST) is a comprehensive destination-based consumption tax introduced via the 101st Constitutional Amendment Act 2016. Replaced 17 central and state indirect taxes with CGST, SGST, UTGST, and IGST under the supreme principle of 'Supply' (Section 7 CGST Act).",
+    eli10: {
+      en: "Before GST, if you bought a toy made in another state, you paid 4 different taxes: Excise, VAT, Entry Tax, CST. With GST, it's 'One Nation, One Tax'. If you buy inside your state, you pay CGST + SGST. If you buy from another state, you pay IGST directly!",
+      hi: "जीएसटी से पहले एक ही सामान पर कई टैक्स लगते थे—एक्साइज ड्यूटी, वैट, एंट्री टैक्स। 1 जुलाई 2017 से 'एक देश, एक कर' लागू हुआ। राज्य के अंदर खरीदारी पर CGST और SGST आधा-आधा लगता है, और दूसरे राज्य से मंगाने पर केवल IGST लगता है।",
+      hinglish: "Pehle har state me alag alag VAT aur excise lagta tha jisse tax par tax (cascading effect) hota tha. 101st Constitutional Amendment se GST aaya. Ab sirf 'Supply' par tax lagta hai: intra-state me CGST + SGST aur inter-state me IGST."
+    },
+    statutoryContext: {
+      standards: "Articles 246A, 269A & 279A (GST Council) of the Constitution of India",
+      sections: "Section 7 (Scope of Supply) & Section 9 (Levy and Collection) of CGST Act 2017",
+      provisions: "Supply includes all forms of supply of goods or services or both such as sale, transfer, barter, exchange, license, rental, lease made for a consideration in the course or furtherance of business."
+    },
+    practicalIllustration: {
+      problemStatement: "A dealer in Raipur (Chhattisgarh) supplies commercial goods worth ₹2,00,000 to a trader in Bilaspur (Chhattisgarh). Applicable GST rate is 18%. In another transaction, he supplies goods worth ₹1,50,000 to a dealer in Nagpur (Maharashtra). Calculate the CGST, SGST, and IGST applicable.",
+      solutionSteps: [
+        "Step 1: Raipur to Bilaspur is within Chhattisgarh (Intra-State Supply). Applicable: CGST (9%) + SGST (9%).",
+        "Step 2: CGST = 9% of ₹2,00,000 = ₹18,000. SGST = 9% of ₹2,00,000 = ₹18,000. Total = ₹36,000.",
+        "Step 3: Raipur to Nagpur is Chhattisgarh to Maharashtra (Inter-State Supply). Applicable: IGST (18%).",
+        "Step 4: IGST = 18% of ₹1,50,000 = ₹27,000."
+      ],
+      journalEntries: [
+        { particulars: "Bilaspur Trader A/c ..................................... Dr.", debit: "₹2,36,000", credit: "" },
+        { particulars: "   To Sales Account", debit: "", credit: "₹2,00,000" },
+        { particulars: "   To Output CGST Account (9%)", debit: "", credit: "₹18,000" },
+        { particulars: "   To Output SGST Account (9%)", debit: "", credit: "₹18,000" },
+        { particulars: "Nagpur Trader A/c ....................................... Dr.", debit: "₹1,77,000", credit: "" },
+        { particulars: "   To Sales Account", debit: "", credit: "₹1,50,000" },
+        { particulars: "   To Output IGST Account (18%)", debit: "", credit: "₹27,000" }
+      ]
+    },
+    commonMistakes: [
+      "Charging IGST on intra-state supply or charging CGST/SGST on interstate supply.",
+      "Confusing 'Composite Supply' (taxed at principal rate) with 'Mixed Supply' (taxed at highest rate)."
+    ],
+    memoryTrick: "GST Golden Mantra: 'Within State = C + S (Halves). Outside State = Full I (Whole)'.",
+    practiceQuestions: [
+      { q: "Which Constitutional Amendment enabled the implementation of GST in India?", a: "The 101st Constitutional Amendment Act, 2016, which inserted Article 246A conferring simultaneous powers to Parliament and State Legislatures." },
+      { q: "What is the taxable event under GST law?", a: "The taxable event under GST is 'Supply' of goods or services or both, as defined under Section 7 of the CGST Act 2017." }
+    ]
   }
 }
 

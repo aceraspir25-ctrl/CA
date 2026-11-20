@@ -324,5 +324,125 @@ Card 2: Front: Credit balance in Cash Book means? | Back: Bank Overdraft (Unfavo
 - Final Balance Tally: 2 Marks`
       }
     ]
+  },
+  {
+    id: "pkg-prsu-s1-ch2",
+    courseId: "prsu",
+    courseName: "PRSU B.Com",
+    institution: "PRSU",
+    levelId: "prsu-bcom-sem1",
+    paperId: "prsu-s1-p1",
+    paperTitle: "Financial Accounting (वित्तीय लेखांकन)",
+    chapterId: "prsu-s1-p1-ch2",
+    chapterNumber: 2,
+    chapterTitle: "Royalty Accounts: Minimum Rent & Shortworkings",
+    hindiTitle: "रॉयल्टी (अधिकार शुल्क) खाते: न्यूनतम किराया एवं लघुकार्य",
+    version: "v1.0 (PRSU NEP-2020 Aligned)",
+    publishDate: "20 Nov 2026",
+    verifiedBy: "LEADER-00 & CCA-04 (Academic Content Engine)",
+    isPublished: true,
+    totalResources: 6,
+    resources: [
+      {
+        id: "prsu-res-1",
+        code: "01",
+        title: "Complete Theory & Concept Master Notes",
+        hindiTitle: "संपूर्ण सैद्धांतिक एवं अवधारणा मास्टर नोट्स",
+        type: "complete_notes",
+        pagesCount: 16,
+        estimatedReadTime: "30 mins",
+        language: "multilingual",
+        visualStyle: "clean_handwritten",
+        description: "Meaning of Royalty, Minimum Rent, Shortworkings, Recoupment clauses (Fixed vs Fluctuating period), and sub-lease accounting.",
+        rawContent: `# Royalty Accounts (अधिकार शुल्क खाते)
+## 1. Meaning of Royalty
+Royalty is periodic consideration payable by a user (Lessee) to an owner (Lessor/Landlord) for exploiting an exclusive right or asset such as a coal mine, oil well, patent, or book copyright.
+
+## 2. Key Terms & Concepts
+- **Minimum Rent (Dead Rent / Fixed Rent):** The guaranteed minimum sum payable to the landlord irrespective of actual output or sales.
+- **Shortworkings:** When Actual Royalty < Minimum Rent, the deficit is termed Shortworkings (Shortworkings = Minimum Rent - Actual Royalty).
+- **Recoupment of Shortworkings:** The legal clause allowing the lessee to recover past shortworkings from future surplus royalties within a stipulated timeframe (Fixed Period vs Floating/Next X Years).
+- **Lapse / Forfeiture of Shortworkings:** Any unrecouped shortworking after the expiration of the recoupment window is an irrecoverable loss, transferred to the Profit & Loss Account.
+
+## 3. Standard Journal Entries in Lessee's Books
+1. **When Royalty is Due (with Shortworkings):**
+   - Royalty A/c ................................ Dr. (Actual Royalty)
+   - Shortworkings A/c .......................... Dr. (Deficit)
+   -    To Landlord A/c ......................... (Minimum Rent)
+2. **When Payment is Made:**
+   - Landlord A/c ............................... Dr. (Minimum Rent)
+   -    To Bank A/c ............................. (Net Paid)
+3. **When Future Surplus Recoups Shortworkings:**
+   - Royalty A/c ................................ Dr. (Total Actual Royalty)
+   -    To Shortworkings A/c .................... (Recouped Amount)
+   -    To Landlord A/c ......................... (Remaining Balance Paid)`
+      },
+      {
+        id: "prsu-res-2",
+        code: "02",
+        title: "Step-by-Step Practical Numericals & Working Ledger Table",
+        hindiTitle: "चरणबद्ध व्यावहारिक संख्यात्मक प्रश्न एवं विश्लेषणात्मक तालिका",
+        type: "solved_examples",
+        pagesCount: 12,
+        estimatedReadTime: "25 mins",
+        language: "en",
+        visualStyle: "numerical_notes",
+        description: "Standard 8-column Analytical Table (Year, Output, Actual Royalty, Min Rent, Shortworkings, Recouped, Lapsed, Paid) with solved exam questions.",
+        rawContent: `Analytical Table Format:
+Columns:
+1. Year
+2. Output (Tonnes / Units)
+3. Actual Royalty (Rate * Output)
+4. Minimum Rent
+5. Shortworkings Incurred
+6. Shortworkings Recouped
+7. Shortworkings Transferred to P&L (Lapsed)
+8. Cash Paid to Landlord
+
+Exam Golden Rule: Landlord always receives MAX(Actual Royalty, Minimum Rent) - Shortworkings Recouped!`
+      },
+      {
+        id: "prsu-res-3",
+        code: "03",
+        title: "15 Exam-Standard Interactive MCQs with Explanations",
+        hindiTitle: "15 मानक परीक्षा उपयोगी बहुविकल्पीय प्रश्न (व्याख्या सहित)",
+        type: "mcq_bank",
+        pagesCount: 8,
+        estimatedReadTime: "15 mins",
+        language: "multilingual",
+        visualStyle: "exam_revision",
+        description: "15 carefully graded objective questions testing definitions, recoupment calculations, and balance sheet disclosure for B.Com semester exams.",
+        rawContent: `Q1: What is the accounting nature of Shortworkings Account in lessee's ledger?
+(A) Nominal Account (until recouped)
+(B) Real Account
+(C) Personal Account
+(D) Asset / Deferred Expense (Recoverable)
+Correct Answer: (D) Asset / Deferred Expense while recoupment period is valid.
+
+Q2: If Actual Royalty is ₹25,000 and Minimum Rent is ₹35,000, Shortworkings is:
+(A) ₹60,000
+(B) ₹10,000
+(C) ₹25,000
+(D) Nil
+Correct Answer: (B) ₹10,000 (35,000 - 25,000).`
+      },
+      {
+        id: "prsu-res-4",
+        code: "04",
+        title: "Quick Revision Cheat Sheet & Analytical Flowchart",
+        hindiTitle: "त्वरित दोहराव फॉर्मूला शीट एवं विश्लेषणात्मक फ्लोचार्ट",
+        type: "formula_sheet",
+        pagesCount: 4,
+        estimatedReadTime: "8 mins",
+        language: "multilingual",
+        visualStyle: "visual_learning",
+        description: "One-page visual summary of all formula relationships, ledger balance positions, and strike/lockout proportionate reduction rules.",
+        rawContent: `Quick Cheat Sheet:
+- Output * Royalty Rate = Actual Royalty
+- If Actual Royalty < Dead Rent ➔ Shortworkings = Dead Rent - Actual Royalty
+- If Actual Royalty > Dead Rent ➔ Surplus = Actual Royalty - Dead Rent
+- If Strike occurs ➔ Minimum Rent reduces proportionately as per lease deed agreement.`
+      }
+    ]
   }
 ]
