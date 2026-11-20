@@ -42,6 +42,7 @@ export const telegramConfigState: TelegramConfig = {
 }
 
 export let activeUploadJobs: TelegramUploadJob[] = [...INITIAL_TELEGRAM_UPLOAD_JOBS]
+export let lastSharedYouTubeUrl: string | null = null
 
 /**
  * Send the 4-Action Verification Report Card to Telegram Admin
@@ -366,9 +367,20 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
   // 000. YOUTUBE EDUCATIONAL LECTURE EXTRACTOR & AUTO-COURSE CLASSIFIER
   const ytVideoId = extractYouTubeVideoId(query)
   if (ytVideoId || q.includes("youtube.com") || q.includes("youtu.be")) {
-    const urlMatch = query.match(/https?:\/\/[^\s]+/)
-    const targetUrl = urlMatch ? urlMatch[0] : `https://www.youtube.com/watch?v=${ytVideoId}`
+    const urlMatch = query.match(/https?:\/\/[^\s"'>]+/)
+    const targetUrl = ytVideoId ? `https://www.youtube.com/watch?v=${ytVideoId}` : (urlMatch ? urlMatch[0] : query)
+    lastSharedYouTubeUrl = targetUrl
     const result = await processYouTubeLectureUrl(targetUrl, query)
+    return result.telegramMessage
+  }
+
+  // Follow-up context memory: e.g. "extract this and add in cma inter", "cma inter me add karo", "is video ko ca inter me add karo"
+  const isReclassifyRequest =
+    (q.includes("extract") || q.includes("add") || q.includes("me add karo") || q.includes("me dalo") || q.includes("is video ko") || q.includes("ye video")) &&
+    (q.includes("cma") || q.includes("ca") || q.includes("bcom") || q.includes("sem") || q.includes("inter") || q.includes("foundation") || q.includes("tax"))
+
+  if (isReclassifyRequest && lastSharedYouTubeUrl) {
+    const result = await processYouTubeLectureUrl(lastSharedYouTubeUrl, query)
     return result.telegramMessage
   }
 

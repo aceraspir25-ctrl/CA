@@ -1,4 +1,4 @@
-export type AIProvider = "gemini" | "openai" | "simulated"
+export type AIProvider = "gemini" | "openai" | "groq" | "deepseek" | "free-ai" | "simulated"
 
 export type AICapability =
   | "teacher"
@@ -23,6 +23,9 @@ export interface AIUsageMetrics {
   totalRequests: number
   geminiRequests: number
   openaiRequests: number
+  groqRequests: number
+  deepseekRequests: number
+  freeAiRequests: number
   simulatedRequests: number
   totalPromptTokens: number
   totalCompletionTokens: number
@@ -37,12 +40,15 @@ export interface AIChatRequest {
   }[]
   capability?: AICapability
   preferredProvider?: AIProvider
+  modelName?: string
   studentLevel?: number
   courseContext?: string
   language?: "en" | "hi" | "hinglish"
   apiKey?: string
   geminiKey?: string
   openaiKey?: string
+  groqKey?: string
+  deepseekKey?: string
 }
 
 export interface AIChatResponse {

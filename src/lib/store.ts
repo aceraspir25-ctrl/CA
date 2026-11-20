@@ -139,9 +139,11 @@ interface AppState {
   certificates: CertificateRecord[]
   issueCertificate: (cert: Omit<CertificateRecord, "id" | "verificationCode" | "completionDate">) => CertificateRecord
 
-  // AI API Keys
+  // AI API Keys & Preferred Model
   geminiApiKey?: string
   openaiApiKey?: string
+  preferredAiProvider: "gemini" | "openai" | "groq" | "deepseek" | "free-ai"
+  setPreferredAiProvider: (provider: "gemini" | "openai" | "groq" | "deepseek" | "free-ai") => void
   setApiKeys: (keys: { geminiKey?: string; openaiKey?: string }) => void
 }
 
@@ -303,6 +305,8 @@ export const useAppStore = create<AppState>()(
       setStudyReminders: (enabled) => set({ studyReminders: enabled }),
       geminiApiKey: "",
       openaiApiKey: "",
+      preferredAiProvider: "gemini",
+      setPreferredAiProvider: (provider) => set({ preferredAiProvider: provider }),
       setApiKeys: (keys) => set((state) => ({
         geminiApiKey: keys.geminiKey !== undefined ? keys.geminiKey : state.geminiApiKey,
         openaiApiKey: keys.openaiKey !== undefined ? keys.openaiKey : state.openaiApiKey,
