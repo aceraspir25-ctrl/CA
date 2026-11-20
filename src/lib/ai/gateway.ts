@@ -5,6 +5,9 @@ export const aiUsageMetrics: AIUsageMetrics = {
   totalRequests: 0,
   geminiRequests: 0,
   openaiRequests: 0,
+  groqRequests: 0,
+  deepseekRequests: 0,
+  freeAiRequests: 0,
   simulatedRequests: 0,
   totalPromptTokens: 0,
   totalCompletionTokens: 0,
@@ -16,6 +19,9 @@ function updateMetrics(provider: AIProvider, promptTokens: number, completionTok
   aiUsageMetrics.totalRequests += 1
   if (provider === "gemini") aiUsageMetrics.geminiRequests += 1
   else if (provider === "openai") aiUsageMetrics.openaiRequests += 1
+  else if (provider === "groq") aiUsageMetrics.groqRequests += 1
+  else if (provider === "deepseek") aiUsageMetrics.deepseekRequests += 1
+  else if (provider === "free-ai") aiUsageMetrics.freeAiRequests += 1
   else aiUsageMetrics.simulatedRequests += 1
 
   aiUsageMetrics.totalPromptTokens += promptTokens
@@ -183,6 +189,154 @@ async function callOpenAI(request: AIChatRequest, apiKey: string): Promise<AICha
     }
   } catch (err) {
     console.error("OpenAI API error:", err)
+    return null
+  }
+}
+
+/**
+ * Calls Groq Cloud API (Ultra-Fast Llama 3.3 70B & DeepSeek R1 Distill)
+ */
+async function callGroq(request: AIChatRequest, apiKey: string): Promise<AIChatResponse | null> {
+  const model = request.modelName || "llama-3.3-70b-versatile"
+  const url = "https://api.groq.com/openai/v1/chat/completions"
+
+  const systemInstruction = buildSystemPrompt(request)
+  const messages = [
+    { role: "system", content: systemInstruction },
+    ...request.messages.map((m) => ({ role: m.role, content: m.content })),
+  ]
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature: 0.6,
+        max_tokens: 2048,
+      }),
+    })
+
+    if (!res.ok) return null
+    const data = await res.json()
+    const text = data?.choices?.[0]?.message?.content
+    if (!text) return null
+
+    const promptTokens = data?.usage?.prompt_tokens || 200
+    const completionTokens = data?.usage?.completion_tokens || 400
+    updateMetrics("groq", promptTokens, completionTokens)
+
+    return {
+      content: text,
+      providerUsed: "groq",
+      modelUsed: `Groq/${model}`,
+      tokensUsed: {
+        prompt: promptTokens,
+        completion: completionTokens,
+        total: promptTokens + completionTokens,
+      },
+      cached: false,
+      timestamp: new Date().toISOString(),
+    }
+  } catch (err) {
+    return null
+  }
+}
+
+/**
+ * Calls DeepSeek Reasoning API (DeepSeek R1 / V3)
+ */
+async function callDeepSeek(request: AIChatRequest, apiKey: string): Promise<AIChatResponse | null> {
+  const model = "deepseek-reasoner"
+  const url = "https://api.deepseek.com/chat/completions"
+
+  const systemInstruction = buildSystemPrompt(request)
+  const messages = [
+    { role: "system", content: systemInstruction },
+    ...request.messages.map((m) => ({ role: m.role, content: m.content })),
+  ]
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature: 0.6,
+        max_tokens: 2048,
+      }),
+    })
+
+    if (!res.ok) return null
+    const data = await res.json()
+    const text = data?.choices?.[0]?.message?.content
+    if (!text) return null
+
+    const promptTokens = data?.usage?.prompt_tokens || 200
+    const completionTokens = data?.usage?.completion_tokens || 400
+    updateMetrics("deepseek", promptTokens, completionTokens)
+
+    return {
+      content: text,
+      providerUsed: "deepseek",
+      modelUsed: "DeepSeek-R1",
+      tokensUsed: {
+        prompt: promptTokens,
+        completion: completionTokens,
+        total: promptTokens + completionTokens,
+      },
+      cached: false,
+      timestamp: new Date().toISOString(),
+    }
+  } catch (err) {
+    return null
+  }
+}
+
+/**
+ * Calls Free Open AI Engine (Zero-Key Required Serverless Inference)
+ */
+async function callFreeAI(request: AIChatRequest): Promise<AIChatResponse | null> {
+  const systemInstruction = buildSystemPrompt(request)
+  const messages = [
+    { role: "system", content: systemInstruction },
+    ...request.messages.map((m) => ({ role: m.role, content: m.content })),
+  ]
+
+  try {
+    const res = await fetch("https://text.pollinations.ai/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages,
+        model: "openai",
+        seed: 42
+      }),
+    })
+
+    if (!res.ok) return null
+    const text = await res.text()
+    if (!text || text.length < 5) return null
+
+    updateMetrics("free-ai", 200, 450)
+
+    return {
+      content: text,
+      providerUsed: "free-ai",
+      modelUsed: "Free-Open-AI/LLM-Online",
+      tokensUsed: { prompt: 200, completion: 450, total: 650 },
+      cached: false,
+      timestamp: new Date().toISOString(),
+    }
+  } catch (err) {
     return null
   }
 }
@@ -428,41 +582,56 @@ Every concept in commerce, professional finance, and corporate management is des
 }
 
 /**
- * Main Centralized AI Gateway Entry Point with Automatic Provider Fallback
+ * Main Centralized AI Gateway Entry Point with Multi-Model Support & Zero-Key Free Fallback
  */
 export async function executeAIChat(request: AIChatRequest): Promise<AIChatResponse> {
   const geminiKey = request.geminiKey || request.apiKey || process.env.GEMINI_API_KEY
   const openaiKey = request.openaiKey || process.env.OPENAI_API_KEY
+  const groqKey = request.groqKey || process.env.GROQ_API_KEY
+  const deepseekKey = request.deepseekKey || process.env.DEEPSEEK_API_KEY
 
-  const preferred = request.preferredProvider || "gemini"
+  const preferred = request.preferredProvider || (geminiKey ? "gemini" : openaiKey ? "openai" : "free-ai")
 
-  // Primary attempt
+  // 1. Try Preferred Provider
   if (preferred === "gemini" && geminiKey) {
     const res = await callGemini(request, geminiKey)
     if (res) return res
-    if (openaiKey) {
-      const fallbackRes = await callOpenAI(request, openaiKey)
-      if (fallbackRes) return fallbackRes
-    }
   } else if (preferred === "openai" && openaiKey) {
     const res = await callOpenAI(request, openaiKey)
     if (res) return res
-    if (geminiKey) {
-      const fallbackRes = await callGemini(request, geminiKey)
-      if (fallbackRes) return fallbackRes
-    }
-  } else {
-    // If preferred is unconfigured, try whichever key is present
-    if (geminiKey) {
-      const res = await callGemini(request, geminiKey)
-      if (res) return res
-    }
-    if (openaiKey) {
-      const res = await callOpenAI(request, openaiKey)
-      if (res) return res
-    }
+  } else if (preferred === "groq" && groqKey) {
+    const res = await callGroq(request, groqKey)
+    if (res) return res
+  } else if (preferred === "deepseek" && deepseekKey) {
+    const res = await callDeepSeek(request, deepseekKey)
+    if (res) return res
+  } else if (preferred === "free-ai") {
+    const res = await callFreeAI(request)
+    if (res) return res
   }
 
-  // Fallback to rich, context-aware academic generator if keys are absent or failed
+  // 2. Cascade Waterfall Fallbacks
+  if (geminiKey) {
+    const res = await callGemini(request, geminiKey)
+    if (res) return res
+  }
+  if (openaiKey) {
+    const res = await callOpenAI(request, openaiKey)
+    if (res) return res
+  }
+  if (groqKey) {
+    const res = await callGroq(request, groqKey)
+    if (res) return res
+  }
+  if (deepseekKey) {
+    const res = await callDeepSeek(request, deepseekKey)
+    if (res) return res
+  }
+
+  // 3. Try High-Performance Free AI (Zero-Key Required)
+  const freeAiRes = await callFreeAI(request)
+  if (freeAiRes) return freeAiRes
+
+  // 4. Ultimate Contextual Academic Engine Fallback
   return generateContextualAcademicResponse(request)
 }

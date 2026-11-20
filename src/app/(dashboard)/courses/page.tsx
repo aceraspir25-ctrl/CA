@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import KnowledgeGraph from "@/components/graph/KnowledgeGraph"
+import YouTubeExtractorStudio, { YoutubeIcon } from "@/components/courses/YouTubeExtractorStudio"
 import {
   GraduationCap,
   BookOpen,
@@ -35,7 +36,7 @@ function CoursesContent() {
 
   const [selectedInstId, setSelectedInstId] = useState<string>(instParam || "prsu")
   const [selectedLevelId, setSelectedLevelId] = useState<string>(levelParam || "prsu-bcom-sem1")
-  const [activeTab, setActiveTab] = useState<"curriculum" | "learning-path" | "graph">("curriculum")
+  const [activeTab, setActiveTab] = useState<"curriculum" | "learning-path" | "graph" | "youtube-extractor">("curriculum")
 
   useEffect(() => {
     if (instParam) setSelectedInstId(instParam)
@@ -68,6 +69,17 @@ function CoursesContent() {
             <p className="text-blue-200 text-xs sm:text-sm max-w-2xl leading-relaxed">
               Explore PRSU Raipur NEP-2020 6-Semester Degree and Professional CA, CMA, CS & ACCA programs. Click any subject to immediately open its dedicated full chapter content studio.
             </p>
+            <div className="pt-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveTab("youtube-extractor")}
+                className="bg-white/10 hover:bg-white/20 text-white border-white/20 rounded-xl text-xs font-bold gap-2 cursor-pointer shadow-sm active:scale-95"
+              >
+                <YoutubeIcon className="h-4 w-4 text-red-400 fill-red-400" />
+                Extract & Add YouTube Video to Course
+              </Button>
+            </div>
           </div>
 
           {/* Institution Switcher Pills */}
@@ -145,6 +157,13 @@ function CoursesContent() {
           >
             <Layers className="h-4 w-4 text-indigo-400" />
             Knowledge Graph
+          </TabsTrigger>
+          <TabsTrigger
+            value="youtube-extractor"
+            className="gap-2 rounded-xl text-xs font-bold py-2 px-3 sm:px-4 cursor-pointer data-[state=active]:bg-red-600 data-[state=active]:text-white"
+          >
+            <YoutubeIcon className="h-4 w-4 text-red-500 group-data-[state=active]:text-white fill-current" />
+            YouTube Lecture Extractor
           </TabsTrigger>
         </TabsList>
 
@@ -309,6 +328,11 @@ function CoursesContent() {
         {/* TAB 3: KNOWLEDGE GRAPH */}
         <TabsContent value="graph">
           <KnowledgeGraph />
+        </TabsContent>
+
+        {/* TAB 4: YOUTUBE AI EXTRACTOR STUDIO */}
+        <TabsContent value="youtube-extractor" className="space-y-6">
+          <YouTubeExtractorStudio />
         </TabsContent>
       </Tabs>
     </div>

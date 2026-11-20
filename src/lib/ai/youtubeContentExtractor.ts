@@ -121,261 +121,148 @@ export function classifyVideoToCurriculum(
 
   let specifiedInstitution: Institution | null = null
   let specifiedLevel: CourseLevel | null = null
-  let specifiedPaper: SubjectPaper | null = null
   let isUserExplicit = false
-
-  // 1. CHECK IF USER EXPLICITLY SPECIFIED COURSE / INSTITUTION
-  const isPrsu = userText.includes("prsu") || userText.includes("ravishankar") || userText.includes("shukla university")
-  const isBcom = userText.includes("bcom") || userText.includes("b.com") || userText.includes("semester") || userText.includes("sem ")
-  const isCa = userText.includes("ca ") || userText.includes("icai") || userText.includes("chartered accountant") || userText.includes("ca foundation") || userText.includes("ca inter")
-  const isCma = userText.includes("cma") || userText.includes("icmai") || userText.includes("cost accountant")
-  const isCs = userText.includes("cs ") || userText.includes("icsi") || userText.includes("company secretary")
 
   const prsuInst = INSTITUTIONS_DATA.find((i) => i.id === "prsu") || INSTITUTIONS_DATA[0]
   const icaiInst = INSTITUTIONS_DATA.find((i) => i.id === "icai") || INSTITUTIONS_DATA[0]
   const icmaiInst = INSTITUTIONS_DATA.find((i) => i.id === "icmai") || INSTITUTIONS_DATA[0]
   const icsiInst = INSTITUTIONS_DATA.find((i) => i.id === "icsi") || INSTITUTIONS_DATA[0]
 
-  // Check specific semester if mentioned
-  let targetSemNumber: number | null = null
-  if (userText.includes("sem 1") || userText.includes("semester 1") || userText.includes("1st sem") || userText.includes("first sem") || userText.includes("1st year") || userText.includes("first year")) {
-    targetSemNumber = 1
-  } else if (userText.includes("sem 2") || userText.includes("semester 2") || userText.includes("2nd sem") || userText.includes("second sem")) {
-    targetSemNumber = 2
-  } else if (userText.includes("sem 3") || userText.includes("semester 3") || userText.includes("3rd sem") || userText.includes("third sem") || userText.includes("2nd year") || userText.includes("second year")) {
-    targetSemNumber = 3
-  } else if (userText.includes("sem 4") || userText.includes("semester 4") || userText.includes("4th sem") || userText.includes("fourth sem")) {
-    targetSemNumber = 4
-  } else if (userText.includes("sem 5") || userText.includes("semester 5") || userText.includes("5th sem") || userText.includes("fifth sem") || userText.includes("3rd year") || userText.includes("third year")) {
-    targetSemNumber = 5
-  } else if (userText.includes("sem 6") || userText.includes("semester 6") || userText.includes("6th sem") || userText.includes("sixth sem")) {
-    targetSemNumber = 6
-  }
+  // 1. CHECK USER EXPLICIT OVERRIDES FIRST
+  const userMentionsCma = userText.includes("cma") || userText.includes("icmai")
+  const userMentionsCa = userText.includes("ca ") || userText.includes("icai") || userText.includes("ca-") || userText.includes("ca foundation") || userText.includes("ca inter")
+  const userMentionsPrsu = userText.includes("prsu") || userText.includes("ravishankar")
+  const userMentionsBcom = userText.includes("bcom") || userText.includes("b.com")
 
-  // Determine explicit target if user provided it
-  if (isPrsu || isBcom || targetSemNumber !== null) {
-    specifiedInstitution = prsuInst
+  if (userMentionsCma) {
+    specifiedInstitution = icmaiInst
     isUserExplicit = true
-    if (targetSemNumber) {
-      specifiedLevel = prsuInst.levels.find((l) => l.id === `prsu-bcom-sem-${targetSemNumber}`) || prsuInst.levels[targetSemNumber - 1]
+    if (userText.includes("inter") || userText.includes("intermediate")) {
+      specifiedLevel = icmaiInst.levels.find((l) => l.id === "cma-intermediate") || icmaiInst.levels[1]
+    } else if (userText.includes("final")) {
+      specifiedLevel = icmaiInst.levels.find((l) => l.id === "cma-final") || icmaiInst.levels[2]
+    } else {
+      specifiedLevel = icmaiInst.levels.find((l) => l.id === "cma-foundation") || icmaiInst.levels[0]
     }
-  } else if (isCa) {
+  } else if (userMentionsCa) {
     specifiedInstitution = icaiInst
     isUserExplicit = true
-    if (userText.includes("final")) {
-      specifiedLevel = icaiInst.levels.find((l) => l.id === "ca-final") || icaiInst.levels[2]
-    } else if (userText.includes("inter")) {
+    if (userText.includes("inter") || userText.includes("intermediate")) {
       specifiedLevel = icaiInst.levels.find((l) => l.id === "ca-intermediate") || icaiInst.levels[1]
+    } else if (userText.includes("final")) {
+      specifiedLevel = icaiInst.levels.find((l) => l.id === "ca-final") || icaiInst.levels[2]
     } else {
       specifiedLevel = icaiInst.levels.find((l) => l.id === "ca-foundation") || icaiInst.levels[0]
     }
-  } else if (isCma) {
-    specifiedInstitution = icmaiInst
+  } else if (userMentionsPrsu || userMentionsBcom) {
+    specifiedInstitution = prsuInst
     isUserExplicit = true
-  } else if (isCs) {
-    specifiedInstitution = icsiInst
-    isUserExplicit = true
-  }
-
-  // 2. TOPIC & KEYWORD SEMANTIC MATCHING
-  // Maps subject domains to exact PRSU B.Com semester papers
-  interface TopicMapping {
-    keywords: string[]
-    institutionId: string
-    levelId: string
-    paperId: string
-    defaultChapterTitle: string
-    reason: string
-  }
-
-  const topicMappings: TopicMapping[] = [
-    // PRSU Sem 1: Fundamental of Accounting (DSC-1)
-    {
-      keywords: ["accounting", "journal", "ledger", "trial balance", "brs", "bank reconciliation", "depreciation", "final accounts", "rectification of errors", "bills of exchange", "sole proprietor", "financial statements"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-1",
-      paperId: "prsu-bcom-s1-p1",
-      defaultChapterTitle: "Fundamental Accounting Principles & Financial Statements",
-      reason: "Video covers core accounting cycle, ledger, trial balance, or financial statements."
-    },
-    // PRSU Sem 1: Business Law (DSC-2)
-    {
-      keywords: ["business law", "contract act", "contract", "consideration", "void agreement", "sale of goods", "partnership act", "llp act", "indian contract", "offer and acceptance", "breach of contract"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-1",
-      paperId: "prsu-bcom-s1-p2",
-      defaultChapterTitle: "Indian Contract Act & Business Regulatory Framework",
-      reason: "Video covers Indian Contract Act, commercial laws, or mercantile regulations."
-    },
-    // PRSU Sem 1: Business Economics (DSC-3)
-    {
-      keywords: ["business economics", "micro economics", "demand", "supply", "elasticity", "consumer behaviour", "indifference curve", "production function", "monopoly", "cost curve", "utility"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-1",
-      paperId: "prsu-bcom-s1-p3",
-      defaultChapterTitle: "Law of Demand, Elasticity & Consumer Equilibrium",
-      reason: "Video covers microeconomic principles, demand-supply equilibrium, or market structures."
-    },
-    // PRSU Sem 2: Business Mathematics (DSC-5)
-    {
-      keywords: ["business math", "mathematics", "calculus", "matrices", "matrix", "determinant", "differentiation", "integration", "compound interest", "annuity", "simple interest"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-2",
-      paperId: "prsu-bcom-s2-p2",
-      defaultChapterTitle: "Matrices, Determinants & Financial Mathematics",
-      reason: "Video covers business mathematics, matrices, calculus, or commercial arithmetic."
-    },
-    // PRSU Sem 3: Corporate Accounting (DSC-7)
-    {
-      keywords: ["corporate accounting", "shares", "debentures", "issue of shares", "forfeiture", "redemption", "internal reconstruction", "amalgamation", "liquidation", "goodwill valuation", "share valuation"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-3",
-      paperId: "prsu-bcom-s3-p1",
-      defaultChapterTitle: "Issue & Forfeiture of Shares and Corporate Accounts",
-      reason: "Video covers corporate accounting, shares, debentures, or company financial statements."
-    },
-    // PRSU Sem 3: Business Statistics (DSC-8)
-    {
-      keywords: ["statistics", "business statistics", "mean", "median", "mode", "standard deviation", "dispersion", "correlation", "regression", "index number", "time series", "skewness"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-3",
-      paperId: "prsu-bcom-s3-p2",
-      defaultChapterTitle: "Measures of Central Tendency & Dispersion",
-      reason: "Video covers statistical measures, correlation, regression, or index numbers."
-    },
-    // PRSU Sem 4: Cost Accounting (DSC-10)
-    {
-      keywords: ["cost accounting", "cost sheet", "material costing", "eoq", "labour costing", "overheads", "unit costing", "contract costing", "process costing", "marginal costing", "cvol"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-4",
-      paperId: "prsu-bcom-s4-p1",
-      defaultChapterTitle: "Cost Sheet Preparation & Elements of Cost",
-      reason: "Video covers cost accounting, material/labour costing, process costing, or cost sheet."
-    },
-    // PRSU Sem 4: Company Law (DSC-11)
-    {
-      keywords: ["company law", "companies act", "director", "board meeting", "annual general meeting", "agm", "moa", "aoa", "memorandum", "articles of association", "prospectus", "winding up"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-4",
-      paperId: "prsu-bcom-s4-p2",
-      defaultChapterTitle: "Incorporation of Company, MOA, AOA & Directors",
-      reason: "Video covers Companies Act 2013, corporate management, meetings, and directors."
-    },
-    // PRSU Sem 5: Income Tax Law & Practice (DSC-13)
-    {
-      keywords: ["income tax", "income tax law", "taxation", "salary", "house property", "pgbp", "business income", "capital gains", "other sources", "80c", "deductions", "tds", "assessment year"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-5",
-      paperId: "prsu-bcom-s5-p1",
-      defaultChapterTitle: "Heads of Income: Salaries, House Property & Business Income",
-      reason: "Video covers Income Tax Act 1961, heads of income, exemptions, or tax computation."
-    },
-    // PRSU Sem 5: Auditing (DSC-14)
-    {
-      keywords: ["auditing", "audit", "internal audit", "vouching", "verification", "internal control", "audit report", "statutory audit", "auditor appointment", "audit programme"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-5",
-      paperId: "prsu-bcom-s5-p2",
-      defaultChapterTitle: "Audit Procedures, Vouching & Verification of Assets",
-      reason: "Video covers auditing standards, vouching, internal checks, or auditor's report."
-    },
-    // PRSU Sem 6: Indirect Taxes with GST (DSC-16)
-    {
-      keywords: ["gst", "indirect tax", "cgst", "sgst", "igst", "input tax credit", "itc", "reverse charge", "rcm", "place of supply", "gst return", "e-way bill", "customs duty"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-6",
-      paperId: "prsu-bcom-s6-p1",
-      defaultChapterTitle: "GST Framework, Levy, Supply & Input Tax Credit (ITC)",
-      reason: "Video covers GST law, Input Tax Credit, CGST/SGST mechanisms, or indirect taxes."
-    },
-    // PRSU Sem 6: Management Accounting (DSC-17)
-    {
-      keywords: ["management accounting", "ratio analysis", "cash flow", "cash flow statement", "fund flow", "budgetary control", "variance analysis", "working capital management"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-6",
-      paperId: "prsu-bcom-s6-p2",
-      defaultChapterTitle: "Ratio Analysis & Cash Flow Statement (AS-3)",
-      reason: "Video covers financial ratios, cash flow statements, or budgetary management."
-    },
-    // PRSU Sem 6: Financial Market Operations (DSC-18)
-    {
-      keywords: ["financial market", "money market", "capital market", "sebi", "stock exchange", "bse", "nse", "mutual fund", "derivatives", "treasury bill", "commercial paper"],
-      institutionId: "prsu",
-      levelId: "prsu-bcom-sem-6",
-      paperId: "prsu-bcom-s6-p3",
-      defaultChapterTitle: "Money Market, Capital Market & SEBI Regulations",
-      reason: "Video covers financial systems, money & capital markets, stock exchanges, or SEBI."
-    }
-  ]
-
-  // Find best matching topic
-  let bestMatchScore = 0
-  let matchedTopic: TopicMapping | null = null
-
-  for (const mapping of topicMappings) {
-    let score = 0
-    for (const kw of mapping.keywords) {
-      if (combinedContext.includes(kw)) {
-        score += kw.length > 5 ? 3 : 2
-      }
-    }
-    // Boost if user explicitly mentioned the semester
-    if (targetSemNumber && mapping.levelId.includes(`sem-${targetSemNumber}`)) {
-      score += 10
-    }
-    if (score > bestMatchScore) {
-      bestMatchScore = score
-      matchedTopic = mapping
-    }
-  }
-
-  // Fallback to PRSU B.Com Semester 1 Accounting DSC-1 if no strong keyword hit
-  if (!matchedTopic) {
-    matchedTopic = topicMappings[0]
-  }
-
-  // Resolve Institution & Level
-  let targetInstitution: Institution = specifiedInstitution || INSTITUTIONS_DATA.find((i) => i.id === matchedTopic!.institutionId) || INSTITUTIONS_DATA[0]
-  let targetLevel: CourseLevel = specifiedLevel || targetInstitution.levels.find((l) => l.id === matchedTopic!.levelId) || targetInstitution.levels[0]
-
-  // Resolve Paper inside Level
-  let targetPaper: SubjectPaper | undefined
-  if (targetLevel.papers) {
-    targetPaper = targetLevel.papers.find((p) => p.id === matchedTopic!.paperId) || targetLevel.papers[0]
-  } else if (targetLevel.groups) {
-    for (const grp of targetLevel.groups) {
-      const p = grp.papers.find((paper) => paper.id === matchedTopic!.paperId)
-      if (p) {
-        targetPaper = p
+    for (let sem = 1; sem <= 6; sem++) {
+      if (userText.includes(`sem ${sem}`) || userText.includes(`sem-${sem}`) || userText.includes(`semester ${sem}`)) {
+        specifiedLevel = prsuInst.levels.find((l) => l.id === `prsu-bcom-sem-${sem}`) || null
         break
       }
     }
-    if (!targetPaper && targetLevel.groups[0]?.papers[0]) {
-      targetPaper = targetLevel.groups[0].papers[0]
+  }
+
+  // 2. IF NOT EXPLICIT IN USER TEXT, CHECK TITLE & TOPIC FOR INSTITUTION & LEVEL
+  if (!specifiedInstitution) {
+    const titleHasCma = titleText.includes("cma")
+    const titleHasCa = titleText.includes("ca ") || titleText.includes("ca/") || titleText.includes("/ca") || titleText.includes("ca inter") || titleText.includes("ca foundation")
+    const titleHasInter = titleText.includes("inter") || titleText.includes("intermediate")
+
+    if (titleHasCma && titleHasInter) {
+      specifiedInstitution = icmaiInst
+      specifiedLevel = icmaiInst.levels.find((l) => l.id === "cma-intermediate") || icmaiInst.levels[1]
+    } else if (titleHasCa && titleHasInter) {
+      specifiedInstitution = icaiInst
+      specifiedLevel = icaiInst.levels.find((l) => l.id === "ca-intermediate") || icaiInst.levels[1]
+    } else if (titleHasCma) {
+      specifiedInstitution = icmaiInst
+      specifiedLevel = icmaiInst.levels[0]
+    } else if (titleHasCa) {
+      specifiedInstitution = icaiInst
+      specifiedLevel = icaiInst.levels[0]
+    } else if (titleText.includes("bcom") || titleText.includes("b.com") || titleText.includes("prsu")) {
+      specifiedInstitution = prsuInst
+      specifiedLevel = prsuInst.levels[0]
+    } else {
+      // Default to PRSU B.Com
+      specifiedInstitution = prsuInst
+      specifiedLevel = prsuInst.levels[0]
     }
   }
 
-  if (!targetPaper) {
-    // Fallback safe resolver
-    const resolved = findSubjectPaperById(matchedTopic.paperId)
-    if (resolved) {
-      targetPaper = resolved.paper
-      targetLevel = resolved.level
-      targetInstitution = resolved.institution
-    } else {
-      targetPaper = {
-        id: matchedTopic.paperId,
-        paperNumber: 1,
-        title: "Fundamental of Accounting (DSC-1)",
-        marks: 100,
-        description: "Core financial accounting principles and financial statements.",
-        chapters: []
+  if (!specifiedLevel) {
+    specifiedLevel = specifiedInstitution.levels[0]
+  }
+
+  const targetInstitution = specifiedInstitution
+  const targetLevel = specifiedLevel
+
+  // 3. FIND BEST MATCHING SUBJECT / PAPER INSIDE TARGET LEVEL
+  // Collect all papers inside this level (from papers array or groups)
+  const candidatePapers: SubjectPaper[] = []
+  if (targetLevel.papers) {
+    candidatePapers.push(...targetLevel.papers)
+  }
+  if (targetLevel.groups) {
+    for (const grp of targetLevel.groups) {
+      candidatePapers.push(...grp.papers)
+    }
+  }
+
+  let bestPaper: SubjectPaper = candidatePapers[0]
+  let bestPaperScore = -1
+
+  for (const paper of candidatePapers) {
+    let score = 0
+    const paperContext = (paper.title + " " + paper.description).toLowerCase()
+
+    // Taxation matching
+    if (combinedContext.includes("tax") || combinedContext.includes("taxation") || combinedContext.includes("gst") || combinedContext.includes("bhanwar borana") || combinedContext.includes("dt") || combinedContext.includes("rates")) {
+      if (paperContext.includes("tax") || paperContext.includes("taxation") || paperContext.includes("gst")) {
+        score += 25
       }
     }
+
+    // Costing matching
+    if (combinedContext.includes("cost") || combinedContext.includes("costing") || combinedContext.includes("marginal") || combinedContext.includes("standard costing")) {
+      if (paperContext.includes("cost")) {
+        score += 25
+      }
+    }
+
+    // Law matching
+    if (combinedContext.includes("law") || combinedContext.includes("contract") || combinedContext.includes("ethics") || combinedContext.includes("corporate law")) {
+      if (paperContext.includes("law") || paperContext.includes("ethics")) {
+        score += 25
+      }
+    }
+
+    // Accounting matching
+    if (combinedContext.includes("accounting") || combinedContext.includes("financial accounting") || combinedContext.includes("advanced accounting") || combinedContext.includes("journal") || combinedContext.includes("final accounts")) {
+      if (paperContext.includes("accounting") && !paperContext.includes("cost")) {
+        score += 20
+      }
+    }
+
+    // Direct keyword match with paper title words
+    const paperWords = paper.title.toLowerCase().split(/\s+/)
+    for (const w of paperWords) {
+      if (w.length > 3 && combinedContext.includes(w)) {
+        score += 5
+      }
+    }
+
+    if (score > bestPaperScore) {
+      bestPaperScore = score
+      bestPaper = paper
+    }
   }
 
-  // Find best matching chapter inside paper
-  const chapters = targetPaper.chapters || []
+  // 4. FIND BEST MATCHING CHAPTER INSIDE PAPER
+  const chapters = bestPaper.chapters || []
   let bestChapter: Chapter | undefined
   let bestChScore = 0
 
@@ -384,7 +271,7 @@ export function classifyVideoToCurriculum(
     const chWords = (ch.title + " " + (ch.hindiTitle || "") + " " + ch.description).toLowerCase().split(/\s+/)
     for (const w of chWords) {
       if (w.length > 3 && combinedContext.includes(w)) {
-        chScore += 1
+        chScore += 2
       }
     }
     if (chScore > bestChScore) {
@@ -399,9 +286,9 @@ export function classifyVideoToCurriculum(
 
   if (!bestChapter) {
     bestChapter = {
-      id: `${targetPaper.id}-ch1`,
+      id: `${bestPaper.id}-ch1`,
       number: 1,
-      title: matchedTopic.defaultChapterTitle,
+      title: "Core Concepts & Practical Application",
       hindiTitle: "अध्याय 1: मुख्य सैद्धांतिक एवं व्यावहारिक ढांचा",
       description: "Structured educational modules extracted from lecture.",
       levels: { min: 0, max: 25 },
@@ -412,17 +299,17 @@ export function classifyVideoToCurriculum(
 
   const detectionMode = isUserExplicit ? "user_specified" : "auto_classified"
   const classificationReason = isUserExplicit
-    ? `Target specified by you in Telegram command: Mapped directly to ${targetInstitution.shortName} ${targetLevel.shortTitle} ➔ ${targetPaper.title}.`
-    : `AI Auto-Classification (${matchedTopic.reason}) ➔ Automatically routed to ${targetInstitution.shortName} ${targetLevel.shortTitle} ➔ ${targetPaper.title}.`
+    ? `Target specified by you: Mapped to ${targetInstitution.shortName} ➔ ${targetLevel.shortTitle} ➔ ${bestPaper.title}.`
+    : `AI Auto-Classification (Detected from video topic) ➔ Mapped to ${targetInstitution.shortName} ➔ ${targetLevel.shortTitle} ➔ ${bestPaper.title}.`
 
   return {
     institution: targetInstitution,
     level: targetLevel,
-    paper: targetPaper,
+    paper: bestPaper,
     chapter: bestChapter,
     detectionMode,
     classificationReason,
-    confidenceScore: bestMatchScore > 0 ? Math.min(99, 75 + bestMatchScore * 2) : 92
+    confidenceScore: bestPaperScore > 0 ? Math.min(99, 80 + bestPaperScore) : 90
   }
 }
 

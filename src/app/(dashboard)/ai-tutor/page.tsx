@@ -16,7 +16,10 @@ import {
   ArrowRight,
   Calculator,
   Scale,
-  GraduationCap
+  GraduationCap,
+  Cpu,
+  Zap,
+  Check
 } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { Button } from "@/components/ui/button"
@@ -24,6 +27,55 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import YouTubeExtractorStudio, { YoutubeIcon } from "@/components/courses/YouTubeExtractorStudio"
+
+const AI_PROVIDERS = [
+  {
+    id: "gemini" as const,
+    name: "Gemini 2.5 Flash",
+    provider: "Google DeepMind",
+    tagline: "Ultra-fast & precise academic reasoning",
+    badge: "Official",
+    badgeClass: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    icon: "⚡"
+  },
+  {
+    id: "openai" as const,
+    name: "OpenAI GPT-4o",
+    provider: "OpenAI",
+    tagline: "Deep legal analysis & complex case laws",
+    badge: "Advanced",
+    badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    icon: "🧠"
+  },
+  {
+    id: "groq" as const,
+    name: "Groq Llama 3.3",
+    provider: "Groq LPU",
+    tagline: "Near-zero latency instant numerical tutor",
+    badge: "Fastest",
+    badgeClass: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    icon: "🚀"
+  },
+  {
+    id: "deepseek" as const,
+    name: "DeepSeek R1",
+    provider: "DeepSeek",
+    tagline: "Chain-of-thought proofs & tax computations",
+    badge: "Reasoning",
+    badgeClass: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+    icon: "🔬"
+  },
+  {
+    id: "free-ai" as const,
+    name: "Free Open AI",
+    provider: "Pollinations Engine",
+    tagline: "100% Free / Zero API Key Required",
+    badge: "Free (Zero-Key)",
+    badgeClass: "bg-teal-500/10 text-teal-300 border-teal-500/20",
+    icon: "🆓"
+  }
+]
 
 const QUICK_ACTIONS = [
   { id: "eli10", label: "👶 Explain Like I'm 10", prompt: "Explain the Accounting Equation and Double-Entry system like I am a 10-year-old child with everyday examples." },
@@ -46,6 +98,8 @@ function AITutorContent() {
     activeLanguage,
     geminiApiKey,
     openaiApiKey,
+    preferredAiProvider,
+    setPreferredAiProvider,
     aiMessages,
     weakConcepts,
     studiedTopics,
@@ -56,7 +110,7 @@ function AITutorContent() {
 
   const [inputQuery, setInputQuery] = useState("")
   const [isTyping, setIsTyping] = useState(false)
-  const [activeTab, setActiveTab] = useState<"chat" | "memory">("chat")
+  const [activeTab, setActiveTab] = useState<"chat" | "memory" | "youtube">("chat")
 
   const promptParam = searchParams.get("prompt") || searchParams.get("topic")
 
@@ -80,7 +134,7 @@ function AITutorContent() {
     setIsTyping(true)
 
     try {
-      // 1. Attempt server AI Gateway with Gemini / OpenAI fallback
+      // 1. Attempt server AI Gateway with Gemini / OpenAI / Groq / DeepSeek / Free AI fallback
       const res = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -92,6 +146,7 @@ function AITutorContent() {
           capability: "teacher",
           studentLevel,
           language: activeLanguage,
+          preferredProvider: preferredAiProvider,
           geminiKey: geminiApiKey,
           openaiKey: openaiApiKey,
         }),
@@ -307,15 +362,79 @@ Would you like me to explain this step-by-step or test your knowledge with a moc
         </div>
       </div>
 
+      {/* Multi-Model AI Engine Selector */}
+      <div className="glass-panel p-4 rounded-3xl border border-[hsl(var(--border))] space-y-3 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Cpu className="h-4 w-4 text-primary" />
+            <span className="text-xs font-black uppercase tracking-wider text-[hsl(var(--foreground))]">
+              Select AI Tutor Engine (Connected Multi-Model Waterfall)
+            </span>
+            <Badge variant="outline" className="text-[10px] font-bold text-emerald-500 border-emerald-500/30">
+              Live Swappable
+            </Badge>
+          </div>
+          <span className="text-[11px] text-[hsl(var(--muted-foreground))]">
+            Active Provider: <strong className="text-primary font-black">{AI_PROVIDERS.find(p => p.id === preferredAiProvider)?.name || "Gemini 2.5 Flash"}</strong>
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+          {AI_PROVIDERS.map((prov) => {
+            const isSelected = (preferredAiProvider || "gemini") === prov.id
+            return (
+              <button
+                key={prov.id}
+                type="button"
+                onClick={() => setPreferredAiProvider(prov.id)}
+                className={`p-3 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden active:scale-95 flex flex-col justify-between gap-1.5 ${
+                  isSelected
+                    ? "bg-primary/10 border-primary shadow-md ring-2 ring-primary/30"
+                    : "bg-[hsl(var(--card))] border-[hsl(var(--border))] hover:border-primary/40 hover:bg-[hsl(var(--muted))]"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-lg">{prov.icon}</span>
+                  <Badge className={`text-[9px] px-1.5 py-0 font-bold border ${prov.badgeClass}`}>
+                    {prov.badge}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-xs font-black text-[hsl(var(--foreground))] flex items-center justify-between">
+                    {prov.name}
+                    {isSelected && <Check className="h-3 w-3 text-primary ml-1" />}
+                  </p>
+                  <p className="text-[10px] text-[hsl(var(--muted-foreground))] line-clamp-1 mt-0.5">
+                    {prov.tagline}
+                  </p>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       {/* Tabs: Active Chat vs AI Memory Inspector */}
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "chat" | "memory")} className="space-y-6">
-        <div className="flex items-center justify-between">
-          <TabsList className="bg-[hsl(var(--muted))]">
-            <TabsTrigger value="chat" className="gap-2">
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <TabsList className="bg-[hsl(var(--muted))] p-1 rounded-2xl flex flex-wrap sm:inline-flex">
+            <TabsTrigger
+              value="chat"
+              className="gap-2 rounded-xl text-xs font-bold py-2 px-3 sm:px-4 cursor-pointer data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
               <Bot className="h-4 w-4" /> Interactive Tutor Chat
             </TabsTrigger>
-            <TabsTrigger value="memory" className="gap-2">
-              <Brain className="h-4 w-4" /> 🧠 AI Memory Bank ({weakConcepts.length} weak areas)
+            <TabsTrigger
+              value="memory"
+              className="gap-2 rounded-xl text-xs font-bold py-2 px-3 sm:px-4 cursor-pointer data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
+              <Brain className="h-4 w-4" /> 🧠 AI Memory Bank ({weakConcepts.length})
+            </TabsTrigger>
+            <TabsTrigger
+              value="youtube"
+              className="gap-2 rounded-xl text-xs font-bold py-2 px-3 sm:px-4 cursor-pointer data-[state=active]:bg-red-600 data-[state=active]:text-white"
+            >
+              <YoutubeIcon className="h-4 w-4 text-red-500 group-data-[state=active]:text-white fill-current" /> 🎥 Extract YouTube Lectures
             </TabsTrigger>
           </TabsList>
 
@@ -323,7 +442,7 @@ Would you like me to explain this step-by-step or test your knowledge with a moc
             variant="outline"
             size="sm"
             onClick={() => setActiveTab(activeTab === "chat" ? "memory" : "chat")}
-            className="gap-2 text-xs"
+            className="gap-2 text-xs rounded-xl"
           >
             {activeTab === "chat" ? <Brain className="h-3.5 w-3.5 text-indigo-500" /> : <Bot className="h-3.5 w-3.5 text-blue-500" />}
             {activeTab === "chat" ? "Inspect AI Memory" : "Return to Chat"}
@@ -550,6 +669,11 @@ Would you like me to explain this step-by-step or test your knowledge with a moc
               </Card>
             </div>
           </div>
+        </TabsContent>
+
+        {/* TAB 3: YouTube Extractor Studio */}
+        <TabsContent value="youtube" className="space-y-6">
+          <YouTubeExtractorStudio />
         </TabsContent>
       </Tabs>
     </div>
