@@ -5,6 +5,7 @@ import {
   revokeRecentMCQs,
   revokeAllRecentGenerated
 } from "@/data/questionBanksData"
+import { revokeExtractedVideos } from "@/data/extractedVideosData"
 import { activeUploadJobs } from "@/lib/telegram/bot"
 
 // One-way SHA-256 cryptographic digest of the master security code
@@ -61,6 +62,7 @@ export function executeSecureRevoke(
   // Target 1: Revoke all recent items
   if (target.toLowerCase() === "all") {
     const { papersCount, mcqsCount } = revokeAllRecentGenerated()
+    const { revokedCount: videosCount } = revokeExtractedVideos("all")
     let jobsRevoked = 0
     activeUploadJobs.forEach((job) => {
       if (job.status === "approved") {
@@ -78,6 +80,7 @@ export function executeSecureRevoke(
         `🗑️ *Purged Items:*\n` +
         `• Model Examination Papers: *${papersCount} removed*\n` +
         `• Generated Practice MCQs: *${mcqsCount} removed*\n` +
+        `• Extracted YouTube Videos: *${videosCount} unlinked*\n` +
         `• Upload Packages Revoked: *${jobsRevoked} deactivated*\n\n` +
         `🔒 *Security Confirmation:* All revoked contents have been permanently uninstalled from the live website!\n` +
         `🕒 *Timestamp:* ${timestamp}`
@@ -98,8 +101,23 @@ export function executeSecureRevoke(
     }
   }
 
-  // Default: Revoke the latest paper & last job
+  // Target 3: Revoke Video only
+  if (target.toLowerCase() === "video" || target.toLowerCase() === "yt") {
+    const { revokedCount, message } = revokeExtractedVideos("last")
+    return {
+      success: true,
+      message:
+        `🛡️ *YOUTUBE LECTURE REVOKE CONFIRMED!*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `✅ *Cryptographic Auth:* Verified (SHA-256 Match)\n` +
+        `🗑️ *Action:* ${message}\n` +
+        `🕒 *Timestamp:* ${timestamp}`
+    }
+  }
+
+  // Default: Revoke the latest paper & last job & last extracted video
   const removedPaper = revokeLastPaper()
+  const { revokedCount: videoRevoked } = revokeExtractedVideos("last")
   let revokedJobName = ""
 
   const lastJob = activeUploadJobs.find((j) => j.status === "approved")

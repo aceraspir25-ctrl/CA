@@ -230,11 +230,14 @@ export async function POST(req: NextRequest) {
           const welcome = `🎓 *Welcome to EduFinance Pro Admin Bot (@jarvis_Ai_AutomationBot)!*\n\n` +
             `✅ *Authenticated!* Your Telegram Chat ID (\`${chatId}\`) is now registered as the *Super Admin*.\n\n` +
             `You have full remote executive control over the platform:\n\n` +
+            `• 🎬 *YouTube Auto-Extractor:* Send any YouTube lecture link! AI auto-extracts content, classifies course & semester if you forget, creates 23-point notes, numericals, MCQs, and embeds the player!\n` +
             `• 📄 *PDF Upload:* Send any PDF (Cost Accounting, Tax, Law notes) to automatically run through the *7-Stage Multi-Agent Pipeline*.\n` +
+            `• 🤖 *Dual AI Paper Gen:* \`/mcqs\` or \`gemini gpt se income tax paper banao\`\n` +
+            `• 🔒 *Master Revoke:* \`/revoke <CODE>\` to instantly purge any item with code 2232.\n` +
             `• 📊 */status* - Check 11 agents & 24x7 pipeline health\n` +
             `• ⏳ */pending* - View all content awaiting review with 1-click buttons\n` +
             `• 🔬 */research <topic>* - Trigger autonomous research cycle\n` +
-            `• 🗣 *Hinglish:* Speak naturally (e.g. *"CMA Inter ke notes verify karo"*, *"Pending approvals dikhao"*, *"Aaj ki agent report do"*)\n\n` +
+            `• 🗣 *Hinglish:* Speak naturally (e.g. *"ye video add karo https://youtu.be/..."*, *"B.Com Sem 1 Accounting paper banao"*)\n\n` +
             `Below is a live Verification Report Card with 1-click approval buttons for testing:`
 
           await sendTelegramMessage(welcome, chatId)

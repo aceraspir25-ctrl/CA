@@ -21,6 +21,10 @@ import {
   SUBJECT_ROTATION_QUEUE
 } from "@/lib/ai/dualAiQuestionAgent"
 import { executeSecureRevoke } from "@/lib/security/revokeManager"
+import {
+  processYouTubeLectureUrl,
+  extractYouTubeVideoId
+} from "@/lib/ai/youtubeContentExtractor"
 
 export interface TelegramConfig {
   botToken?: string
@@ -358,6 +362,15 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
   ]
   const isHinglish = hinglishTokens.some((t) => q.split(/[\s,?.!]+/).includes(t))
   const lang: "hi" | "hinglish" | "en" = isPureHindi ? "hi" : isHinglish ? "hinglish" : "en"
+
+  // 000. YOUTUBE EDUCATIONAL LECTURE EXTRACTOR & AUTO-COURSE CLASSIFIER
+  const ytVideoId = extractYouTubeVideoId(query)
+  if (ytVideoId || q.includes("youtube.com") || q.includes("youtu.be")) {
+    const urlMatch = query.match(/https?:\/\/[^\s]+/)
+    const targetUrl = urlMatch ? urlMatch[0] : `https://www.youtube.com/watch?v=${ytVideoId}`
+    const result = await processYouTubeLectureUrl(targetUrl, query)
+    return result.telegramMessage
+  }
 
   // 000. MASTER CRYPTOGRAPHIC REVOKE OPERATION (REQUIRES SECRET CODE CONFIRMATION)
   if (q.includes("revoke") || q.includes("रिवोक") || q.includes("हटाओ") || q.includes("रद्द") || q.includes("वापस लो")) {

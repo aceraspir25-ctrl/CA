@@ -12,6 +12,10 @@ import {
   Chapter
 } from "@/data/coursesData"
 import { getChapterLessonData } from "@/data/chapterContentData"
+import {
+  getExtractedVideoForChapter,
+  getLatestExtractedVideoForPaper
+} from "@/data/extractedVideosData"
 import { useAppStore } from "@/lib/store"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -33,7 +37,10 @@ import {
   Bot,
   Share2,
   ChevronRight,
-  Check
+  Check,
+  Play,
+  ExternalLink,
+  Video
 } from "lucide-react"
 
 // Robust fallback finder
@@ -107,6 +114,14 @@ function SubjectDetailsContent() {
   const { paper, level, institution } = subjectData
   const chapters = paper.chapters || []
   const currentChapter: Chapter | undefined = chapters[activeChapterIndex] || chapters[0]
+
+  const extractedVideo = useMemo(() => {
+    if (!paper) return undefined
+    if (currentChapter) {
+      return getExtractedVideoForChapter(paper.id, currentChapter.id) || getLatestExtractedVideoForPaper(paper.id)
+    }
+    return getLatestExtractedVideoForPaper(paper.id)
+  }, [paper, currentChapter])
 
   const lesson = currentChapter
     ? getChapterLessonData(currentChapter.id, currentChapter.title, currentChapter.hindiTitle)
@@ -306,6 +321,70 @@ function SubjectDetailsContent() {
                 {lesson.overview}
               </p>
             </div>
+
+            {/* EXTRACTED YOUTUBE VIDEO LECTURE PLAYER */}
+            {extractedVideo && (
+              <div className="rounded-3xl overflow-hidden border-2 border-red-500/30 bg-gradient-to-br from-red-950/20 via-[hsl(var(--card))] to-[hsl(var(--card))] p-5 space-y-3.5 shadow-xl animate-in fade-in zoom-in-95 duration-200">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-md">
+                      <Play className="h-4 w-4 fill-white" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-red-500">
+                          {extractedVideo.detectionMode === "user_specified" ? "Linked Video Lecture" : "AI Auto-Classified Lecture"}
+                        </span>
+                        <Badge className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] py-0 px-1.5 font-bold">
+                          Live Active
+                        </Badge>
+                      </div>
+                      <h3 className="text-sm sm:text-base font-black text-[hsl(var(--foreground))] line-clamp-1 mt-0.5">
+                        {extractedVideo.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 self-start sm:self-auto">
+                    <Badge variant="outline" className="text-xs font-semibold border-red-500/30 text-red-400">
+                      Channel: {extractedVideo.author}
+                    </Badge>
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 text-xs font-bold gap-1 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 active:scale-95 cursor-pointer"
+                    >
+                      <a href={extractedVideo.videoUrl} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Watch on YT
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Responsive 16:9 Iframe Player */}
+                <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black/80 border border-[hsl(var(--border))] shadow-inner">
+                  <iframe
+                    src={`${extractedVideo.embedUrl}?rel=0&modestbranding=1`}
+                    title={extractedVideo.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="absolute inset-0 w-full h-full border-0"
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between text-xs text-[hsl(var(--muted-foreground))] pt-1">
+                  <span className="flex items-center gap-1.5 font-bold text-emerald-600 dark:text-emerald-400">
+                    <Sparkles className="h-4 w-4" />
+                    23-Point Deep Study Notes, Solved Numericals & MCQs Synthesized Below
+                  </span>
+                  <span className="text-[11px] font-semibold opacity-75">
+                    Course Mapped: {extractedVideo.targetLevelTitle} &bull; Ch {currentChapter?.number || 1}
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* 23-Point Deep Learning Modules Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
