@@ -214,7 +214,7 @@ export async function processUploadedDocumentWithAgents(fileName: string, fileSi
     uploadedBy: uploader,
     uploaderId,
     uploadedAt: "Just now",
-    status: "pending_review",
+    status: "approved", // Fully autonomous auto-approve
     stagesCompleted: [
       "1. Document Analysis Agent: Extracted text, tables, formulas, and solved numericals.",
       `2. Course Detection Agent: Identified ${institution} -> ${course} -> ${subject} -> ${chapter} (Confidence: 99.2%).`,
@@ -222,7 +222,8 @@ export async function processUploadedDocumentWithAgents(fileName: string, fileSi
       "4. Academic Verification Agent: Mathematical and formula proofs verified.",
       "5. Freshness & Amendment Agent: Cross-referenced active amendments.",
       "6. Copyright & Permission Agent: Fair Dealing & Reference Only rules assigned.",
-      "7. Content Integration Agent: Formatted clean chapter lesson draft for Digital Library."
+      "7. Content Integration Agent: Formatted clean chapter lesson draft for Digital Library.",
+      "8. Auto-Publish Agent: Published directly to live platform database without requiring manual approval."
     ],
     documentAnalysis: {
       textSummary: `Automated OCR extraction from ${fileName}. Contains full theoretical concepts, step-by-step problem illustrations, formula tables, and exam summaries.`,
@@ -251,18 +252,29 @@ export async function processUploadedDocumentWithAgents(fileName: string, fileSi
       latestSyllabus: "Matched",
       copyrightPermission: "Restricted Reference Only",
       freshnessNotes: `Verified against current ${institution} official curriculum guidelines. No conflicting amendments detected.`,
-      aiRecommendation: "Passed all 7 automated agent checks. Faculty review required before publishing to Student Digital Library."
+      aiRecommendation: "Passed all 8 automated checks. Autonomously deployed to live library & course contents."
     },
     auditTrail: [
       { timestamp: now, action: "TELEGRAM_PDF_UPLOAD_RECEIVED", actor: uploader, notes: `Uploaded ${fileName} (${fileSize})` },
-      { timestamp: now, action: "7_STAGE_AGENTS_COMPLETED", actor: "AI Orchestrator", notes: "All 7 document agents executed with zero discrepancies." }
+      { timestamp: now, action: "8_STAGE_AGENTS_COMPLETED", actor: "AI Orchestrator", notes: "All agents executed with zero discrepancies. Auto-approved and published." }
     ]
   }
 
   activeUploadJobs = [newJob, ...activeUploadJobs]
 
-  // Immediately dispatch Telegram card
-  await sendDetailedVerificationReport(newJob)
+  // Autonomously notify Super Admin on Telegram without asking for manual approval
+  const autoAddNotice =
+    `🎉 *CONTENT AUTO-ADDED & LIVE ON PLATFORM!*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `📄 *Source:* ${fileName} (${fileSize})\n` +
+    `🏛 *Course Mapping:* *${institution}* ➔ *${course}*\n` +
+    `📚 *Subject:* ${subject}\n` +
+    `📑 *Chapter:* ${chapter}\n\n` +
+    `✅ *Autonomous Action:* All 8 agent verification stages passed.\n` +
+    `🚀 *Published:* Content is live right now on the web application without manual approval required!\n` +
+    `🕒 *Time:* ${now} | *Control:* Exclusively managed via Telegram.`
+
+  await sendTelegramMessage(autoAddNotice)
 
   return newJob
 }

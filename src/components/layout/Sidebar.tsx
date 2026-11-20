@@ -42,11 +42,8 @@ const mainNav: NavItem[] = [
   { label: "Tests & Exams", href: "/tests", icon: ClipboardList },
   { label: "PYQ & Exam Simulator", href: "/exams", icon: ClipboardList },
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
-  { label: "AI Academic Agents", href: "/admin/agents", icon: Bot },
-  { label: "Content Pipeline", href: "/admin/pipeline", icon: Sparkles },
   { label: "Library", href: "/library", icon: Library },
   { label: "My Progress", href: "/progress", icon: BarChart2 },
-  { label: "Admin & Faculty", href: "/admin", icon: Settings },
   { label: "Settings", href: "/settings", icon: Settings },
 ]
 

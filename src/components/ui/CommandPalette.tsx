@@ -52,8 +52,6 @@ const SEARCH_CATALOG: SearchItem[] = [
 
   // AI & Tools
   { id: "ai-tutor", title: "AI Academic Tutor & Doubt Solver", subtitle: "Trilingual instant doubt resolution with legal sections & step-by-step numericals", category: "AI & Tools", href: "/ai-tutor", badge: "AI" },
-  { id: "pipeline", title: "Autonomous Research & Content Pipeline", subtitle: "8-Stage multi-agent surveillance (MCA, CBDT, ICAI, PW, BYJU'S)", category: "AI & Tools", href: "/admin/pipeline", badge: "24x7" },
-  { id: "agents", title: "11 Autonomous Academic Agents & LEADER-00", subtitle: "Real-time coordinator, self-healing bug fixer & Telegram link", category: "AI & Tools", href: "/admin/agents", badge: "Leader" },
 
   // Features
   { id: "lab", title: "Study Lab & Interactive Visualizer", subtitle: "CAS-6 costing calculators, GST offset simulation & ratio graphs", category: "Features", href: "/lab", badge: "Tools" },

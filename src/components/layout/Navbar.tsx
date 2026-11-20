@@ -123,12 +123,6 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }: NavbarProps) {
         </div>
 
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-          {/* Autonomous Status Pill */}
-          <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Leader-00 Active</span>
-          </div>
-
           {/* Study Streak Flame */}
           <Link
             href="/dashboard"
@@ -199,12 +193,6 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }: NavbarProps) {
                 <Link href="/settings">
                   <Settings className="h-3.5 w-3.5 text-primary" />
                   Account & Settings
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="gap-2 cursor-pointer rounded-xl px-2.5 py-2 text-xs font-medium hover:bg-[hsl(var(--accent))]">
-                <Link href="/admin/pipeline">
-                  <Sparkles className="h-3.5 w-3.5 text-emerald-500" />
-                  Agentic AI Pipeline
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="my-1" />

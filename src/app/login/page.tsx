@@ -79,22 +79,14 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => router.push("/dashboard")}
-                className="gap-1.5 text-xs"
+                className="w-full gap-1.5 text-xs font-semibold rounded-xl"
               >
-                <UserCheck className="h-3.5 w-3.5 text-blue-600" /> Demo Student
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push("/admin/pipeline")}
-                className="gap-1.5 text-xs"
-              >
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Admin / Pipeline
+                <UserCheck className="h-3.5 w-3.5 text-blue-600" /> Explore as Student Demo
               </Button>
             </div>
           </CardContent>
