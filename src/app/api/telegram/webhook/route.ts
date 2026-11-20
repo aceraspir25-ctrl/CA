@@ -23,7 +23,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const update = await req.json()
-    const token = telegramConfigState.botToken || process.env.TELEGRAM_BOT_TOKEN || "9270115302:AAFyGSkjS_DZ_yrDwCVdpfxMgd2sENKtIo8"
+    const token = telegramConfigState.botToken || process.env.TELEGRAM_BOT_TOKEN || ""
 
     // Extract sender chat ID & human user ID
     const senderChatId = String(update.message?.chat?.id || update.callback_query?.message?.chat?.id || "")

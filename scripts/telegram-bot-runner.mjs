@@ -7,7 +7,30 @@
  * Works 100% locally on localhost:3000 without requiring any ngrok tunnel or public domain!
  */
 
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "9270115302:AAFyGSkjS_DZ_yrDwCVdpfxMgd2sENKtIo8"
+import fs from "fs"
+import path from "path"
+
+// Load .env.local if present
+try {
+  const envPath = path.resolve(process.cwd(), ".env.local")
+  if (fs.existsSync(envPath)) {
+    const content = fs.readFileSync(envPath, "utf-8")
+    for (const line of content.split("\n")) {
+      const trimmed = line.trim()
+      if (trimmed && !trimmed.startsWith("#")) {
+        const [key, ...vals] = trimmed.split("=")
+        if (key && vals.length) {
+          const val = vals.join("=").replace(/^["']|["']$/g, "").trim()
+          if (!process.env[key.trim()]) {
+            process.env[key.trim()] = val
+          }
+        }
+      }
+    }
+  }
+} catch (e) {}
+
+const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || ""
 const WEBHOOK_LOCAL_URL = "http://localhost:3000/api/telegram/webhook"
 
 async function startTelegramPoller() {
