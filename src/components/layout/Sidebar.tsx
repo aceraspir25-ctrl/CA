@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname, useSearchParams, useRouter } from "next/navigation"
+import { useAppStore } from "@/lib/store"
 import {
   GraduationCap,
   ChevronLeft,
@@ -18,6 +19,7 @@ import {
   Settings,
   LogOut,
   X,
+  User,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -44,6 +46,7 @@ const mainNav: NavItem[] = [
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
   { label: "Library", href: "/library", icon: Library },
   { label: "My Progress", href: "/progress", icon: BarChart2 },
+  { label: "My Profile", href: "/profile", icon: User },
   { label: "Settings", href: "/settings", icon: Settings },
 ]
 
@@ -115,10 +118,17 @@ export default function Sidebar({
   isMobileOpen = false,
   onCloseMobile,
 }: SidebarProps) {
+  const router = useRouter()
+  const { currentUser, logout } = useAppStore()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const instParam = searchParams.get("inst")
   const levelParam = searchParams.get("level")
+
+  const handleLogout = () => {
+    logout()
+    router.push("/login")
+  }
 
   return (
     <>
@@ -260,42 +270,45 @@ export default function Sidebar({
       <div className="border-t border-white/10 p-3">
         {isCollapsed ? (
           <div className="flex flex-col items-center gap-2">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">
-                RS
-              </AvatarFallback>
-            </Avatar>
-            <Link
-              href="/"
-              className="p-1 rounded-md hover:bg-white/10 text-white/60 hover:text-white transition-colors"
-              title="Logout to Home"
+            <Link href="/profile" title="My Profile">
+              <Avatar className="h-8 w-8 ring-1 ring-white/20 hover:ring-2 hover:ring-primary transition-all cursor-pointer">
+                <AvatarFallback className="bg-gradient-to-tr from-blue-600 to-indigo-600 text-white text-xs font-bold">
+                  {currentUser?.avatar || "RS"}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="p-1 rounded-md hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
+              title="Sign Out"
             >
               <LogOut className="h-4 w-4" />
-            </Link>
+            </button>
           </div>
         ) : (
           <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-8 w-8 shrink-0">
-                <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">
-                  RS
+            <Link
+              href="/profile"
+              className="flex items-center gap-3 p-1.5 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group"
+            >
+              <Avatar className="h-8 w-8 shrink-0 ring-1 ring-white/20 group-hover:ring-primary transition-all">
+                <AvatarFallback className="bg-gradient-to-tr from-blue-600 to-indigo-600 text-white text-xs font-bold">
+                  {currentUser?.avatar || "RS"}
                 </AvatarFallback>
               </Avatar>
               <div className="overflow-hidden flex-1">
-                <p className="text-sm font-medium text-white truncate">Rahul Sharma</p>
-                <p className="text-xs text-white/50">Student</p>
+                <p className="text-sm font-bold text-white truncate group-hover:text-primary transition-colors">{currentUser?.name || "Rahul Sharma"}</p>
+                <p className="text-xs text-white/50 truncate">{currentUser?.level || "Student"}</p>
               </div>
-            </div>
+            </Link>
             <Button
               variant="ghost"
               size="sm"
-              asChild
-              className="w-full justify-start gap-2 text-white/60 hover:text-white hover:bg-white/10"
+              onClick={handleLogout}
+              className="w-full justify-start gap-2 text-white/60 hover:text-white hover:bg-white/10 cursor-pointer"
             >
-              <Link href="/">
-                <LogOut className="h-4 w-4" />
-                <span>Logout</span>
-              </Link>
+              <LogOut className="h-4 w-4" />
+              <span>Sign Out</span>
             </Button>
           </div>
         )}

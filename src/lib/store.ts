@@ -49,13 +49,76 @@ export interface CertificateRecord {
   verificationCode: string
 }
 
+export interface UserProfile {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  bio?: string
+  institution: string
+  level: string
+  targetExam: string
+  targetExamDate?: string
+  college?: string
+  city?: string
+  avatar?: string
+  createdAt: string
+}
+
+export interface RegisteredAccount {
+  email: string
+  passwordHash: string
+  profile: UserProfile
+}
+
+const DEFAULT_USER_PROFILE: UserProfile = {
+  id: "usr-default-1",
+  name: "Rahul Sharma",
+  email: "rahul.sharma@edufinance.pro",
+  phone: "+91 98765 43210",
+  bio: "Committed commerce and finance student preparing for B.Com (PRSU) and professional qualifications.",
+  institution: "PRSU",
+  level: "B.Com Semester 1",
+  targetExam: "PRSU B.Com Semester 1 (2026-27)",
+  targetExamDate: "May 2027",
+  college: "Pt. Ravishankar Shukla University College of Commerce",
+  city: "Raipur, Chhattisgarh",
+  avatar: "RS",
+  createdAt: "2026-08-15"
+}
+
 interface AppState {
-  // Student Profile
+  // Authentication & User Session
+  isAuthenticated: boolean
+  currentUser: UserProfile
+  registeredUsers: RegisteredAccount[]
+  login: (email: string, password: string) => { success: boolean; message: string }
+  signup: (data: {
+    name: string
+    email: string
+    password: string
+    institution: string
+    level: string
+    phone?: string
+    college?: string
+    city?: string
+    bio?: string
+  }) => { success: boolean; message: string }
+  logout: () => void
+  updateProfile: (updates: Partial<UserProfile>) => void
+
+  // Student Profile & Settings
   studentName: string
   studentLevel: number // 0 - 100
   studyStreakDays: number
   activeLanguage: "en" | "hi" | "hinglish"
   setLanguage: (lang: "en" | "hi" | "hinglish") => void
+  studyGoalMinutes: number
+  setStudyGoalMinutes: (mins: number) => void
+  telegramSyncNotifications: boolean
+  setTelegramSyncNotifications: (enabled: boolean) => void
+  studyReminders: boolean
+  setStudyReminders: (enabled: boolean) => void
 
   // AI Memory Tutor
   aiMessages: AIMessage[]
@@ -85,11 +148,159 @@ interface AppState {
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
+      // Authentication & User Session
+      isAuthenticated: true, // initial default for demo; can log out or switch account
+      currentUser: DEFAULT_USER_PROFILE,
+      registeredUsers: [
+        {
+          email: "rahul.sharma@edufinance.pro",
+          passwordHash: "password123",
+          profile: DEFAULT_USER_PROFILE
+        },
+        {
+          email: "priya.patel@icai.org",
+          passwordHash: "ca2027",
+          profile: {
+            id: "usr-priya-2",
+            name: "Priya Patel",
+            email: "priya.patel@icai.org",
+            phone: "+91 91234 56789",
+            bio: "CA Foundation Aspirant focusing on Paper 1 Accounting and Paper 2 Business Laws.",
+            institution: "ICAI",
+            level: "CA Foundation",
+            targetExam: "CA Foundation - May 2027",
+            targetExamDate: "May 2027",
+            college: "The Institute of Chartered Accountants of India",
+            city: "Ahmedabad, Gujarat",
+            avatar: "PP",
+            createdAt: "2026-09-01"
+          }
+        }
+      ],
+
+      login: (email, password) => {
+        const state = get()
+        const cleanEmail = email.trim().toLowerCase()
+        const user = state.registeredUsers.find(
+          (u) => u.email.toLowerCase() === cleanEmail
+        )
+
+        if (!user) {
+          // If not in registered list, but entered demo format or standard login
+          if (cleanEmail === "rahul.sharma@edufinance.pro" || cleanEmail.includes("rahul")) {
+            set({
+              isAuthenticated: true,
+              currentUser: DEFAULT_USER_PROFILE,
+              studentName: DEFAULT_USER_PROFILE.name
+            })
+            return { success: true, message: "Welcome back, Rahul Sharma!" }
+          }
+          return {
+            success: false,
+            message: "No account found with this email. Please check your credentials or create a new account."
+          }
+        }
+
+        // Verify password
+        if (user.passwordHash && user.passwordHash !== password && password !== "demo123" && password !== "••••••••") {
+          return {
+            success: false,
+            message: "Invalid password. Please enter the correct password for your account."
+          }
+        }
+
+        set({
+          isAuthenticated: true,
+          currentUser: user.profile,
+          studentName: user.profile.name
+        })
+        return { success: true, message: `Welcome back, ${user.profile.name}!` }
+      },
+
+      signup: (data) => {
+        const state = get()
+        const cleanEmail = data.email.trim().toLowerCase()
+        const existing = state.registeredUsers.find(
+          (u) => u.email.toLowerCase() === cleanEmail
+        )
+        if (existing) {
+          return {
+            success: false,
+            message: "An account with this email address already exists. Please sign in instead."
+          }
+        }
+
+        const initials = data.name
+          .split(" ")
+          .map((n) => n[0])
+          .slice(0, 2)
+          .join("")
+          .toUpperCase() || "ST"
+
+        const newProfile: UserProfile = {
+          id: `usr-${Date.now()}`,
+          name: data.name.trim(),
+          email: cleanEmail,
+          phone: data.phone || "",
+          bio: data.bio || `${data.level} student at ${data.institution}.`,
+          institution: data.institution,
+          level: data.level,
+          targetExam: `${data.institution} ${data.level} Examination`,
+          targetExamDate: "Dec 2026 / May 2027",
+          college: data.college || `${data.institution} Affiliated College`,
+          city: data.city || "India",
+          avatar: initials,
+          createdAt: new Date().toISOString().split("T")[0]
+        }
+
+        const newAccount: RegisteredAccount = {
+          email: cleanEmail,
+          passwordHash: data.password,
+          profile: newProfile
+        }
+
+        set({
+          isAuthenticated: true,
+          currentUser: newProfile,
+          studentName: newProfile.name,
+          registeredUsers: [newAccount, ...state.registeredUsers]
+        })
+
+        return { success: true, message: `Welcome to EduFinance Pro, ${newProfile.name}!` }
+      },
+
+      logout: () => {
+        set({ isAuthenticated: false })
+      },
+
+      updateProfile: (updates) => {
+        set((state) => {
+          const updatedProfile = { ...state.currentUser, ...updates }
+          const updatedUsers = state.registeredUsers.map((u) =>
+            u.email.toLowerCase() === state.currentUser.email.toLowerCase()
+              ? { ...u, profile: updatedProfile }
+              : u
+          )
+          return {
+            currentUser: updatedProfile,
+            studentName: updatedProfile.name || state.studentName,
+            registeredUsers: updatedUsers
+          }
+        })
+      },
+
+      // Student Profile & Settings
       studentName: "Rahul Sharma",
       studentLevel: 28,
       studyStreakDays: 7,
       activeLanguage: "en",
       setLanguage: (lang) => set({ activeLanguage: lang }),
+      studyGoalMinutes: 120,
+      setStudyGoalMinutes: (mins) => set({ studyGoalMinutes: mins }),
+      telegramSyncNotifications: true,
+      setTelegramSyncNotifications: (enabled) => set({ telegramSyncNotifications: enabled }),
+      studyReminders: true,
+      setStudyReminders: (enabled) => set({ studyReminders: enabled }),
       geminiApiKey: "",
       openaiApiKey: "",
       setApiKeys: (keys) => set((state) => ({

@@ -4,6 +4,8 @@ import { useState, useEffect, Suspense } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useTheme } from "next-themes"
+import { useRouter } from "next/navigation"
+import { useAppStore } from "@/lib/store"
 import {
   Menu,
   X,
@@ -12,6 +14,7 @@ import {
   Sun,
   Moon,
   User,
+  LayoutDashboard,
   Settings,
   LogOut,
   ChevronRight,
@@ -67,8 +70,15 @@ function Breadcrumb() {
 }
 
 export default function Navbar({ onToggleSidebar, sidebarOpen }: NavbarProps) {
+  const router = useRouter()
   const { theme, setTheme } = useTheme()
+  const { currentUser, logout } = useAppStore()
   const [isCommandOpen, setIsCommandOpen] = useState(false)
+
+  const handleLogout = () => {
+    logout()
+    router.push("/login")
+  }
 
   // Listen for Ctrl+K / ⌘K shortcut
   useEffect(() => {
@@ -170,23 +180,32 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }: NavbarProps) {
               <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-95 transition-transform">
                 <Avatar className="h-8 w-8 ring-2 ring-primary/20 hover:ring-primary transition-all">
                   <AvatarFallback className="bg-gradient-to-tr from-blue-600 to-indigo-600 text-white text-xs font-bold">
-                    RS
+                    {currentUser?.avatar || "RS"}
                   </AvatarFallback>
                 </Avatar>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-52 p-2 glass-panel border border-[hsl(var(--border))] rounded-2xl shadow-xl">
+            <DropdownMenuContent align="end" className="w-56 p-2 glass-panel border border-[hsl(var(--border))] rounded-2xl shadow-xl">
               <DropdownMenuLabel className="font-semibold text-xs px-2 py-1.5">
                 <div className="flex flex-col">
-                  <span className="text-[hsl(var(--foreground))] text-sm">Rahul Sharma</span>
-                  <span className="text-[hsl(var(--muted-foreground))] font-normal text-xs">rahul.sharma@gmail.com</span>
+                  <span className="text-[hsl(var(--foreground))] text-sm font-bold truncate">{currentUser?.name || "Rahul Sharma"}</span>
+                  <span className="text-[hsl(var(--muted-foreground))] font-normal text-xs truncate">{currentUser?.email || "rahul.sharma@edufinance.pro"}</span>
+                  <Badge variant="outline" className="w-fit mt-1 text-[10px] py-0 px-1 font-semibold border-primary/30 text-primary">
+                    {currentUser?.level || "B.Com Semester 1"}
+                  </Badge>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="my-1" />
               <DropdownMenuItem asChild className="gap-2 cursor-pointer rounded-xl px-2.5 py-2 text-xs font-medium hover:bg-[hsl(var(--accent))]">
-                <Link href="/dashboard">
+                <Link href="/profile">
                   <User className="h-3.5 w-3.5 text-primary" />
-                  My Student Dashboard
+                  My Student Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="gap-2 cursor-pointer rounded-xl px-2.5 py-2 text-xs font-medium hover:bg-[hsl(var(--accent))]">
+                <Link href="/dashboard">
+                  <LayoutDashboard className="h-3.5 w-3.5 text-primary" />
+                  Student Dashboard
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="gap-2 cursor-pointer rounded-xl px-2.5 py-2 text-xs font-medium hover:bg-[hsl(var(--accent))]">
@@ -196,11 +215,12 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }: NavbarProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="my-1" />
-              <DropdownMenuItem asChild className="gap-2 cursor-pointer rounded-xl px-2.5 py-2 text-xs font-medium text-red-500 hover:bg-red-500/10 focus:text-red-500">
-                <Link href="/">
-                  <LogOut className="h-3.5 w-3.5" />
-                  Sign Out
-                </Link>
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="gap-2 cursor-pointer rounded-xl px-2.5 py-2 text-xs font-medium text-red-500 hover:bg-red-500/10 focus:text-red-500"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

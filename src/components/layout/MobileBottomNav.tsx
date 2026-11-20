@@ -8,15 +8,17 @@ import {
   FlaskConical,
   Bot,
   Library,
+  ClipboardList,
+  User
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const bottomNavItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Courses", href: "/courses", icon: BookOpen },
-  { label: "Study Lab", href: "/lab", icon: FlaskConical },
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
-  { label: "Library", href: "/library", icon: Library },
+  { label: "Tests", href: "/tests", icon: ClipboardList },
+  { label: "Profile", href: "/profile", icon: User },
 ]
 
 export default function MobileBottomNav() {
