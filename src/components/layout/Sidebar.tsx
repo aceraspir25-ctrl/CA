@@ -23,7 +23,8 @@ import {
   Scale,
   Award,
   Briefcase,
-  ShieldCheck
+  ShieldCheck,
+  Cpu
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -49,6 +50,7 @@ const mainNav: NavItem[] = [
   { label: "Exam Simulator", href: "/exam-simulator", icon: Award },
   { label: "Career Roadmap AI", href: "/career", icon: Briefcase },
   { label: "FRIDAY Security", href: "/security", icon: ShieldCheck },
+  { label: "Agent Workforce", href: "/agents", icon: Cpu },
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
   { label: "Study Lab", href: "/lab", icon: FlaskConical },
   { label: "Tests & Assessments", href: "/tests", icon: ClipboardList },
