@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import {
   Settings,
@@ -22,7 +22,16 @@ import {
   Send,
   AlertTriangle,
   Lock,
-  Laptop
+  Laptop,
+  Database,
+  Cloud,
+  HardDrive,
+  RefreshCw,
+  Copy,
+  Check,
+  Server,
+  Zap,
+  CheckCheck
 } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { useTheme } from "next-themes"
@@ -30,6 +39,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import {
+  configureSupabase,
+  testSupabaseConnection,
+  isSupabaseConfigured
+} from "@/lib/cloud/supabaseClient"
+import {
+  configureS3CloudStorage,
+  testS3CloudConnection,
+  isS3Configured
+} from "@/lib/cloud/s3StorageClient"
+import {
+  configureCloudMemory,
+  testCloudMemoryConnection,
+  isCloudMemoryConfigured
+} from "@/lib/cloud/cloudMemoryEngine"
+import { executeMasterCloudSync } from "@/lib/cloud/syncManager"
 
 export default function SettingsPage() {
   const router = useRouter()
@@ -43,6 +68,11 @@ export default function SettingsPage() {
     setTelegramSyncNotifications,
     studyReminders,
     setStudyReminders,
+    studentLevel,
+    studyStreakDays,
+    aiMessages,
+    weakConcepts,
+    studiedTopics,
     geminiApiKey,
     openaiApiKey,
     setApiKeys,
@@ -56,6 +86,23 @@ export default function SettingsPage() {
   const [geminiKeyInput, setGeminiKeyInput] = useState(geminiApiKey || "")
   const [openaiKeyInput, setOpenaiKeyInput] = useState(openaiApiKey || "")
 
+  // Cloud Config state
+  const [supabaseUrl, setSupabaseUrl] = useState("")
+  const [supabaseKey, setSupabaseKey] = useState("")
+  const [s3Endpoint, setS3Endpoint] = useState("")
+  const [s3Bucket, setS3Bucket] = useState("edufinance-cloud-storage")
+  const [s3KeyId, setS3KeyId] = useState("")
+  const [upstashUrl, setUpstashUrl] = useState("")
+  const [upstashToken, setUpstashToken] = useState("")
+
+  // Cloud Testing & Sync status
+  const [supabaseStatus, setSupabaseStatus] = useState<{ connected?: boolean; msg?: string }>({})
+  const [s3Status, setS3Status] = useState<{ connected?: boolean; msg?: string }>({})
+  const [memoryStatus, setMemoryStatus] = useState<{ connected?: boolean; msg?: string }>({})
+  const [isSyncing, setIsSyncing] = useState(false)
+  const [syncReport, setSyncReport] = useState<string | null>(null)
+  const [copiedSql, setCopiedSql] = useState(false)
+
   // Password change state
   const [currentPass, setCurrentPass] = useState("")
   const [newPass, setNewPass] = useState("")
@@ -64,14 +111,113 @@ export default function SettingsPage() {
   // Telegram test state
   const [telegramStatus, setTelegramStatus] = useState("")
 
+  // Load cloud keys from localStorage if available
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setSupabaseUrl(localStorage.getItem("edufinance_supabase_url") || process.env.NEXT_PUBLIC_SUPABASE_URL || "")
+      setSupabaseKey(localStorage.getItem("edufinance_supabase_key") || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "")
+      setS3Endpoint(localStorage.getItem("edufinance_s3_endpoint") || "https://auto.r2.cloudflarestorage.com")
+      setS3Bucket(localStorage.getItem("edufinance_s3_bucket") || "edufinance-cloud-storage")
+      setUpstashUrl(localStorage.getItem("edufinance_upstash_url") || "")
+    }
+  }, [])
+
   const handleSaveSettings = () => {
     setStudyGoalMinutes(selectedGoal)
     setApiKeys({
       geminiKey: geminiKeyInput,
       openaiKey: openaiKeyInput,
     })
+
+    // Save cloud configurations
+    if (supabaseUrl && supabaseKey) {
+      configureSupabase(supabaseUrl, supabaseKey)
+      if (typeof window !== "undefined") {
+        localStorage.setItem("edufinance_supabase_url", supabaseUrl)
+        localStorage.setItem("edufinance_supabase_key", supabaseKey)
+      }
+    }
+    if (s3Endpoint && s3Bucket) {
+      configureS3CloudStorage({
+        endpoint: s3Endpoint,
+        bucketName: s3Bucket,
+        accessKeyId: s3KeyId
+      })
+    }
+    if (upstashUrl) {
+      configureCloudMemory(upstashUrl, upstashToken)
+    }
+
     setSavedStatus(true)
     setTimeout(() => setSavedStatus(false), 3000)
+  }
+
+  const handleTestSupabase = async () => {
+    setSupabaseStatus({ msg: "Connecting to Supabase PostgreSQL & Storage..." })
+    const res = await testSupabaseConnection(supabaseUrl, supabaseKey)
+    setSupabaseStatus({
+      connected: res.connected,
+      msg: res.message
+    })
+  }
+
+  const handleTestS3 = async () => {
+    setS3Status({ msg: "Probing Cloudflare R2 / S3 storage bucket..." })
+    configureS3CloudStorage({ endpoint: s3Endpoint, bucketName: s3Bucket, accessKeyId: s3KeyId })
+    const res = await testS3CloudConnection()
+    setS3Status({
+      connected: res.connected,
+      msg: res.message
+    })
+  }
+
+  const handleTestMemory = async () => {
+    setMemoryStatus({ msg: "Pinging Upstash Cloud Memory..." })
+    configureCloudMemory(upstashUrl, upstashToken)
+    const res = await testCloudMemoryConnection()
+    setMemoryStatus({
+      connected: res.connected,
+      msg: res.message
+    })
+  }
+
+  const handleMasterCloudSync = async () => {
+    setIsSyncing(true)
+    setSyncReport(null)
+
+    // Save config first
+    if (supabaseUrl && supabaseKey) {
+      configureSupabase(supabaseUrl, supabaseKey)
+    }
+
+    try {
+      const res = await executeMasterCloudSync(
+        currentUser,
+        studentLevel,
+        studyStreakDays,
+        activeLanguage,
+        aiMessages,
+        weakConcepts,
+        studiedTopics
+      )
+      setIsSyncing(false)
+      setSyncReport(
+        `✅ Master Cloud Sync Complete (${res.syncedAt})! Providers: [${res.providersActive.join(", ")}]. ${res.overallMessage}`
+      )
+      setTimeout(() => setSyncReport(null), 7000)
+    } catch (e: any) {
+      setIsSyncing(false)
+      setSyncReport(`⚠️ Cloud sync note: ${e?.message || "Sync finished with local cache."}`)
+    }
+  }
+
+  const handleCopySqlSchema = () => {
+    const sqlNotice = `-- Run this in your Supabase SQL Editor:
+-- https://github.com/aceraspir25-ctrl/CA/blob/master/supabase/schema.sql
+-- Contains complete tables for profiles, ai_tutor_memory, weak_concepts, course_progress, extracted_youtube_lectures & certificates.`
+    navigator.clipboard.writeText(sqlNotice)
+    setCopiedSql(true)
+    setTimeout(() => setCopiedSql(false), 2000)
   }
 
   const handlePasswordChange = (e: React.FormEvent) => {
@@ -111,7 +257,7 @@ export default function SettingsPage() {
             <h1 className="text-xl sm:text-2xl font-black">Preferences & System Settings</h1>
           </div>
           <p className="text-slate-300 text-xs sm:text-sm">
-            Control theme, language of instruction, daily targets, Telegram alerts, and security credentials.
+            Control theme, language of instruction, daily targets, Cloud Database (Supabase, S3 & Memory), and security.
           </p>
         </div>
 
@@ -123,7 +269,236 @@ export default function SettingsPage() {
       </div>
 
       <div className="space-y-6">
-        {/* 2. THEME & DISPLAY PREFERENCES */}
+        {/* ========================================================================= */}
+        {/* 2. MULTI-CLOUD DATABASE & PERSISTENT MEMORY HUB (SUPABASE, S3, REDIS) */}
+        {/* ========================================================================= */}
+        <Card className="glass-panel border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-950/10 via-[hsl(var(--card))] to-[hsl(var(--card))] shadow-xl rounded-3xl overflow-hidden">
+          <CardHeader className="border-b border-[hsl(var(--border))] pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-0.5">
+                <CardTitle className="text-base sm:text-lg font-black flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                  <Cloud className="h-5 w-5" /> Cloud Database, Storage & Memory Hub
+                </CardTitle>
+                <CardDescription className="text-xs">
+                  Connect Supabase PostgreSQL, Cloudflare R2 / S3 storage, and Upstash Cloud Memory for permanent cross-device persistence.
+                </CardDescription>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <Button
+                  onClick={handleMasterCloudSync}
+                  disabled={isSyncing}
+                  size="sm"
+                  className="rounded-xl text-xs font-bold gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white shadow-md btn-tactile cursor-pointer"
+                >
+                  <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? "animate-spin" : ""}`} />
+                  {isSyncing ? "Syncing..." : "Sync Memory to Cloud Now"}
+                </Button>
+              </div>
+            </div>
+
+            {syncReport && (
+              <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold animate-in fade-in">
+                {syncReport}
+              </div>
+            )}
+          </CardHeader>
+
+          <CardContent className="p-5 sm:p-6 space-y-6">
+            {/* SUB-SECTION A: SUPABASE POSTGRESQL & BUCKETS */}
+            <div className="space-y-3.5 p-4 rounded-2xl bg-[hsl(var(--muted)/0.4)] border border-[hsl(var(--border))]">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-emerald-500 text-white flex items-center justify-center">
+                    <Database className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-black text-[hsl(var(--foreground))]">
+                      Supabase Cloud Database & Storage
+                    </h4>
+                    <p className="text-[11px] text-[hsl(var(--muted-foreground))]">
+                      Stores student profiles, chapter progress, test papers, and YouTube lecture extractions.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCopySqlSchema}
+                    className="h-7 text-xs font-semibold gap-1 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
+                  >
+                    {copiedSql ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                    {copiedSql ? "SQL Link Copied!" : "Schema SQL"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestSupabase}
+                    className="h-7 text-xs font-bold gap-1 rounded-lg border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 cursor-pointer"
+                  >
+                    <Zap className="h-3 w-3" /> Test Connection
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-[hsl(var(--foreground))]">Supabase Project URL</label>
+                  <Input
+                    value={supabaseUrl}
+                    onChange={(e) => setSupabaseUrl(e.target.value)}
+                    placeholder="https://xyzcompany.supabase.co"
+                    className="h-9 text-xs rounded-xl font-mono"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-[hsl(var(--foreground))]">Supabase Anon Public API Key</label>
+                  <Input
+                    type="password"
+                    value={supabaseKey}
+                    onChange={(e) => setSupabaseKey(e.target.value)}
+                    placeholder="eyJhbGciOi..."
+                    className="h-9 text-xs rounded-xl font-mono"
+                  />
+                </div>
+              </div>
+
+              {supabaseStatus.msg && (
+                <p className={`text-xs font-semibold ${supabaseStatus.connected ? "text-emerald-500" : "text-amber-500"}`}>
+                  {supabaseStatus.msg}
+                </p>
+              )}
+            </div>
+
+            {/* SUB-SECTION B: CLOUDFLARE R2 / AWS S3 OBJECT STORAGE */}
+            <div className="space-y-3.5 p-4 rounded-2xl bg-[hsl(var(--muted)/0.4)] border border-[hsl(var(--border))]">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-indigo-500 text-white flex items-center justify-center">
+                    <HardDrive className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-black text-[hsl(var(--foreground))]">
+                      Cloudflare R2 / AWS S3 Object Storage
+                    </h4>
+                    <p className="text-[11px] text-[hsl(var(--muted-foreground))]">
+                      High-speed CDN storage for PDF books, lecture notes, and video media assets.
+                    </p>
+                  </div>
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleTestS3}
+                  className="h-7 text-xs font-bold gap-1 rounded-lg border-indigo-500/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/10 cursor-pointer"
+                >
+                  <Zap className="h-3 w-3" /> Test Bucket
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-[hsl(var(--foreground))]">S3 / R2 Endpoint URL</label>
+                  <Input
+                    value={s3Endpoint}
+                    onChange={(e) => setS3Endpoint(e.target.value)}
+                    placeholder="https://auto.r2.cloudflarestorage.com"
+                    className="h-9 text-xs rounded-xl font-mono"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-[hsl(var(--foreground))]">Storage Bucket Name</label>
+                  <Input
+                    value={s3Bucket}
+                    onChange={(e) => setS3Bucket(e.target.value)}
+                    placeholder="edufinance-cloud-storage"
+                    className="h-9 text-xs rounded-xl font-mono"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-[hsl(var(--foreground))]">Access Key ID (Optional)</label>
+                  <Input
+                    value={s3KeyId}
+                    onChange={(e) => setS3KeyId(e.target.value)}
+                    placeholder="R2_ACCESS_KEY_ID"
+                    className="h-9 text-xs rounded-xl font-mono"
+                  />
+                </div>
+              </div>
+
+              {s3Status.msg && (
+                <p className={`text-xs font-semibold ${s3Status.connected ? "text-emerald-500" : "text-amber-500"}`}>
+                  {s3Status.msg}
+                </p>
+              )}
+            </div>
+
+            {/* SUB-SECTION C: UPSTASH REDIS CLOUD MEMORY */}
+            <div className="space-y-3.5 p-4 rounded-2xl bg-[hsl(var(--muted)/0.4)] border border-[hsl(var(--border))]">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-rose-500 text-white flex items-center justify-center">
+                    <Server className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-black text-[hsl(var(--foreground))]">
+                      Upstash Cloud Memory Engine (AI Tutor Long-Term Recall)
+                    </h4>
+                    <p className="text-[11px] text-[hsl(var(--muted-foreground))]">
+                      Remembers student doubts, weak topics, and streak across PC, Mobile & Telegram.
+                    </p>
+                  </div>
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleTestMemory}
+                  className="h-7 text-xs font-bold gap-1 rounded-lg border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 cursor-pointer"
+                >
+                  <Zap className="h-3 w-3" /> Ping Memory
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-[hsl(var(--foreground))]">Upstash REST URL</label>
+                  <Input
+                    value={upstashUrl}
+                    onChange={(e) => setUpstashUrl(e.target.value)}
+                    placeholder="https://gorgeous-panda-123.upstash.io"
+                    className="h-9 text-xs rounded-xl font-mono"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-[hsl(var(--foreground))]">Upstash REST Token</label>
+                  <Input
+                    type="password"
+                    value={upstashToken}
+                    onChange={(e) => setUpstashToken(e.target.value)}
+                    placeholder="AXB...Token"
+                    className="h-9 text-xs rounded-xl font-mono"
+                  />
+                </div>
+              </div>
+
+              {memoryStatus.msg && (
+                <p className={`text-xs font-semibold ${memoryStatus.connected ? "text-emerald-500" : "text-amber-500"}`}>
+                  {memoryStatus.msg}
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 3. THEME & DISPLAY PREFERENCES */}
         <Card className="glass-panel border-[hsl(var(--border))] shadow-md rounded-3xl">
           <CardHeader>
             <CardTitle className="text-base font-black flex items-center gap-2">
@@ -163,7 +538,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* 3. LANGUAGE OF INSTRUCTION */}
+        {/* 4. LANGUAGE OF INSTRUCTION */}
         <Card className="glass-panel border-[hsl(var(--border))] shadow-md rounded-3xl">
           <CardHeader>
             <CardTitle className="text-base font-black flex items-center gap-2">
@@ -204,7 +579,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* 4. DAILY STUDY TARGETS */}
+        {/* 5. DAILY STUDY TARGETS */}
         <Card className="glass-panel border-[hsl(var(--border))] shadow-md rounded-3xl">
           <CardHeader>
             <CardTitle className="text-base font-black flex items-center gap-2">
@@ -237,7 +612,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* 5. TELEGRAM & NOTIFICATIONS SYNC */}
+        {/* 6. TELEGRAM & NOTIFICATIONS SYNC */}
         <Card className="glass-panel border-[hsl(var(--border))] shadow-md rounded-3xl">
           <CardHeader>
             <CardTitle className="text-base font-black flex items-center gap-2">
@@ -293,7 +668,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* 6. SECURITY & ACCOUNT PASSWORD */}
+        {/* 7. SECURITY & ACCOUNT PASSWORD */}
         <Card className="glass-panel border-[hsl(var(--border))] shadow-md rounded-3xl">
           <CardHeader>
             <CardTitle className="text-base font-black flex items-center gap-2">
@@ -337,7 +712,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* 7. SAVE MASTER PREFERENCES BUTTON */}
+        {/* 8. SAVE MASTER PREFERENCES BUTTON */}
         <div className="flex items-center justify-end gap-3 pt-2">
           <Button
             onClick={handleSaveSettings}
@@ -347,7 +722,7 @@ export default function SettingsPage() {
           </Button>
         </div>
 
-        {/* 8. DANGER ZONE / LOGOUT */}
+        {/* 9. DANGER ZONE / LOGOUT */}
         <Card className="border-rose-500/30 bg-rose-500/5 rounded-3xl">
           <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-0.5">
