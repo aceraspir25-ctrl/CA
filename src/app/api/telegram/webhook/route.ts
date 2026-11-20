@@ -240,6 +240,36 @@ export async function POST(req: NextRequest) {
           const reply = await executeLeaderAutonomousCycle(chatId, "Self-Healing Bug & Error Fix Engine")
           return NextResponse.json({ ok: true, handled: true, reply })
         }
+
+        if (cmd === "/agents" || cmd === "/all") {
+          const reply = await handleNaturalLanguageHinglishCommand("all agents run", chatId)
+          await sendTelegramMessage(reply, chatId)
+          return NextResponse.json({ ok: true, handled: true, reply })
+        }
+
+        if (cmd === "/report") {
+          const reply = await handleNaturalLanguageHinglishCommand("daily report", chatId)
+          await sendTelegramMessage(reply, chatId)
+          return NextResponse.json({ ok: true, handled: true, reply })
+        }
+
+        if (cmd === "/notes") {
+          const reply = await handleNaturalLanguageHinglishCommand("notes verify", chatId)
+          await sendTelegramMessage(reply, chatId)
+          return NextResponse.json({ ok: true, handled: true, reply })
+        }
+
+        if (cmd === "/mcqs") {
+          const reply = await handleNaturalLanguageHinglishCommand("mcq banao", chatId)
+          await sendTelegramMessage(reply, chatId)
+          return NextResponse.json({ ok: true, handled: true, reply })
+        }
+
+        if (cmd === "/amendments") {
+          const reply = await handleNaturalLanguageHinglishCommand("amendment check karo", chatId)
+          await sendTelegramMessage(reply, chatId)
+          return NextResponse.json({ ok: true, handled: true, reply })
+        }
       }
 
       // Process Natural Language Hinglish / English instruction
