@@ -2,77 +2,103 @@ import fs from "fs"
 import path from "path"
 
 const coursesDataPath = path.resolve(process.cwd(), "src/data/coursesData.ts")
-const chapterContentPath = path.resolve(process.cwd(), "src/data/chapterContentData.ts")
 
-console.log("Loading files...")
+console.log("Loading coursesData.ts...")
 let coursesContent = fs.readFileSync(coursesDataPath, "utf-8")
-let chapterLessonsContent = fs.readFileSync(chapterContentPath, "utf-8")
 
-// Define the 6 semesters with 4 papers each and 5 units/chapters per paper
-const prsuSemesters = [
+// The exact PRSU / UGC NEP-2020 B.Com Curriculum (Semester 1 to Semester 6)
+const prsuNepSemesters = [
   {
     id: "prsu-bcom-sem1",
     title: "B.Com Semester 1 (PRSU / NEP)",
     shortTitle: "B.Com Sem 1",
     institution: "PRSU",
-    description: "First semester covering Financial Accounting, Business Regulatory Framework, Business Communication, Business Mathematics.",
+    description: "Certificate Level First Semester: 6 Subjects, 20 Credits (DSC-1, DSC-2, DSC-3, GE-1, AEC-1, VAC-1).",
     eligibility: "Class 12 in Commerce or equivalent",
-    scheme: "NEP-2020 / PRSU Scheme (4 Papers, 20 Chapters)",
+    scheme: "NEP-2020 / PRSU Scheme (6 Subjects - 20 Credits)",
     papers: [
       {
-        id: "prsu-s1-p1",
-        paperNumber: 1,
-        title: "Financial Accounting (वित्तीय लेखांकन)",
+        id: "prsu-s1-dsc1",
+        paperNumber: "DSC-1",
+        title: "Fundamental of Accounting (वित्तीय लेखांकन के मूल तत्व)",
         marks: 100,
-        description: "Core financial accounting principles, AS-1/10, Royalty Accounts, Hire Purchase, Branch & Departmental Accounts.",
+        description: "Accounting principles, standards (AS-1, AS-10), double-entry cycle, depreciation, royalty and hire purchase accounts.",
         chapters: [
-          { id: "prsu-s1-p1-ch1", number: 1, title: "Meaning, Principles & Accounting Standards (AS-1, AS-10)", hindiTitle: "लेखांकन के सिद्धांत एवं मानक (AS-1, AS-10)", description: "Concepts, conventions, GAAP, AS-1 disclosure, AS-10 property plant equipment.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
-          { id: "prsu-s1-p1-ch2", number: 2, title: "Royalty Accounts: Minimum Rent & Shortworkings", hindiTitle: "रॉयल्टी (अधिकार शुल्क) खाते: न्यूनतम किराया एवं लघुकार्य", description: "Lessee & lessor journal entries, recoupment of shortworkings, strike/lockout provisions.", levels: { min: 15, max: 45 }, topicsCount: 8, estimatedHours: 14, isCompleted: true },
-          { id: "prsu-s1-p1-ch3", number: 3, title: "Hire Purchase and Installment Purchase System", hindiTitle: "किराया क्रय एवं किस्त भुगतान पद्धति", description: "Interest calculation, cash price determination, default & repossession accounting.", levels: { min: 15, max: 50 }, topicsCount: 8, estimatedHours: 14, isCompleted: true },
-          { id: "prsu-s1-p1-ch4", number: 4, title: "Branch Accounts: Debtors & Stock and Debtors Method", hindiTitle: "शाखा खाते: देनदार एवं स्कंध-देनदार पद्धति", description: "Dependent branch, independent branch, invoice price adjustments, reconciliation.", levels: { min: 20, max: 55 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s1-p1-ch5", number: 5, title: "Departmental Accounts & Partnership Dissolution", hindiTitle: "विभागीय खाते एवं साझेदारी फर्म का विघटन", description: "Inter-departmental transfers at cost/selling price, Garner vs Murray rule, piece-meal distribution.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 16 }
+          { id: "prsu-s1-dsc1-ch1", number: 1, title: "Theoretical Framework, Meaning & Accounting Standards (AS-1, AS-10)", hindiTitle: "लेखांकन का सैद्धांतिक ढांचा एवं मानक (AS-1, AS-10)", description: "Concepts, conventions, GAAP, AS-1 disclosure, AS-10 property plant equipment.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s1-dsc1-ch2", number: 2, title: "Accounting Process: Journal, Ledger, Trial Balance & BRS", hindiTitle: "लेखांकन प्रक्रिया: रोजनामचा, खाता बही एवं बैंक समाधान विवरण", description: "Recording transactions, golden rules, trial balance balancing, adjusted cash book BRS.", levels: { min: 10, max: 40 }, topicsCount: 8, estimatedHours: 14, isCompleted: true },
+          { id: "prsu-s1-dsc1-ch3", number: 3, title: "Depreciation Accounting, Provisions & Reserves", hindiTitle: "ह्रास लेखांकन, प्रावधान एवं संचय", description: "Straight line method, written down value method, change in method, capital vs revenue reserve.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s1-dsc1-ch4", number: 4, title: "Royalty Accounts: Minimum Rent & Shortworkings", hindiTitle: "रॉयल्टी (अधिकार शुल्क) खाते: न्यूनतम किराया एवं लघुकार्य", description: "Lessee and lessor entries, recoupment of shortworkings, strike and lockout provisions.", levels: { min: 15, max: 50 }, topicsCount: 8, estimatedHours: 14, isCompleted: true },
+          { id: "prsu-s1-dsc1-ch5", number: 5, title: "Hire Purchase and Installment Purchase System", hindiTitle: "किराया क्रय एवं किस्त भुगतान पद्धति", description: "Calculation of interest, cash price calculation, repossession of goods in default cases.", levels: { min: 20, max: 50 }, topicsCount: 8, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s1-p2",
-        paperNumber: 2,
-        title: "Business Regulatory Framework (व्यावसायिक नियामक ढांचा)",
+        id: "prsu-s1-dsc2",
+        paperNumber: "DSC-2",
+        title: "Business Law (व्यावसायिक सन्नियम / व्यावसायिक विधि)",
         marks: 100,
-        description: "Indian Contract Act 1872, Special Contracts, Sale of Goods Act 1930, Negotiable Instruments & Consumer Protection 2019.",
+        description: "Indian Contract Act 1872, Special contracts (Indemnity, Guarantee, Bailment, Pledge, Agency) & Sale of Goods Act 1930.",
         chapters: [
-          { id: "prsu-s1-p2-ch1", number: 1, title: "Indian Contract Act 1872: Offer, Acceptance & Consideration", hindiTitle: "भारतीय अनुबंध अधिनियम: प्रस्ताव, स्वीकृति एवं प्रतिफल", description: "Essential elements of valid contract, legal capacity, free consent, void agreements.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
-          { id: "prsu-s1-p2-ch2", number: 2, title: "Special Contracts: Indemnity & Guarantee", hindiTitle: "विशिष्ट अनुबंध: क्षतिपूर्ति एवं गारंटी अनुबंध", description: "Rights of indemnity holder, surety's liability, discharge of surety, rights against creditor/debtor.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s1-p2-ch3", number: 3, title: "Bailment, Pledge & Law of Agency", hindiTitle: "निक्षेप, गिरवी एवं एजेंसी के नियम", description: "Duties of bailor and bailee, rights of pawnee, creation and termination of agency.", levels: { min: 15, max: 45 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s1-p2-ch4", number: 4, title: "Sale of Goods Act 1930: Conditions & Warranties", hindiTitle: "वस्तु विक्रय अधिनियम: शर्तें एवं आश्वासन", description: "Caveat emptor doctrine, transfer of property, rights of unpaid seller against goods.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s1-p2-ch5", number: 5, title: "Negotiable Instruments Act 1881 & Consumer Protection Act 2019", hindiTitle: "परक्राम्य विलेख अधिनियम 1881 एवं उपभोक्ता संरक्षण 2019", description: "Promissory note, bill of exchange, cheque crossing, consumer dispute redressal commissions.", levels: { min: 20, max: 50 }, topicsCount: 8, estimatedHours: 14 }
+          { id: "prsu-s1-dsc2-ch1", number: 1, title: "Indian Contract Act 1872: Nature, Offer, Acceptance & Consideration", hindiTitle: "भारतीय अनुबंध अधिनियम: प्रस्ताव, स्वीकृति एवं प्रतिफल", description: "Elements of valid contract, legal capacity, free consent, lawful object and consideration.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s1-dsc2-ch2", number: 2, title: "Capacity to Contract, Free Consent & Void Agreements", hindiTitle: "अनुबंध की क्षमता, स्वतंत्र सहमति एवं व्यर्थ समझौते", description: "Coercion, undue influence, fraud, misrepresentation, mistake, agreements in restraint of trade.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s1-dsc2-ch3", number: 3, title: "Special Contracts: Indemnity & Guarantee", hindiTitle: "विशिष्ट अनुबंध: क्षतिपूर्ति एवं गारंटी अनुबंध", description: "Rights of indemnity holder, surety's liability, discharge of surety, rights against creditor/debtor.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s1-dsc2-ch4", number: 4, title: "Bailment, Pledge & Law of Agency", hindiTitle: "निक्षेप, गिरवी एवं एजेंसी के नियम", description: "Duties of bailor and bailee, rights of pawnee, creation and termination of agency.", levels: { min: 15, max: 45 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s1-dsc2-ch5", number: 5, title: "Sale of Goods Act 1930: Conditions, Warranties & Unpaid Seller", hindiTitle: "वस्तु विक्रय अधिनियम: शर्तें, आश्वासन एवं अदत्त विक्रेता", description: "Caveat emptor doctrine, transfer of property, rights of unpaid seller against goods.", levels: { min: 20, max: 50 }, topicsCount: 8, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s1-p3",
-        paperNumber: 3,
-        title: "Business Communication (व्यावसायिक संचार)",
+        id: "prsu-s1-dsc3",
+        paperNumber: "DSC-3",
+        title: "Business Economics (व्यावसायिक अर्थशास्त्र)",
         marks: 100,
-        description: "Communication channels, barriers, business correspondence, report writing, oral presentation & digital tools.",
+        description: "Microeconomic principles, demand elasticity, indifference curve, production function and market cost structures.",
         chapters: [
-          { id: "prsu-s1-p3-ch1", number: 1, title: "Concept, Process & Barriers to Business Communication", hindiTitle: "व्यावसायिक संचार की अवधारणा, प्रक्रिया एवं बाधाएं", description: "Communication loop, 7Cs of effective communication, physical, psychological & cultural barriers.", levels: { min: 5, max: 35 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
-          { id: "prsu-s1-p3-ch2", number: 2, title: "Business Correspondence: Inquiries, Quotations & Orders", hindiTitle: "व्यावसायिक पत्राचार: पूछताछ, दर-सूची एवं आदेश पत्र", description: "Structure of trade letters, credit inquiries, complaint letters, collection correspondence.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s1-p3-ch3", number: 3, title: "Report Writing, Notices, Agenda & Minutes", hindiTitle: "रिपोर्ट लेखन, सूचना, कार्यसूची एवं कार्यवृत्त", description: "Formal business reports, committee proceedings, writing notices and statutory meeting minutes.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
-          { id: "prsu-s1-p3-ch4", number: 4, title: "Oral Presentation, Interviews & Group Discussions", hindiTitle: "मौखिक प्रस्तुतीकरण, साक्षात्कार एवं समूह चर्चा", description: "Public speaking techniques, audio-visual aids, facing interview boards, GD dynamics.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 },
-          { id: "prsu-s1-p3-ch5", number: 5, title: "Digital Business Communication & Email Etiquette", hindiTitle: "डिजिटल व्यावसायिक संचार एवं ईमेल शिष्टाचार", description: "Corporate emailing standards, video conferencing etiquette, intranet, cyber protocols.", levels: { min: 10, max: 35 }, topicsCount: 6, estimatedHours: 10 }
+          { id: "prsu-s1-dsc3-ch1", number: 1, title: "Nature and Scope of Business Economics & Decision Making", hindiTitle: "व्यावसायिक अर्थशास्त्र की प्रकृति, क्षेत्र एवं व्यावसायिक निर्णय", description: "Integration of economic theory with business practice, opportunity cost principle.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s1-dsc3-ch2", number: 2, title: "Demand Analysis, Law of Demand & Elasticity of Demand", hindiTitle: "मांग विश्लेषण, मांग का नियम एवं मांग की लोच", description: "Price, income, cross elasticity, measurement methods, demand forecasting techniques.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s1-dsc3-ch3", number: 3, title: "Consumer Behavior: Indifference Curve & Marginal Rate of Substitution", hindiTitle: "उपभोक्ता व्यवहार: उदासीनता वक्र एवं प्रतिस्थापन की सीमांत दर", description: "Assumptions, properties of IC, budget constraint, consumer equilibrium under IC.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s1-dsc3-ch4", number: 4, title: "Production Function, Law of Variable Proportions & Returns to Scale", hindiTitle: "उत्पादन फलन, परिवर्तनशील अनुपातों का नियम एवं पैमाने के प्रतिफल", description: "Total, average, marginal product, stages of production, iso-quants, returns to scale.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s1-dsc3-ch5", number: 5, title: "Cost Concepts, Revenue Curves & Short-Run/Long-Run Cost Analysis", hindiTitle: "लागत अवधारणाएं, आगम वक्र एवं अल्पकालीन/दीर्घकालीन लागत विश्लेषण", description: "Fixed and variable costs, marginal cost, U-shaped LAC curve, break-even analysis.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 }
         ]
       },
       {
-        id: "prsu-s1-p4",
-        paperNumber: 4,
-        title: "Business Mathematics (व्यावसायिक गणित)",
+        id: "prsu-s1-ge1",
+        paperNumber: "GE-1",
+        title: "Generic Elective: Information & Communication Technology in Business (ICT)",
         marks: 100,
-        description: "Commercial mathematics, simultaneous equations, matrices, determinants, interest, annuities and calculus.",
+        description: "Open interdisciplinary elective covering hardware, software, office productivity, internet, cloud and business data security.",
         chapters: [
-          { id: "prsu-s1-p4-ch1", number: 1, title: "Ratio, Proportion, Percentage & Commercial Brokerage", hindiTitle: "अनुपात, समानुपात, प्रतिशत एवं व्यापारिक दलाली", description: "Direct and inverse proportions, commission calculations, trade discount and cash discount.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
-          { id: "prsu-s1-p4-ch2", number: 2, title: "Simultaneous Equations & Linear Functions", hindiTitle: "युगपत समीकरण एवं रैखिक फलन", description: "Two and three variable linear systems, graphical method, applications in break-even analysis.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s1-p4-ch3", number: 3, title: "Matrices & Determinants: Cramer's Rule & Inverses", hindiTitle: "आव्यूह एवं सारणिक: क्रेमर नियम एवं व्युत्क्रम", description: "Matrix algebra, adjoint, inverse of 3x3 matrix, solving linear systems by Cramer's rule.", levels: { min: 15, max: 50 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s1-p4-ch4", number: 4, title: "Simple and Compound Interest, Annuities & Sinking Funds", hindiTitle: "साधारण व चक्रवृद्धि ब्याज, वार्षिकी एवं शोधन कोष", description: "Effective rate of interest, present value of annuity regular, amortisation schedules.", levels: { min: 15, max: 50 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s1-p4-ch5", number: 5, title: "Differential Calculus Basics & Linear Programming", hindiTitle: "अवकलन की मूल बातें एवं रैखिक प्रोग्रामन (LPP)", description: "First and second order derivatives, marginal cost, revenue maximization, graphical LPP.", levels: { min: 20, max: 55 }, topicsCount: 8, estimatedHours: 16 }
+          { id: "prsu-s1-ge1-ch1", number: 1, title: "Fundamentals of Computers, Hardware, Software & Operating Systems", hindiTitle: "कंप्यूटर के मूल तत्व, हार्डवेयर, सॉफ्टवेयर एवं ऑपरेटिंग सिस्टम", description: "Input/output devices, CPU architecture, system software vs application software, Windows/Linux.", levels: { min: 5, max: 35 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s1-ge1-ch2", number: 2, title: "Word Processing & Professional Business Document Formatting", hindiTitle: "वर्ड प्रोसेसिंग एवं व्यावसायिक दस्तावेज निर्माण", description: "Document design, tables, mail merge, professional templates, corporate report layout.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s1-ge1-ch3", number: 3, title: "Spreadsheets for Business: Advanced Excel, Formulas & Functions", hindiTitle: "व्यावसायिक स्प्रेडशीट: उन्नत एक्सेल, फॉर्मूले एवं फलन", description: "VLOOKUP/XLOOKUP, Pivot Tables, conditional formatting, financial functions (PMT, NPV).", levels: { min: 15, max: 45 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s1-ge1-ch4", number: 4, title: "Internet, Cloud Computing & Database Management Systems (DBMS)", hindiTitle: "इंटरनेट, क्लाउड कंप्यूटिंग एवं डेटाबेस प्रबंधन प्रणाली (DBMS)", description: "Web protocols, Google Workspace/MS 365 cloud, relational database concepts, SQL queries.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s1-ge1-ch5", number: 5, title: "Information Security, Data Privacy & Cyber Ethics in Commerce", hindiTitle: "सूचना सुरक्षा, डेटा गोपनीयता एवं वाणिज्य में साइबर नैतिकता", description: "Malware prevention, two-factor authentication, data privacy norms, cyber safety practices.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 }
+        ]
+      },
+      {
+        id: "prsu-s1-aec1",
+        paperNumber: "AEC-1",
+        title: "Environmental Studies (पर्यावरण अध्ययन)",
+        marks: 100,
+        description: "Multidisciplinary nature of environmental science, natural resources, biodiversity, pollution control and green business.",
+        chapters: [
+          { id: "prsu-s1-aec1-ch1", number: 1, title: "Multidisciplinary Nature of Environmental Studies & Ecosystems", hindiTitle: "पर्यावरण अध्ययन की बहुविषयक प्रकृति एवं पारिस्थितिकी तंत्र", description: "Structure and function of forest, grassland, desert and aquatic ecosystems, food chains.", levels: { min: 5, max: 35 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s1-aec1-ch2", number: 2, title: "Natural Resources: Renewable, Non-renewable & Sustainable Conservation", hindiTitle: "प्राकृतिक संसाधन: नवीकरणीय व अनवीकरणीय तथा सतत संरक्षण", description: "Water, land, mineral, energy resources, deforestation, over-utilization, dams and conflicts.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s1-aec1-ch3", number: 3, title: "Biodiversity: Values, Threats, Hotspots & Conservation Strategies", hindiTitle: "जैव विविधता: महत्व, संकट, तप्त स्थल एवं संरक्षण रणनीतियां", description: "Genetic, species and ecosystem diversity, endangered flora and fauna, in-situ/ex-situ methods.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s1-aec1-ch4", number: 4, title: "Environmental Pollution: Air, Water, Soil, Noise & Solid Waste", hindiTitle: "पर्यावरण प्रदूषण: वायु, जल, मृदा, ध्वनि एवं ठोस अपशिष्ट प्रबंधन", description: "Causes, effects and control of urban and industrial pollutants, nuclear hazards, e-waste.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s1-aec1-ch5", number: 5, title: "Environmental Policies, Climate Change, Green Business & Law", hindiTitle: "पर्यावरण नीतियां, जलवायु परिवर्तन, हरित व्यवसाय एवं कानून", description: "Environment Protection Act 1986, climate agreements, ESG corporate responsibilities.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 }
+        ]
+      },
+      {
+        id: "prsu-s1-vac1",
+        paperNumber: "VAC-1",
+        title: "Concept of Business / Pool Elective (व्यावसायिक अवधारणाएं)",
+        marks: 100,
+        description: "Value Added Course: Meaning, nature, forms of business organization, ethics, CSR, startups and supply chains.",
+        chapters: [
+          { id: "prsu-s1-vac1-ch1", number: 1, title: "Meaning, Evolution, Nature and Social Purpose of Modern Business", hindiTitle: "आधुनिक व्यवसाय की अवधारणा, विकास, प्रकृति एवं सामाजिक उद्देश्य", description: "Business vs profession vs employment, economic and social objectives of commerce.", levels: { min: 5, max: 35 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s1-vac1-ch2", number: 2, title: "Forms of Business Ownership: Sole Trader, Partnership, LLP & Company", hindiTitle: "व्यावसायिक स्वामित्व के रूप: एकाकी व्यापार, साझेदारी, एलएलपी व कंपनी", description: "Comparative features, merits, demerits, suitability for different scales of enterprise.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s1-vac1-ch3", number: 3, title: "Business Ethics, Corporate Social Responsibility (CSR) & Governance", hindiTitle: "व्यावसायिक नैतिकता, कॉर्पोरेट सामाजिक उत्तरदायित्व (CSR) व सुशासन", description: "Moral principles in commercial deals, CSR mandate under Section 135 Companies Act 2013.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s1-vac1-ch4", number: 4, title: "Startups, MSMEs & Business Incubation in Indian Economy", hindiTitle: "स्टार्टअप्स, एमएसएमई एवं भारतीय अर्थव्यवस्था में व्यापार इनक्यूबेशन", description: "Entrepreneurial mindset, government incentives, registration under Udyam portal.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s1-vac1-ch5", number: 5, title: "Emerging Trends in Global Trade, Digital Business & Supply Chain", hindiTitle: "वैश्विक व्यापार, डिजिटल व्यवसाय एवं आपूर्ति श्रृंखला के नए रुझान", description: "E-commerce ecosystems, fintech innovations, circular economy business models.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 }
         ]
       }
     ]
@@ -82,64 +108,92 @@ const prsuSemesters = [
     title: "B.Com Semester 2 (PRSU / NEP)",
     shortTitle: "B.Com Sem 2",
     institution: "PRSU",
-    description: "Second semester covering Corporate Accounting, Business Economics, Principles of Management, Business Environment.",
+    description: "Certificate Level Second Semester: 6 Subjects, 20 Credits (DSC-4, DSC-5, DSC-6, GE-2, AEC-2, SEC-1).",
     eligibility: "Completed B.Com Semester 1",
-    scheme: "NEP-2020 / PRSU Scheme (4 Papers, 20 Chapters)",
+    scheme: "NEP-2020 / PRSU Scheme (6 Subjects - 20 Credits)",
     papers: [
       {
-        id: "prsu-s2-p1",
-        paperNumber: 1,
-        title: "Corporate Accounting (कंपनी लेखांकन)",
+        id: "prsu-s2-dsc4",
+        paperNumber: "DSC-4",
+        title: "Business Accounting / Corporate Accounting Basics (व्यावसायिक / कंपनी लेखांकन मूल तत्व)",
         marks: 100,
-        description: "Shares, debentures redemption, company final accounts under Schedule III, valuation of goodwill/shares, amalgamation.",
+        description: "Accounting for share capital, debentures, branch accounts, departmental accounts, partnership dissolution.",
         chapters: [
-          { id: "prsu-s2-p1-ch1", number: 1, title: "Issue, Forfeiture & Re-issue of Shares, Pro-rata Allotment", hindiTitle: "अंशों का निर्गमन, जब्ती एवं आनुपातिक आवंटन", description: "Calls-in-arrears, calls-in-advance, forfeiture mechanics, re-issue at premium/discount.", levels: { min: 20, max: 55 }, topicsCount: 8, estimatedHours: 16, isCompleted: true },
-          { id: "prsu-s2-p1-ch2", number: 2, title: "Redemption of Preference Shares & Debentures", hindiTitle: "पूर्वाधिकार अंशों एवं ऋणपत्रों का शोधन", description: "Capital Redemption Reserve (CRR), purchase of own debentures, ex-interest/cum-interest.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s2-p1-ch3", number: 3, title: "Final Accounts of Companies as per Schedule III", hindiTitle: "कंपनी के अंतिम खाते: कंपनी अधिनियम 2013 अनुसूची III", description: "Statement of Profit & Loss, Balance Sheet format, corporate dividend tax provisions.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s2-p1-ch4", number: 4, title: "Valuation of Goodwill and Valuation of Shares", hindiTitle: "ख्याति एवं अंशों का मूल्यांकन", description: "Super profit method, capitalization method, intrinsic value, yield value, fair value.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s2-p1-ch5", number: 5, title: "Amalgamation, Absorption & Internal Reconstruction (AS-14)", hindiTitle: "कंपनियों का एकीकरण, संविलियन एवं आंतरिक पुनर्निर्माण", description: "Pooling of interests vs purchase method, capital reduction scheme, restructuring balance sheet.", levels: { min: 35, max: 70 }, topicsCount: 9, estimatedHours: 18 }
+          { id: "prsu-s2-dsc4-ch1", number: 1, title: "Accounting for Share Capital: Issue, Forfeiture & Re-issue of Shares", hindiTitle: "अंश पूंजी लेखांकन: अंशों का निर्गमन, जब्ती एवं पुनर्निर्गमन", description: "Issue of shares at par/premium, calls in arrears/advance, pro-rata allotment, forfeiture mechanics.", levels: { min: 20, max: 55 }, topicsCount: 8, estimatedHours: 16, isCompleted: true },
+          { id: "prsu-s2-dsc4-ch2", number: 2, title: "Redemption of Preference Shares & Debentures", hindiTitle: "पूर्वाधिकार अंशों एवं ऋणपत्रों का शोधन", description: "Capital Redemption Reserve (CRR), purchase of own debentures, ex-interest/cum-interest.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s2-dsc4-ch3", number: 3, title: "Branch Accounts: Debtors System & Stock-Debtors Method", hindiTitle: "शाखा खाते: देनदार पद्धति एवं स्कंध-देनदार पद्धति", description: "Dependent branch accounting at cost/invoice price, branch reconciliation.", levels: { min: 20, max: 55 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-dsc4-ch4", number: 4, title: "Departmental Accounting & Inter-Departmental Transfers", hindiTitle: "विभागीय लेखांकन एवं अंतर-विभागीय हस्तांतरण", description: "Allocation of common expenses, transfers at cost vs selling price, unrealized profit reserve.", levels: { min: 20, max: 55 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-dsc4-ch5", number: 5, title: "Partnership Accounts: Dissolution & Garner vs Murray Rule", hindiTitle: "साझेदारी खाते: फर्म का विघटन एवं गार्नर बनाम मरे नियम", description: "Insolvency of partners, piecemeal distribution of cash, maximum loss method.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s2-p2",
-        paperNumber: 2,
-        title: "Business Economics (व्यावसायिक अर्थशास्त्र)",
+        id: "prsu-s2-dsc5",
+        paperNumber: "DSC-5",
+        title: "Business Mathematics (व्यावसायिक गणित)",
         marks: 100,
-        description: "Demand elasticity, indifference curves, production function, market pricing, theories of distribution.",
+        description: "Commercial mathematics, simultaneous equations, matrices, determinants, interest, annuities and calculus.",
         chapters: [
-          { id: "prsu-s2-p2-ch1", number: 1, title: "Law of Demand, Elasticity of Demand & Consumer Surplus", hindiTitle: "मांग का नियम, मांग की लोच एवं उपभोक्ता की बचत", description: "Price, income, cross elasticity, measurement methods, consumer equilibrium.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
-          { id: "prsu-s2-p2-ch2", number: 2, title: "Indifference Curve Analysis & Marginal Rate of Substitution", hindiTitle: "उदासीनता वक्र विश्लेषण एवं प्रतिस्थापन की सीमांत दर", description: "Assumptions, properties of IC, budget constraint, consumer equilibrium under IC.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 12 },
-          { id: "prsu-s2-p2-ch3", number: 3, title: "Production Function & Law of Variable Proportions", hindiTitle: "उत्पादन फलन एवं परिवर्तनशील अनुपातों का नियम", description: "Total, average, marginal product, stages of production, iso-quants, returns to scale.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s2-p2-ch4", number: 4, title: "Market Structures: Perfect Competition, Monopoly & Oligopoly", hindiTitle: "बाजार रूप: पूर्ण प्रतियोगिता, एकाधिकार, एकाधिकारात्मक व अल्पाधिकार", description: "Price and output determination in short run and long run, price discrimination, kinked demand.", levels: { min: 25, max: 55 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s2-p2-ch5", number: 5, title: "Theories of Distribution: Rent, Wages, Interest & Profit", hindiTitle: "वितरण के सिद्धांत: लगान, मजदूरी, ब्याज एवं लाभ के सिद्धांत", description: "Ricardian rent, modern theory of rent, marginal productivity theory of wages, liquidity preference.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 }
+          { id: "prsu-s2-dsc5-ch1", number: 1, title: "Ratio, Proportion, Percentage & Commercial Brokerage", hindiTitle: "अनुपात, समानुपात, प्रतिशत एवं व्यापारिक दलाली", description: "Direct and inverse proportions, commission calculations, trade discount and cash discount.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s2-dsc5-ch2", number: 2, title: "Simultaneous Equations & Linear Functions", hindiTitle: "युगपत समीकरण एवं रैखिक फलन", description: "Two and three variable linear systems, graphical method, applications in break-even analysis.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-dsc5-ch3", number: 3, title: "Matrices & Determinants: Cramer's Rule & Inverses", hindiTitle: "आव्यूह एवं सारणिक: क्रेमर नियम एवं व्युत्क्रम", description: "Matrix algebra, adjoint, inverse of 3x3 matrix, solving linear systems by Cramer's rule.", levels: { min: 15, max: 50 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s2-dsc5-ch4", number: 4, title: "Simple and Compound Interest, Annuities & Sinking Funds", hindiTitle: "साधारण व चक्रवृद्धि ब्याज, वार्षिकी एवं शोधन कोष", description: "Effective rate of interest, present value of annuity regular, amortisation schedules.", levels: { min: 15, max: 50 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s2-dsc5-ch5", number: 5, title: "Differential Calculus Basics & Linear Programming (LPP)", hindiTitle: "अवकलन की मूल बातें एवं रैखिक प्रोग्रामन (LPP)", description: "First and second order derivatives, marginal cost, revenue maximization, graphical LPP.", levels: { min: 20, max: 55 }, topicsCount: 8, estimatedHours: 16 }
         ]
       },
       {
-        id: "prsu-s2-p3",
-        paperNumber: 3,
-        title: "Principles of Business Management (प्रबंध के सिद्धांत)",
-        marks: 100,
-        description: "Taylor & Fayol principles, planning, MBO, organization structures, motivation models, leadership and control.",
-        chapters: [
-          { id: "prsu-s2-p3-ch1", number: 1, title: "Nature & Evolution of Management Thought: Taylor & Fayol", hindiTitle: "प्रबंध की प्रकृति एवं प्रबंधकीय चिंतन का विकास: टेलर व फेयोल", description: "Scientific management principles, Fayol's 14 administrative principles, Hawthorne experiments.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
-          { id: "prsu-s2-p3-ch2", number: 2, title: "Planning Process, Strategic Decisions & MBO", hindiTitle: "नियोजन प्रक्रिया, रणनीतिक निर्णय एवं उद्देश्य आधारित प्रबंध", description: "Types of plans, steps in planning, Drucker's MBO, decision making styles.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s2-p3-ch3", number: 3, title: "Organization Structures, Span of Control & Delegation", hindiTitle: "संगठन संरचनाएं, नियंत्रण विस्तार एवं अधिकार प्रत्यायोजन", description: "Formal vs informal organization, line and staff, centralization vs decentralization.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s2-p3-ch4", number: 4, title: "Directing & Motivation: Maslow, Herzberg & McGregor", hindiTitle: "निर्देशन एवं अभिप्रेरणा: मैस्लो, हर्जबर्ग एवं मैकग्रेगर सिद्धांत", description: "Hierarchy of needs, hygiene factors, Theory X & Theory Y, intrinsic vs extrinsic rewards.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s2-p3-ch5", number: 5, title: "Leadership Styles, Coordination & Modern Control Techniques", hindiTitle: "नेतृत्व शैलियां, समन्वय एवं आधुनिक नियंत्रण तकनीकें", description: "Autocratic, democratic, laissez-faire leadership, budgetary control, PERT and CPM.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 }
-        ]
-      },
-      {
-        id: "prsu-s2-p4",
-        paperNumber: 4,
+        id: "prsu-s2-dsc6",
+        paperNumber: "DSC-6",
         title: "Business Environment (व्यावसायिक पर्यावरण)",
         marks: 100,
-        description: "Micro & macro factors, 1991 LPG reforms, NITI Aayog, FDI/FII, Make in India, EXIM policy.",
+        description: "Micro/macro factors, 1991 LPG reforms, NITI Aayog, FDI/FII, Make in India and trade policy.",
         chapters: [
-          { id: "prsu-s2-p4-ch1", number: 1, title: "Nature, Concept & Dimensions of Business Environment", hindiTitle: "व्यावसायिक पर्यावरण की प्रकृति, अवधारणा एवं आयाम", description: "Internal vs external environment, PESTLE analysis, environmental scanning techniques.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
-          { id: "prsu-s2-p4-ch2", number: 2, title: "New Economic Policy 1991: LPG Reforms in India", hindiTitle: "नई आर्थिक नीति 1991: उदारीकरण, निजीकरण, वैश्वीकरण", description: "De-licensing, dis-investment in PSUs, opening up sectors, impact on Indian industries.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s2-p4-ch3", number: 3, title: "Industrial Policy & NITI Aayog Strategic Framework", hindiTitle: "औद्योगिक नीति एवं नीति आयोग का रणनीतिक ढांचा", description: "Evolution from Planning Commission to NITI Aayog, cooperative federalism, industrial clusters.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
-          { id: "prsu-s2-p4-ch4", number: 4, title: "Foreign Capital, FDI, FII & EXIM Policy of India", hindiTitle: "विदेशी पूंजी, प्रत्यक्ष विदेशी निवेश (FDI) एवं विदेश व्यापार नीति", description: "Automatic vs government route for FDI, foreign exchange reserves, export incentives.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s2-p4-ch5", number: 5, title: "Make in India, Digital India & Sustainable Business", hindiTitle: "मेक इन इंडिया, डिजिटल इंडिया एवं सतत व्यावसायिक पर्यावरण", description: "PLI schemes, start-up initiatives, environmental regulations, ESG compliance for businesses.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 }
+          { id: "prsu-s2-dsc6-ch1", number: 1, title: "Nature, Concept & Dimensions of Business Environment", hindiTitle: "व्यावसायिक पर्यावरण की प्रकृति, अवधारणा एवं आयाम", description: "Internal vs external environment, PESTLE analysis, environmental scanning techniques.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s2-dsc6-ch2", number: 2, title: "New Economic Policy 1991: LPG Reforms in India", hindiTitle: "नई आर्थिक नीति 1991: उदारीकरण, निजीकरण, वैश्वीकरण", description: "De-licensing, dis-investment in PSUs, opening up sectors, impact on Indian industries.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-dsc6-ch3", number: 3, title: "Industrial Policy & NITI Aayog Strategic Framework", hindiTitle: "औद्योगिक नीति एवं नीति आयोग का रणनीतिक ढांचा", description: "Evolution from Planning Commission to NITI Aayog, cooperative federalism, industrial clusters.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s2-dsc6-ch4", number: 4, title: "Foreign Capital, FDI, FII & EXIM Policy of India", hindiTitle: "विदेशी पूंजी, प्रत्यक्ष विदेशी निवेश (FDI) एवं विदेश व्यापार नीति", description: "Automatic vs government route for FDI, foreign exchange reserves, export incentives.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-dsc6-ch5", number: 5, title: "Make in India, Atmanirbhar Bharat & Sustainable Industry", hindiTitle: "मेक इन इंडिया, आत्मनिर्भर भारत एवं सतत औद्योगिक विकास", description: "PLI schemes, start-up initiatives, environmental regulations, ESG compliance for businesses.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 }
+        ]
+      },
+      {
+        id: "prsu-s2-ge2",
+        paperNumber: "GE-2",
+        title: "Generic Elective: Management Information Systems (MIS)",
+        marks: 100,
+        description: "Open interdisciplinary elective covering MIS concepts, Decision Support Systems, ERP modules, data analytics and IT security.",
+        chapters: [
+          { id: "prsu-s2-ge2-ch1", number: 1, title: "Introduction to MIS: Concept, Structure & Organizational Role", hindiTitle: "प्रबंध सूचना प्रणाली: अवधारणा, संरचना एवं संगठनात्मक भूमिका", description: "Data vs information, characteristics of MIS, strategic role of information in management.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s2-ge2-ch2", number: 2, title: "Decision Support Systems (DSS) & Executive Information Systems", hindiTitle: "निर्णय समर्थन प्रणाली (DSS) एवं कार्यकारी सूचना प्रणाली", description: "Components of DSS, model base, group DSS, executive dashboards for strategic decisions.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s2-ge2-ch3", number: 3, title: "Enterprise Resource Planning (ERP): SAP, Oracle & Integrated Modules", hindiTitle: "ईआरपी (ERP): एकीकृत व्यावसायिक मॉड्यूल एवं कार्यान्वयन", description: "ERP architecture, supply chain integration, finance and HR modules, challenges in ERP rollout.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-ge2-ch4", number: 4, title: "Business Data Analytics, Business Intelligence & Data Warehousing", hindiTitle: "व्यावसायिक डेटा एनालिटिक्स, बिजनेस इंटेलिजेंस एवं डेटा वेयरहाउसिंग", description: "Big data in business, ETL pipeline, OLAP vs OLTP, data mining for consumer insights.", levels: { min: 15, max: 50 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-ge2-ch5", number: 5, title: "Information Systems Security, Cloud ERP & IT Audit", hindiTitle: "सूचना प्रणाली सुरक्षा, क्लाउड ईआरपी एवं आईटी अंकेक्षण", description: "Cyber threats to enterprise systems, disaster recovery planning, IT audit standards.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 }
+        ]
+      },
+      {
+        id: "prsu-s2-aec2",
+        paperNumber: "AEC-2",
+        title: "English Language / Hindi Language (भाषा संचार)",
+        marks: 100,
+        description: "Ability Enhancement Course: Professional language precision, reading comprehension, trade correspondence, technical writing.",
+        chapters: [
+          { id: "prsu-s2-aec2-ch1", number: 1, title: "Professional Communication, Grammar & Lexical Precision", hindiTitle: "व्यावसायिक संवाद, व्याकरण एवं शब्दावली परिशुद्धता", description: "Syntax in business writing, active vs passive voice in reporting, avoidance of ambiguity.", levels: { min: 5, max: 35 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s2-aec2-ch2", number: 2, title: "Reading Comprehension, Business Summaries & Precis Writing", hindiTitle: "बोधगम्यता, संक्षेपण एवं सार लेखन", description: "Techniques of analytical reading, extracting key points, one-third precis rules.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s2-aec2-ch3", number: 3, title: "Formal Business Correspondence: Inquiries, Quotations & Complaints", hindiTitle: "औपचारिक व्यावसायिक पत्राचार: पूछताछ, कोटेशन एवं शिकायती पत्र", description: "Standard business letter formats, adjustment letters, credit status letters.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-aec2-ch4", number: 4, title: "Technical Writing, Agendas, Minutes & Executive Notices", hindiTitle: "तकनीकी लेखन, कार्यसूची, कार्यवृत्त एवं कार्यकारी सूचनाएं", description: "Drafting statutory notices, resolutions, verbatim minutes of board meetings.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s2-aec2-ch5", number: 5, title: "Oral Communication, Presentation Skills & Interview Dynamics", hindiTitle: "मौखिक प्रस्तुतीकरण, संवाद कौशल एवं साक्षात्कार तकनीक", description: "Non-verbal communication, visual aids in presentations, facing personal interview panels.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 }
+        ]
+      },
+      {
+        id: "prsu-s2-sec1",
+        paperNumber: "SEC-1",
+        title: "Accounting for Everyone / Pool Elective (जनोपयोगी लेखांकन)",
+        marks: 100,
+        description: "Skill Enhancement Course: Financial literacy, household budgets, banking operations, basic tax filing, mutual funds.",
+        chapters: [
+          { id: "prsu-s2-sec1-ch1", number: 1, title: "Financial Literacy, Family Budgets & Everyday Banking Operations", hindiTitle: "वित्तीय साक्षरता, पारिवारिक बजट एवं दैनिक बैंकिंग परिचालन", description: "Need for financial planning, 50-30-20 rule, tracking expenses, avoiding high-interest debt.", levels: { min: 5, max: 35 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s2-sec1-ch2", number: 2, title: "Understanding Personal Bank Accounts, UPI, Fixed Deposits & Cards", hindiTitle: "व्यक्तिगत बैंक खाते, यूपीआई, एफडी एवं कार्ड का सुरक्षित उपयोग", description: "Savings vs current accounts, KYC norms, interest calculation, digital transaction safety.", levels: { min: 5, max: 35 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s2-sec1-ch3", number: 3, title: "Reading Financial Statements for Non-Accountants: P&L & Balance Sheet", hindiTitle: "गैर-लेखाकारों के लिए वित्तीय विवरण समझना: लाभ-हानि व बैलेंस शीट", description: "Understanding revenues, profit margins, assets, liabilities, debt ratios in simple language.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-sec1-ch4", number: 4, title: "Basic Income Tax Filing: ITR-1 (Sahaj), Tax Deductions & Slabs", hindiTitle: "मूल आयकर विवरणी: आईटीआर-1 (सहज), कटौतियां एवं कर दरें", description: "Tax computation under old vs new regime, Section 87A rebate, e-filing workflow on portal.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s2-sec1-ch5", number: 5, title: "Mutual Funds, SIPs, Insurance & Retirement Planning", hindiTitle: "म्यूचुअल फंड, एसआईपी, बीमा एवं सेवानिवृत्ति योजना", description: "Equity vs debt mutual funds, power of compounding via SIP, term insurance, PPF/NPS.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12 }
         ]
       }
     ]
@@ -149,64 +203,92 @@ const prsuSemesters = [
     title: "B.Com Semester 3 (PRSU / NEP)",
     shortTitle: "B.Com Sem 3",
     institution: "PRSU",
-    description: "Third semester covering Cost Accounting, Company Law, Principles of Statistics, Banking & Financial Systems.",
+    description: "Diploma Level Third Semester: 6 Subjects, 20 Credits (DSC-7, DSC-8, DSC-9, GE-3, AEC-3, SEC-2).",
     eligibility: "Completed B.Com Semester 2",
-    scheme: "NEP-2020 / PRSU Scheme (4 Papers, 20 Chapters)",
+    scheme: "NEP-2020 / PRSU Scheme (6 Subjects - 20 Credits)",
     papers: [
       {
-        id: "prsu-s3-p1",
-        paperNumber: 1,
-        title: "Cost Accounting (लागत लेखांकन)",
+        id: "prsu-s3-dsc7",
+        paperNumber: "DSC-7",
+        title: "Corporate Accounting (उच्चतर कंपनी लेखांकन)",
         marks: 100,
-        description: "Cost concepts, cost sheet, material control (EOQ, stores ledger), labour incentives, overhead absorption, unit costing.",
+        description: "Company final accounts under Schedule III, valuation of goodwill and shares, amalgamation, absorption, internal reconstruction.",
         chapters: [
-          { id: "prsu-s3-p1-ch1", number: 1, title: "Cost Concepts, Classification & Cost Sheet Preparation", hindiTitle: "लागत की अवधारणाएं, वर्गीकरण एवं लागत पत्रक निर्माण", description: "Elements of cost (direct/indirect), prime cost, works cost, cost of production, tenders.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14, isCompleted: true },
-          { id: "prsu-s3-p1-ch2", number: 2, title: "Material Control: EOQ, Stock Levels & Stores Ledger", hindiTitle: "सामग्री नियंत्रण: EOQ, स्कंध स्तर एवं स्टोर लेजर (FIFO, LIFO)", description: "Economic order quantity, reorder level, ABC analysis, FIFO, LIFO, Weighted Average pricing.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s3-p1-ch3", number: 3, title: "Labour Cost & Incentive Wage Schemes: Halsey & Rowan", hindiTitle: "श्रम लागत एवं प्रेरणात्मक मजदूरी योजनाएं: हाल्से व रोवन", description: "Idle time, overtime, labour turnover, differential piece rate systems, formula calculations.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s3-p1-ch4", number: 4, title: "Overhead Accounting: Allocation, Apportionment & Absorption", hindiTitle: "उपरिव्यय लेखांकन: आबंटन, अनुभाजन एवं अवशोषण", description: "Primary and secondary distribution, machine hour rate, under/over absorption of overheads.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s3-p1-ch5", number: 5, title: "Unit Costing, Job Costing & Batch Costing Methods", hindiTitle: "इकाई, उपकार्य एवं समूह लागत विधियां", description: "Output costing, job cost sheets, economic batch quantity (EBQ), practical problems.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 }
+          { id: "prsu-s3-dsc7-ch1", number: 1, title: "Final Accounts of Companies as per Schedule III Companies Act 2013", hindiTitle: "कंपनी के अंतिम खाते: कंपनी अधिनियम 2013 अनुसूची III के अनुसार", description: "Statement of Profit & Loss, Balance Sheet format, corporate dividend tax provisions.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16, isCompleted: true },
+          { id: "prsu-s3-dsc7-ch2", number: 2, title: "Valuation of Goodwill: Average Profit, Super Profit, Capitalization", hindiTitle: "ख्याति का मूल्यांकन: औसत लाभ, अधिलाभ एवं पूंजीकरण विधि", description: "Factors affecting goodwill, purchase of super profit, annuity method, accounting treatment.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s3-dsc7-ch3", number: 3, title: "Valuation of Shares: Net Assets Method, Yield Method & Fair Value", hindiTitle: "अंशों का मूल्यांकन: शुद्ध संपत्ति विधि, प्रत्याय विधि एवं उचित मूल्य", description: "Intrinsic value, dividend yield vs earnings yield, valuation of preference shares.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s3-dsc7-ch4", number: 4, title: "Amalgamation, Absorption & Accounting Standard 14 (AS-14)", hindiTitle: "कंपनियों का एकीकरण, संविलियन एवं लेखांकन मानक 14 (AS-14)", description: "Pooling of interests vs purchase method, calculation of purchase consideration.", levels: { min: 35, max: 70 }, topicsCount: 9, estimatedHours: 18 },
+          { id: "prsu-s3-dsc7-ch5", number: 5, title: "Internal Reconstruction, Capital Reduction Scheme & Restructuring", hindiTitle: "आंतरिक पुनर्निर्माण, पूंजी में कमी योजना एवं पुनर्गठन", description: "Section 66 procedure, reconstruction account, writing off fictitious assets, restructured balance sheet.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 }
         ]
       },
       {
-        id: "prsu-s3-p2",
-        paperNumber: 2,
-        title: "Company Law (कंपनी अधिनियम 2013)",
-        marks: 100,
-        description: "Corporate entity, MOA, AOA, prospectus, share capital, directors appointment and powers, meetings, winding up.",
-        chapters: [
-          { id: "prsu-s3-p2-ch1", number: 1, title: "Nature, Features & Types of Companies: Corporate Veil", hindiTitle: "कंपनी की प्रकृति, विशेषताएं एवं प्रकार: कॉर्पोरेट आवरण", description: "Private, public, OPC, small company, lifting of corporate veil, Salomon vs Salomon case.", levels: { min: 20, max: 55 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
-          { id: "prsu-s3-p2-ch2", number: 2, title: "Memorandum (MOA) & Articles of Association (AOA)", hindiTitle: "सीमा नियम (MOA) एवं अंतर्नियम (AOA): आंतरिक प्रबंध का सिद्धांत", description: "Clauses of MOA, alteration procedure, doctrine of ultra vires, doctrine of indoor management.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s3-p2-ch3", number: 3, title: "Prospectus, Share Capital & Debentures", hindiTitle: "प्रविवरण, अंश पूंजी एवं ऋणपत्र", description: "Shelf prospectus, red-herring, misstatements in prospectus, sweat equity, issue of debentures.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s3-p2-ch4", number: 4, title: "Directors: Appointment, Powers, Duties & Liabilities", hindiTitle: "निदेशक: नियुक्ति, अधिकार, कर्तव्य एवं दायित्व (Sec 149-166)", description: "DIN requirement, independent directors, woman director, duties under Section 166, board meetings.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s3-p2-ch5", number: 5, title: "Company Meetings, Resolutions & Winding Up Procedures", hindiTitle: "कंपनी की सभाएं, प्रस्ताव एवं कंपनी का समापन", description: "AGM, EGM, quorum, ordinary and special resolutions, winding up by NCLT, voluntary winding up.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 }
-        ]
-      },
-      {
-        id: "prsu-s3-p3",
-        paperNumber: 3,
-        title: "Principles of Business Statistics (व्यावसायिक सांख्यिकी)",
+        id: "prsu-s3-dsc8",
+        paperNumber: "DSC-8",
+        title: "Business Statistics (व्यावसायिक सांख्यिकी)",
         marks: 100,
         description: "Data classification, central tendency (mean/median/mode), dispersion, standard deviation, skewness and probability.",
         chapters: [
-          { id: "prsu-s3-p3-ch1", number: 1, title: "Collection, Classification & Tabulation of Statistical Data", hindiTitle: "सांख्यिकीय समंकों का संकलन, वर्गीकरण एवं सारणीयन", description: "Primary vs secondary data, questionnaires, frequency distributions, cumulative tables.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
-          { id: "prsu-s3-p3-ch2", number: 2, title: "Measures of Central Tendency: Mean, Median, Mode", hindiTitle: "केंद्रीय प्रवृत्ति के माप: समांतर माध्य, मध्यका एवं बहुलक", description: "Arithmetic mean, weighted mean, median, mode, geometric & harmonic mean in business.", levels: { min: 20, max: 55 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s3-p3-ch3", number: 3, title: "Measures of Dispersion: Standard Deviation & Quartiles", hindiTitle: "अपकिरण के माप: प्रमाप विचलन, प्रसरण एवं चतुर्थक विचलन", description: "Range, quartile deviation, mean deviation, variance, coefficient of variation.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s3-p3-ch4", number: 4, title: "Skewness: Karl Pearson's & Bowley's Coefficients", hindiTitle: "विषमता के माप: कार्ल पियर्सन एवं बाउले के विषमता गुणांक", description: "Symmetrical vs skewed distributions, Pearson's sk1 and sk2, Bowley's quartile formula.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s3-p3-ch5", number: 5, title: "Elementary Probability Theory & Additional Theorems", hindiTitle: "प्रायिकता के मूलभूत सिद्धांत एवं प्रमेय", description: "Sample space, mutually exclusive events, addition and multiplication theorems, Bayes' theorem basics.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 }
+          { id: "prsu-s3-dsc8-ch1", number: 1, title: "Data Collection, Frequency Distribution, Classification & Tabulation", hindiTitle: "समंक संकलन, आवृत्ति वितरण, वर्गीकरण एवं सारणीयन", description: "Primary vs secondary data, questionnaires, cumulative frequency curves, histograms.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s3-dsc8-ch2", number: 2, title: "Measures of Central Tendency: Mean, Median, Mode, GM & HM", hindiTitle: "केंद्रीय प्रवृत्ति के माप: समांतर माध्य, मध्यका, बहुलक एवं गुणोत्तर माध्य", description: "Mathematical properties, weighted mean, positional averages, applications in business.", levels: { min: 20, max: 55 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s3-dsc8-ch3", number: 3, title: "Measures of Dispersion: Standard Deviation, Variance & Quartile Deviation", hindiTitle: "अपकिरण के माप: प्रमाप विचलन, प्रसरण एवं चतुर्थक विचलन", description: "Absolute vs relative dispersion, coefficient of variation (CV) for consistency testing.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s3-dsc8-ch4", number: 4, title: "Skewness: Karl Pearson's & Bowley's Coefficients of Skewness", hindiTitle: "विषमता के माप: कार्ल पियर्सन एवं बाउले के विषमता गुणांक", description: "Symmetrical vs skewed curves, Pearson's formula based on mode/median, Bowley's quartiles.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s3-dsc8-ch5", number: 5, title: "Elementary Probability Concepts, Addition & Multiplication Theorems", hindiTitle: "प्रायिकता की मूलभूत अवधारणाएं, योग एवं गुणन प्रमेय", description: "Classical, empirical and axiomatic probability, independent events, Bayes' theorem basics.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s3-p4",
-        paperNumber: 4,
-        title: "Banking & Financial Systems (बैंकिंग एवं वित्तीय प्रणाली)",
+        id: "prsu-s3-dsc9",
+        paperNumber: "DSC-9",
+        title: "Principles of Business Management (प्रबंध के सिद्धांत)",
         marks: 100,
-        description: "RBI monetary policy, commercial banks credit creation, NPA management, negotiable banking, digital UPI systems.",
+        description: "Fayol and Taylor principles, planning, MBO, organizational structure, motivation models, leadership styles, control.",
         chapters: [
-          { id: "prsu-s3-p4-ch1", number: 1, title: "Reserve Bank of India: Functions & Monetary Policy Tools", hindiTitle: "भारतीय रिज़र्व बैंक: कार्य एवं मौद्रic नीति के उपकरण", description: "Currency issue, banker to government, repo rate, reverse repo, CRR, SLR, quantitative tools.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
-          { id: "prsu-s3-p4-ch2", number: 2, title: "Commercial Banks: Credit Creation & NPA Management", hindiTitle: "व्यापारिक बैंक: साख सृजन एवं एनपीए (गैर-निष्पादित परिसंपत्ति) प्रबंधन", description: "Credit multiplier, gross vs net NPA, SARFAESI Act, IBC code, insolvency resolution.", levels: { min: 25, max: 55 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s3-p4-ch3", number: 3, title: "Banker-Customer Relationship & Banking Ombudsman", hindiTitle: "बैंकर-ग्राहक संबंध, अधिकार, दायित्व एवं बैंकिंग लोकपाल", description: "Debtor-creditor relationship, banker's lien, right of set-off, RBI Ombudsman complaint process.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s3-p4-ch4", number: 4, title: "Negotiable Instruments in Banking: Crossing & Clearance", hindiTitle: "परक्राम्य विलेख: चेक का रेखांकन, बेचान एवं समाशोधन", description: "General and special crossing, holder in due course, paying vs collecting banker protection.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s3-p4-ch5", number: 5, title: "Digital Banking: UPI, NEFT, RTGS, IMPS & Cyber Fraud", hindiTitle: "डिजिटल बैंकिंग: यूपीआई, एनईएफटी, आरटीजीएस एवं साइबर सुरक्षा", description: "NPCI infrastructure, 2-factor authentication, mobile banking safety, prevention of financial frauds.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 }
+          { id: "prsu-s3-dsc9-ch1", number: 1, title: "Management Theories: Scientific Management & Fayol's 14 Principles", hindiTitle: "प्रबंध सिद्धांत: टेलर का वैज्ञानिक प्रबंध एवं फेयोल के 14 सिद्धांत", description: "Administrative management, bureaucratic model, human relations approach, Hawthorne study.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s3-dsc9-ch2", number: 2, title: "Planning, Forecasting, Decision Making & Management by Objectives (MBO)", hindiTitle: "नियोजन, पूर्वानुमान, निर्णय प्रक्रिया एवं उद्देश्य आधारित प्रबंध (MBO)", description: "Types of plans, strategic vs operational planning, steps in rational decision making.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s3-dsc9-ch3", number: 3, title: "Organization Structure, Formal/Informal, Delegation & Decentralization", hindiTitle: "संगठन संरचना, औपचारिक/अनौपचारिक, अधिकार प्रत्यायोजन व विकेंद्रीकरण", description: "Span of control, line and staff relationships, matrix organization, delegation principles.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s3-dsc9-ch4", number: 4, title: "Motivation Models: Maslow, Herzberg, McGregor's X & Y Theories", hindiTitle: "अभिप्रेरणा सिद्धांत: मैस्लो, हर्जबर्ग द्वि-घटक एवं मैकग्रेगर X व Y", description: "Hierarchy of needs, motivators vs hygiene factors, intrinsic motivation, job enrichment.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s3-dsc9-ch5", number: 5, title: "Leadership Styles, Coordination & Control Systems (PERT/CPM)", hindiTitle: "नेतृत्व शैलियां, समन्वय एवं आधुनिक नियंत्रण तकनीकें (PERT/CPM)", description: "Transformational vs transactional leadership, feedforward/feedback control, network analysis.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 }
+        ]
+      },
+      {
+        id: "prsu-s3-ge3",
+        paperNumber: "GE-3",
+        title: "Generic Elective: Basics of Banking & Insurance (बैंकिंग एवं बीमा के मूल सिद्धांत)",
+        marks: 100,
+        description: "Open interdisciplinary pool elective: Indian banking structure, RBI monetary policy, insurance principles, IRDAI regulation.",
+        chapters: [
+          { id: "prsu-s3-ge3-ch1", number: 1, title: "Banking System in India: Commercial Banks, RRBs & Small Finance Banks", hindiTitle: "भारतीय बैंकिंग प्रणाली: व्यापारिक बैंक, क्षेत्रीय ग्रामीण बैंक व लघु वित्त बैंक", description: "Scheduled vs non-scheduled banks, public sector banking reforms, payment banks in India.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s3-ge3-ch2", number: 2, title: "Reserve Bank of India: Functions, Credit Control, Repo/CRR/SLR", hindiTitle: "भारतीय रिज़र्व बैंक: कार्य, साख नियंत्रण एवं मौद्रिक उपकरण", description: "Monetary policy committee, repo rate, open market operations, qualitative credit controls.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s3-ge3-ch3", number: 3, title: "Banker-Customer Relationship, Rights, Duties & Banking Ombudsman", hindiTitle: "बैंकर-ग्राहक संबंध, अधिकार, कर्तव्य एवं बैंकिंग लोकपाल योजना", description: "Garnishee orders, banker's lien, right of appropriation, resolving customer grievances.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s3-ge3-ch4", number: 4, title: "Principles of Insurance: Insurable Interest, Indemnity, Subrogation", hindiTitle: "बीमा के मूल सिद्धांत: बीमायोग्य हित, क्षतिपूर्ति, प्रत्यासन एवं परम सद्विश्वास", description: "Utmost good faith, proximate cause, contribution, insurable risk characteristics.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s3-ge3-ch5", number: 5, title: "Life Insurance, General Insurance & IRDAI Regulatory Framework", hindiTitle: "जीवन बीमा, सामान्य बीमा एवं इरडा (IRDAI) नियामक ढांचा", description: "Term plans, endowment, health insurance, motor insurance, claim settlement procedures.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 }
+        ]
+      },
+      {
+        id: "prsu-s3-aec3",
+        paperNumber: "AEC-3",
+        title: "Hindi / English Language (उन्नत भाषा एवं अनुवाद कौशल)",
+        marks: 100,
+        description: "Ability Enhancement Course: Advanced commercial writing, bilingual terminology, business translation, corporate negotiation.",
+        chapters: [
+          { id: "prsu-s3-aec3-ch1", number: 1, title: "Advanced Business Writing, Editorial Reports & Press Releases", hindiTitle: "उन्नत व्यावसायिक लेखन, संपादकीय रिपोर्ट एवं प्रेस विज्ञप्ति", description: "Drafting corporate newsletters, executive briefings, media releases, speech drafting.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s3-aec3-ch2", number: 2, title: "Commercial Terminology: Hindi-English Bilingual Vocabularies", hindiTitle: "व्यापारिक पारिभाषिक शब्दावली: हिन्दी-अंग्रेजी द्विभाषी शब्दकोश", description: "Statutory terms in banking, accounting, taxation, company law and government gazettes.", levels: { min: 10, max: 40 }, topicsCount: 7, estimatedHours: 10 },
+          { id: "prsu-s3-aec3-ch3", number: 3, title: "Translation Skills: English to Hindi & Hindi to English Business Translation", hindiTitle: "व्यावसायिक अनुवाद कौशल: अंग्रेजी से हिन्दी एवं हिन्दी से अंग्रेजी", description: "Translating audit queries, annual report excerpts, commercial contracts accurately.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s3-aec3-ch4", number: 4, title: "Meeting Management: Resolutions, Dissents & Parliamentary Procedures", hindiTitle: "सभा प्रबंध: प्रस्ताव, असहमति एवं संसदीय कार्यप्रणाली", description: "Drafting ordinary and special resolutions, recording minutes of debate, voting procedures.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s3-aec3-ch5", number: 5, title: "Corporate Public Speaking, Debate & Cross-Cultural Negotiation", hindiTitle: "कॉर्पोरेट संवाद, वाद-विवाद एवं अंतर-सांस्कृतिक वार्ता कौशल", description: "Pitching business proposals, negotiation tactics, cross-border corporate communication.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 }
+        ]
+      },
+      {
+        id: "prsu-s3-sec2",
+        paperNumber: "SEC-2",
+        title: "Skill Enhancement Course: Computer Applications in Business / E-Filing",
+        marks: 100,
+        description: "Practical IT skills: TallyPrime accounting, ledger entries, Income Tax portal ITR e-filing, GST portal returns, DSC setup.",
+        chapters: [
+          { id: "prsu-s3-sec2-ch1", number: 1, title: "Accounting Software Essentials: TallyPrime / Zoho Books Setup", hindiTitle: "लेखांकन सॉफ्टवेयर: टैलीप्राइम व जोहो बुक्स कंपनी निर्माण", description: "Company configuration, chart of accounts, master creation, groups and ledger architecture.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s3-sec2-ch2", number: 2, title: "Voucher Entry, Ledger Creation & Financial Reports in Accounting Software", hindiTitle: "वाउचर प्रविष्टि, खाता बही एवं वित्तीय रिपोर्ट निर्माण", description: "Payment, receipt, sales, purchase, contra, journal vouchers, Day Book, Trial Balance, P&L.", levels: { min: 20, max: 50 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s3-sec2-ch3", number: 3, title: "E-Filing of Income Tax Returns (ITR-1 / ITR-2) on IT Portal", hindiTitle: "आयकर पोर्टल पर ई-फाइलिंग (ITR-1 / ITR-2)", description: "Downloading pre-filled data, Form 26AS & AIS reconciliation, verifying ITR via Aadhaar OTP.", levels: { min: 20, max: 55 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s3-sec2-ch4", number: 4, title: "E-Filing of GST Returns (GSTR-1, GSTR-3B) & GST Portal Operations", hindiTitle: "जीएसटी पोर्टल परिचालन एवं विवरणियां (GSTR-1, GSTR-3B)", description: "Uploading B2B invoices, generating e-way bills, offsetting tax liability using electronic ledger.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s3-sec2-ch5", number: 5, title: "Digital Signature Certificates (DSC), MCA21 Portal Filings & Form Filling", hindiTitle: "डिजिटल हस्ताक्षर (DSC), एमसीए21 पोर्टल एवं कॉर्पोरेट ई-फॉर्म", description: "Class 3 DSC registration, filing SPICe+ company incorporation forms, annual return MGT-7.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 }
         ]
       }
     ]
@@ -216,64 +298,92 @@ const prsuSemesters = [
     title: "B.Com Semester 4 (PRSU / NEP)",
     shortTitle: "B.Com Sem 4",
     institution: "PRSU",
-    description: "Fourth semester covering Income Tax Law & Accounts (Part 1), Management Accounting, Marketing Principles, Applied Statistics.",
+    description: "Diploma Level Fourth Semester: 6 Subjects, 20 Credits (DSC-10, DSC-11, DSC-12, GE-4, AEC-4, VAC-2 / Internship).",
     eligibility: "Completed B.Com Semester 3",
-    scheme: "NEP-2020 / PRSU Scheme (4 Papers, 20 Chapters)",
+    scheme: "NEP-2020 / PRSU Scheme (6 Subjects - 20 Credits)",
     papers: [
       {
-        id: "prsu-s4-p1",
-        paperNumber: 1,
-        title: "Income Tax Law & Accounts - Part 1 (आयकर विधान एवं लेखे)",
+        id: "prsu-s4-dsc10",
+        paperNumber: "DSC-10",
+        title: "Cost Accounting (लागत लेखांकन)",
         marks: 100,
-        description: "Income Tax Act 1961: Basic definitions, agricultural income, residential status, Salary, House Property.",
+        description: "Cost concepts, cost sheet, material control (EOQ, stores ledger), labour incentives, overhead absorption, unit costing.",
         chapters: [
-          { id: "prsu-s4-p1-ch1", number: 1, title: "Basic Definitions, Agricultural Income & Residential Status", hindiTitle: "मूल परिभाषाएं, कृषि आय एवं निवास स्थिति (Sec 2, 6)", description: "Assessee, assessment year, previous year, residential tests for individual/HUF/firm, tax incidence.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14, isCompleted: true },
-          { id: "prsu-s4-p1-ch2", number: 2, title: "Income from Salaries: Allowances, Perquisites & Sec 16", hindiTitle: "वेतन से आय: भत्ते, अनुलाभ एवं मानक कटौती (Sec 15-17)", description: "HRA, gratuity, commuted pension, motor car perquisite, standard deduction ₹50,000/₹75,000.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s4-p1-ch3", number: 3, title: "Income from House Property: Annual Value & Deductions Sec 24", hindiTitle: "मकान संपत्ति से आय: वार्षिक मूल्य एवं कटौतियां (Sec 22-27)", description: "Gross annual value (GAV), municipal taxes, standard deduction Sec 24(a), home loan interest Sec 24(b).", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s4-p1-ch4", number: 4, title: "Aggregation of Income, Clubbing & Set-off of Losses", hindiTitle: "आय का संकलन, मिलान (Clubbing) एवं हानियों की पूर्ति", description: "Spouse/minor child income clubbing, inter-source and inter-head set off, 8-year carry forward rules.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s4-p1-ch5", number: 5, title: "Assessment Procedure, PAN, Filing of ITR & Tax Deduction (TDS)", hindiTitle: "कर निर्धारण प्रक्रिया, पैन, आयकर विवरणी (ITR) एवं टीडीएस", description: "Types of returns (ITR 1-4), due dates, self-assessment tax, basic TDS/TCS obligations.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 12 }
+          { id: "prsu-s4-dsc10-ch1", number: 1, title: "Meaning, Objectives, Scope & Preparation of Cost Sheet", hindiTitle: "लागत का अर्थ, उद्देश्य, क्षेत्र एवं लागत पत्रक निर्माण", description: "Prime cost, factory cost, cost of production, total cost, quotation and tender prices.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14, isCompleted: true },
+          { id: "prsu-s4-dsc10-ch2", number: 2, title: "Material Control: EOQ, Stock Levels & Stores Ledger", hindiTitle: "सामग्री नियंत्रण: मितव्ययी आदेश मात्रा (EOQ) एवं स्टोर लेजर (FIFO, LIFO)", description: "Economic order quantity, minimum/maximum stock levels, ABC analysis, store pricing methods.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s4-dsc10-ch3", number: 3, title: "Labour Costing: Incentive Wage Plans (Halsey, Rowan & Taylor)", hindiTitle: "श्रम लागत एवं प्रेरणात्मक मजदूरी योजनाएं: हाल्से, रोवन व टेलर", description: "Time wage vs piece wage, idle time, overtime, labour turnover ratios, efficiency bonuses.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s4-dsc10-ch4", number: 4, title: "Overhead Allocation, Apportionment & Absorption (Machine Hour Rate)", hindiTitle: "उपरिव्यय आबंटन, अनुभाजन एवं अवशोषण (मशीन घंटा दर)", description: "Primary and secondary distribution summary, step-ladder method, machine hour rate computation.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s4-dsc10-ch5", number: 5, title: "Methods of Costing: Unit Costing, Job Costing & Batch Costing", hindiTitle: "लागत पद्धतियां: इकाई लागत, उपकार्य लागत एवं समूह लागत विधियां", description: "Job cost sheet, economic batch quantity (EBQ), practical applications in production.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s4-p2",
-        paperNumber: 2,
-        title: "Management Accounting (प्रबंधकीय लेखांकन)",
+        id: "prsu-s4-dsc11",
+        paperNumber: "DSC-11",
+        title: "Company Law (कंपनी अधिनियम 2013)",
         marks: 100,
-        description: "Ratio analysis, Cash Flow Statement (AS-3), Marginal costing, CVP & BEP analysis, Budgetary control.",
+        description: "Corporate entity, MOA, AOA, prospectus, share capital, directors appointment, powers, meetings, winding up.",
         chapters: [
-          { id: "prsu-s4-p2-ch1", number: 1, title: "Nature, Scope & Tools of Management Accounting", hindiTitle: "प्रबंधकीय लेखांकन की प्रकृति, क्षेत्र एवं उपकरण", description: "Comparison with financial and cost accounting, decision making tools, role of management accountant.", levels: { min: 20, max: 50 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
-          { id: "prsu-s4-p2-ch2", number: 2, title: "Financial Statement Analysis & Ratio Analysis", hindiTitle: "वित्तीय विवरण विश्लेषण एवं अनुपात विश्लेषण", description: "Current ratio, debt-equity, inventory turnover, debtors turnover, operating ratio, ROE calculations.", levels: { min: 30, max: 70 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s4-p2-ch3", number: 3, title: "Cash Flow Statement as per Accounting Standard 3 (AS-3)", hindiTitle: "रोकड़ प्रवाह विवरण: लेखांकन मानक 3 (AS-3 संशोधित)", description: "Cash from operating activities (indirect method), investing activities, financing activities.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s4-p2-ch4", number: 4, title: "Marginal Costing, CVP Analysis & Break-Even Point", hindiTitle: "सीमांत लागत, लागत-मात्रा-लाभ (CVP) एवं सम-विच्छेद बिंदु", description: "Contribution, P/V ratio, Break-even sales, Margin of safety, decision making problems.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s4-p2-ch5", number: 5, title: "Budgetary Control: Cash Budget & Flexible Budget", hindiTitle: "बजटीय नियंत्रण: रोकड़ बजट एवं लोचशील बजट", description: "Budget manual, principal budget factor, preparation of flexible budget at different activity levels.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 }
+          { id: "prsu-s4-dsc11-ch1", number: 1, title: "Nature, Characteristics & Types of Companies: Corporate Veil", hindiTitle: "कंपनी की प्रकृति, विशेषताएं एवं प्रकार: कॉर्पोरेट आवरण", description: "Private, public, OPC, small company, lifting of corporate veil, Salomon vs Salomon case.", levels: { min: 20, max: 55 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s4-dsc11-ch2", number: 2, title: "Incorporation, Memorandum (MOA) & Articles of Association (AOA)", hindiTitle: "कंपनी समामेलन, सीमा नियम (MOA) एवं अंतर्नियम (AOA)", description: "Clauses of MOA, alteration procedure, doctrine of ultra vires, doctrine of indoor management.", levels: { min: 25, max: 60 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s4-dsc11-ch3", number: 3, title: "Prospectus, Allotment of Securities, Share Capital & Debentures", hindiTitle: "प्रविवरण, प्रतिभूतियों का आवंटन, अंश पूंजी एवं ऋणपत्र", description: "Shelf prospectus, red-herring, misstatements in prospectus, sweat equity, debentures.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s4-dsc11-ch4", number: 4, title: "Directors: Appointment, Disqualification, Powers, Duties & Section 166", hindiTitle: "निदेशक: नियुक्ति, अयोग्यताएं, अधिकार, कर्तव्य एवं धारा 166", description: "DIN requirement, independent directors, woman director, duties of directors, board meetings.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s4-dsc11-ch5", number: 5, title: "Meetings, Resolutions, Board Committees, Prevention of Oppression & Winding Up", hindiTitle: "सभाएं, प्रस्ताव, बोर्ड समितियां, उत्पीड़न रोकथाम एवं कंपनी समापन", description: "AGM, EGM, quorum, ordinary and special resolutions, winding up by NCLT, voluntary winding up.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s4-p3",
-        paperNumber: 3,
-        title: "Principles of Marketing (विपणन के सिद्धांत)",
+        id: "prsu-s4-dsc12",
+        paperNumber: "DSC-12",
+        title: "Fundamentals of Entrepreneurship / Business Finance (उद्यमिता एवं व्यावसायिक वित्त)",
         marks: 100,
-        description: "Marketing concept, STP strategy, Product life cycle, branding, pricing models, distribution channels, promotion.",
+        description: "Entrepreneur traits, opportunity scanning, bankable project reports (DPR), seed capital, venture finance, MSME policies.",
         chapters: [
-          { id: "prsu-s4-p3-ch1", number: 1, title: "Marketing Concept, Philosophy & Marketing Environment", hindiTitle: "विपणन की अवधारणा, दर्शन एवं विपणन पर्यावरण", description: "Production, product, selling, societal marketing concepts, macro & micro environment.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
-          { id: "prsu-s4-p3-ch2", number: 2, title: "Consumer Behaviour & Market Segmentation, Targeting (STP)", hindiTitle: "उपभोक्ता व्यवहार एवं बाजार विभक्तिकरण तथा लक्ष्यीकरण (STP)", description: "Consumer decision making process, geographic, demographic, psychographic segmentation.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s4-p3-ch3", number: 3, title: "Product Decisions, Product Life Cycle (PLC) & Branding", hindiTitle: "उत्पाद निर्णय, उत्पाद जीवन चक्र (PLC) एवं ब्रांडिंग", description: "Introduction, growth, maturity, decline strategies, brand equity, packaging & labelling.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s4-p3-ch4", number: 4, title: "Pricing Strategies & Policies, Channels of Distribution", hindiTitle: "मूल्य निर्धारण नीतियां एवं वितरण माध्यम", description: "Cost-plus pricing, penetration vs skimming, zero-level, one-level channels, logistics management.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s4-p3-ch5", number: 5, title: "Promotion Mix: Advertising, PR & Personal Selling", hindiTitle: "संवर्धन मिश्रण: विज्ञापन, जनसंपर्क एवं वैयक्तिक विक्रय", description: "Advertising budget, media selection, sales promotion schemes, direct marketing.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 }
+          { id: "prsu-s4-dsc12-ch1", number: 1, title: "Meaning, Traits, Functions and Economic Role of Entrepreneurs", hindiTitle: "उद्यमिता का अर्थ, विशेषताएं, कार्य एवं आर्थिक विकास में भूमिका", description: "Schumpeter innovation model, entrepreneurial competencies, intrapreneurship.", levels: { min: 20, max: 50 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s4-dsc12-ch2", number: 2, title: "Ideation, Business Opportunity Scanning & Feasibility Analysis", hindiTitle: "व्यावसायिक अवसर की पहचान, विचार सृजन एवं व्यवहार्यता विश्लेषण", description: "Market, technical, financial and economic viability tests, SWOT analysis for new ventures.", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s4-dsc12-ch3", number: 3, title: "Preparation of Bankable Detailed Project Report (DPR) & Pitch Decks", hindiTitle: "विस्तृत परियोजना प्रतिवेदन (DPR) एवं निवेशक पिच डेक निर्माण", description: "Cash flow projections, break-even point in project report, sensitivity analysis.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s4-dsc12-ch4", number: 4, title: "Startup Financing: Bootstrapping, Seed Capital, Angels, Venture Capital", hindiTitle: "स्टार्टअप वित्तपोषण: बूटस्ट्रैपिंग, सीड कैपिटल, एंजेल एवं वेंचर कैपिटल", description: "Stages of startup funding, term sheets, equity dilution, crowd-funding mechanisms.", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s4-dsc12-ch5", number: 5, title: "MSME Support Ecosystem: PMEGP, Stand-Up India, SIDBI & Incubators", hindiTitle: "एमएसएमई सहायता पारिस्थितिकी: PMEGP, स्टैंड-अप इंडिया, सिडबी व इनक्यूबेटर", description: "Credit guarantee schemes, MSME Samadhaan for delayed payments, technology centers.", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12 }
         ]
       },
       {
-        id: "prsu-s4-p4",
-        paperNumber: 4,
-        title: "Applied Business Statistics & Correlation (व्यावहारिक सांख्यिकी)",
+        id: "prsu-s4-ge4",
+        paperNumber: "GE-4",
+        title: "Generic Elective: Principles of Microeconomics (व्यष्टि अर्थशास्त्र के सिद्धांत)",
         marks: 100,
-        description: "Karl Pearson and Spearman correlation, linear regression, Fisher index numbers, time series analysis, SQC.",
+        description: "Open interdisciplinary pool elective: PPC, consumer optimization, production isoquants, market structures, game theory.",
         chapters: [
-          { id: "prsu-s4-p4-ch1", number: 1, title: "Correlation Analysis: Karl Pearson & Spearman's Rank", hindiTitle: "सहसंबंध विश्लेषण: कार्ल पियर्सन एवं स्पीयरमैन कोटि सहसंबंध", description: "Scatter diagram, Pearson's product moment 'r', probable error, Spearman's tied ranks formula.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14, isCompleted: true },
-          { id: "prsu-s4-p4-ch2", number: 2, title: "Linear Regression Analysis: Equations & Regression Lines", hindiTitle: "रैखिक प्रतीपगमन विश्लेषण: समीकरण एवं रेखाएं", description: "Regression coefficients bxy and byx, properties, lines of regression of Y on X and X on Y.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s4-p4-ch3", number: 3, title: "Index Numbers: Laspeyres, Paasche, Fisher's Ideal Index", hindiTitle: "निर्देशांक: लास्पेयर, पाशे एवं फिशर का आदर्श सूचकांक", description: "Weighted aggregate index, time reversal test, factor reversal test, cost of living index.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s4-p4-ch4", number: 4, title: "Time Series Analysis: Secular Trend & Moving Averages", hindiTitle: "काल श्रेणी विश्लेषण: उपनति एवं चल माध्य विधि", description: "Components of time series (trend, seasonal, cyclical, irregular), method of least squares.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s4-p4-ch5", number: 5, title: "Statistical Quality Control (SQC) & Shewhart Control Charts", hindiTitle: "सांख्यिकीय गुणवत्ता नियंत्रण एवं शेवार्ट नियंत्रण चार्ट", description: "X-bar chart, R-chart, p-chart, c-chart, upper and lower control limits in production.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 }
+          { id: "prsu-s4-ge4-ch1", number: 1, title: "Scarcity, Choice, Production Possibility Curve (PPC) & Opportunity Cost", hindiTitle: "दुर्लभता, चयन, उत्पादन संभावना वक्र (PPC) एवं अवसर लागत", description: "Central problems of an economy, marginal rate of transformation, shifts in PPC.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s4-ge4-ch2", number: 2, title: "Consumer Choice: Indifference Curves, Budget Constraints & Optimal Choice", hindiTitle: "उपभोक्ता चयन: उदासीनता वक्र, बजट रेखा एवं इष्टतम उपभोग", description: "Income and substitution effects (Hicks and Slutsky), Giffen goods, normal vs inferior goods.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s4-ge4-ch3", number: 3, title: "Production with One and Multiple Variable Inputs, Isoquants & Isocosts", hindiTitle: "उत्पादन फलन: सम-उत्पाद वक्र, सम-लागत रेखा एवं उत्पादक संतुलन", description: "Marginal rate of technical substitution (MRTS), expansion path, ridge lines.", levels: { min: 15, max: 45 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s4-ge4-ch4", number: 4, title: "Market Structure: Perfect Competition, Monopoly & Price Discrimination", hindiTitle: "बाजार संरचना: पूर्ण प्रतियोगिता, एकाधिकार एवं मूल्य विभेद", description: "Short-run and long-run equilibrium, first, second, third degree price discrimination.", levels: { min: 20, max: 50 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s4-ge4-ch5", number: 5, title: "Monopolistic Competition, Oligopoly & Game Theory Basics", hindiTitle: "एकाधिकारात्मक प्रतियोगिता, अल्पाधिकार एवं गेम थ्योरी की मूल बातें", description: "Product differentiation, selling costs, kinked demand curve model, Prisoner's Dilemma.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 }
+        ]
+      },
+      {
+        id: "prsu-s4-aec4",
+        paperNumber: "AEC-4",
+        title: "Ability Enhancement Course: Professional Ethics & Human Values (व्यावसायिक नैतिकता)",
+        marks: 100,
+        description: "Ethics philosophy, corporate governance committees, accounting fraud case studies, workplace PoSH, green CSR.",
+        chapters: [
+          { id: "prsu-s4-aec4-ch1", number: 1, title: "Philosophy of Ethics, Morality, Values & Integrity in Profession", hindiTitle: "व्यावसायिक नैतिकता, सत्यनिष्ठा एवं मानवीय मूल्यों का दर्शन", description: "Deontological vs teleological ethics, fundamental human values, ethical dilemmas in finance.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s4-aec4-ch2", number: 2, title: "Corporate Governance: Cadbury Report, Kumar Mangalam Birla Committee", hindiTitle: "कॉर्पोरेट प्रशासन: कैडबरी समिति एवं कुमार मंगलम बिड़ला समिति", description: "OECD principles of corporate governance, audit committee role, independent directors.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s4-aec4-ch3", number: 3, title: "Ethical Issues in Accounting, Insider Trading & Corporate Frauds", hindiTitle: "लेखांकन में नैतिक मुद्दे, भेदिया व्यापार एवं कॉर्पोरेट घोटाले", description: "Creative accounting, Satyam scandal, Enron collapse, SEBI Prohibition of Insider Trading regulations.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s4-aec4-ch4", number: 4, title: "Workplace Ethics, Harassment Prevention (PoSH Act) & Whistleblower Policies", hindiTitle: "कार्यस्थल नैतिकता, पोश अधिनियम (PoSH) एवं विसलब्लोअर नीतियां", description: "Internal Complaints Committee (ICC), gender equality, protection to whistleblowers under law.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s4-aec4-ch5", number: 5, title: "Environmental Ethics, Sustainable Development & Green Business Practices", hindiTitle: "पर्यावरणीय नैतिकता, सतत विकास एवं हरित व्यावसायिक व्यवहार", description: "Carbon footprint tracking, zero liquid discharge, sustainable corporate reporting.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10 }
+        ]
+      },
+      {
+        id: "prsu-s4-vac2",
+        paperNumber: "VAC-2",
+        title: "Value Added Course: Summer Internship / Field Project (व्यावहारिक इंटर्नशिप)",
+        marks: 100,
+        description: "Field training in industry/banks/offices: organizational exposure, commercial transactions, project report, viva-voce.",
+        chapters: [
+          { id: "prsu-s4-vac2-ch1", number: 1, title: "Internship Preparation, Organizational Structure & Corporate Etiquette", hindiTitle: "इंटर्नशिप की तैयारी, संगठनात्मक संरचना एवं कॉर्पोरेट शिष्टाचार", description: "Workplace expectations, reporting hierarchy, professional dress codes, confidentiality agreements.", levels: { min: 10, max: 40 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s4-vac2-ch2", number: 2, title: "Practical Commerce Field Exposure: Banking, Accounting or Retail Operations", hindiTitle: "व्यावहारिक वाणिज्य क्षेत्रीय अनुभव: बैंकिंग, लेखांकन अथवा खुदरा व्यापार", description: "Observing real-world commercial transaction processing, cashier operations, invoicing desks.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s4-vac2-ch3", number: 3, title: "Data Gathering, Daily Logbook Maintenance & Project Formulation", hindiTitle: "समंक संकलन, दैनिक कार्य विवरण (लॉगबुक) एवं परियोजना रूपरेखा", description: "Maintaining day-to-day activity logs signed by industry mentor, identifying project topics.", levels: { min: 15, max: 45 }, topicsCount: 6, estimatedHours: 10 },
+          { id: "prsu-s4-vac2-ch4", number: 4, title: "Analysis of Real-World Financial Transactions & Workflow Documentation", hindiTitle: "व्यावहारिक वित्तीय लेन-देन का विश्लेषण एवं कार्यप्रवाह प्रलेखन", description: "Case analysis of internal controls, cash flow bottlenecks, customer service workflows.", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s4-vac2-ch5", number: 5, title: "Internship Project Report Writing, Presentation & Viva-Voce Defense", hindiTitle: "इंटर्नशिप रिपोर्ट लेखन, प्रस्तुतीकरण एवं मौखिक परीक्षा", description: "Structure of standard project report (Introduction, Methodology, Findings, Recommendations).", levels: { min: 20, max: 50 }, topicsCount: 7, estimatedHours: 12 }
         ]
       }
     ]
@@ -283,64 +393,78 @@ const prsuSemesters = [
     title: "B.Com Semester 5 (PRSU / NEP)",
     shortTitle: "B.Com Sem 5",
     institution: "PRSU",
-    description: "Fifth semester covering Income Tax Law (Part 2 - PGBP & Capital Gains), Financial Management, Auditing, Entrepreneurship.",
+    description: "Degree Level Fifth Semester: 5 Subjects, 20 Credits (DSC-13, DSC-14, DSC-15, DSE-1, SEC-3 / Internship).",
     eligibility: "Completed B.Com Semester 4",
-    scheme: "NEP-2020 / PRSU Scheme (4 Papers, 20 Chapters)",
+    scheme: "NEP-2020 / PRSU Scheme (5-6 Subjects - 20 Credits)",
     papers: [
       {
-        id: "prsu-s5-p1",
-        paperNumber: 1,
-        title: "Income Tax Law & Accounts - Part 2 (आयकर विधान एवं कर नियोजन)",
+        id: "prsu-s5-dsc13",
+        paperNumber: "DSC-13",
+        title: "Income Tax Law & Practice (आयकर विधान एवं व्यवहार)",
         marks: 100,
-        description: "PGBP (Sec 28-44), Capital Gains (Sec 45-55), Other Sources, Chapter VI-A deductions, New Regime Sec 115BAC.",
+        description: "Income Tax Act 1961: Residential status, Salary, House Property, PGBP, Capital Gains, Deductions 80C-80U, Tax Slabs (AY 2025-26).",
         chapters: [
-          { id: "prsu-s5-p1-ch1", number: 1, title: "Profits & Gains of Business or Profession (PGBP)", hindiTitle: "व्यापार अथवा पेशे के लाभ एवं प्राप्तियां (Sec 28-44)", description: "Allowable business expenses (Sec 30-37), disallowances (Sec 40, 40A), presumptive taxation (44AD).", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16, isCompleted: true },
-          { id: "prsu-s5-p1-ch2", number: 2, title: "Capital Gains: STCG, LTCG & Exemptions Sec 54", hindiTitle: "पूंजीगत लाभ: अल्पकालीन, दीर्घकालीन एवं धारा 54 छूटें", description: "Cost of acquisition, indexed cost, STCG Sec 111A, LTCG Sec 112A, exemptions Sec 54, 54EC, 54F.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s5-p1-ch3", number: 3, title: "Income from Other Sources & Gifts Taxation Sec 56(2)(x)", hindiTitle: "अन्य साधनों से आय एवं उपहारों पर कराधान", description: "Dividend taxation, casual earnings (lottery/betting), family pension deduction, monetary gifts.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s5-p1-ch4", number: 4, title: "Deductions from Gross Total Income (Chapter VI-A: 80C to 80U)", hindiTitle: "सकल कुल आय से कटौतियां: धारा 80C से 80U", description: "Sec 80C, 80CCC, 80CCD (NPS), 80D (health insurance), 80G (donations), 80TTA/TTB, 80U.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s5-p1-ch5", number: 5, title: "Tax Computation: Old vs New Tax Regime Sec 115BAC (AY 2025-26)", hindiTitle: "कर दायित्व की गणना: पुरानी बनाम नई कर व्यवस्था (AY 2025-26)", description: "Revised slab rates under default New Scheme, rebate under Sec 87A (₹25,000 up to ₹7 Lakh), surcharge.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 }
+          { id: "prsu-s5-dsc13-ch1", number: 1, title: "Basic Concepts, Scope of Total Income, Agricultural Income & Residential Status", hindiTitle: "आयकर की मूल अवधारणाएं, कृषि आय एवं निवास स्थिति (Sec 2, 5, 6, 10)", description: "Assessee, assessment year, previous year, residential test of individuals, tax incidence.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14, isCompleted: true },
+          { id: "prsu-s5-dsc13-ch2", number: 2, title: "Income from Salaries: Allowances, Perquisites, Retirement Benefits & Sec 16", hindiTitle: "वेतन से आय: भत्ते, अनुलाभ, सेवानिवृत्ति लाभ एवं मानक कटौती", description: "HRA, gratuity, commuted pension, perquisites valuation, standard deduction ₹50,000/₹75,000.", levels: { min: 30, max: 65 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s5-dsc13-ch3", number: 3, title: "Income from House Property: Annual Value & Deductions Sec 24", hindiTitle: "मकान संपत्ति से आय: वार्षिक मूल्य एवं कटौतियां (Sec 22-27)", description: "Gross annual value (GAV), municipal taxes, standard deduction Sec 24(a), interest Sec 24(b).", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s5-dsc13-ch4", number: 4, title: "Profits & Gains of Business or Profession (PGBP) & Capital Gains (Sec 28-55)", hindiTitle: "व्यापार अथवा पेशे के लाभ एवं पूंजीगत लाभ (Sec 28-55)", description: "Admissible expenses (30-37), disallowances (40, 40A), STCG Sec 111A, LTCG Sec 112A, exemptions Sec 54.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s5-dsc13-ch5", number: 5, title: "Deductions under Chapter VI-A (80C to 80U) & Total Tax Liability (AY 2025-26)", hindiTitle: "सकल कुल आय से कटौतियां (80C से 80U) एवं कर दायित्व (AY 2025-26)", description: "Deductions 80C, 80D, 80G, tax calculation under default New Scheme Sec 115BAC, rebate 87A.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 }
         ]
       },
       {
-        id: "prsu-s5-p2",
-        paperNumber: 2,
-        title: "Financial Management (वित्तीय प्रबंध)",
+        id: "prsu-s5-dsc14",
+        paperNumber: "DSC-14",
+        title: "Auditing (अंकेक्षण सिद्धान्त एवं व्यवहार)",
         marks: 100,
-        description: "Capital budgeting (NPV/IRR), cost of capital (WACC), leverages, capital structure theories, working capital cycle.",
+        description: "Audit principles, internal control, vouching, verification of assets/liabilities, company auditor appointment, powers, report.",
         chapters: [
-          { id: "prsu-s5-p2-ch1", number: 1, title: "Concept, Objectives & Wealth Maximization Principle", hindiTitle: "वित्तीय प्रबंध की अवधारणा, उद्देश्य एवं संपदा अधिकतमीकरण", description: "Finance function, profit vs wealth maximization, role of Chief Financial Officer (CFO).", levels: { min: 25, max: 55 }, topicsCount: 6, estimatedHours: 12, isCompleted: true },
-          { id: "prsu-s5-p2-ch2", number: 2, title: "Capital Budgeting: NPV, IRR, Payback & Profitability Index", hindiTitle: "पूंजी बजटिंग तकनीकें: शुद्ध वर्तमान मूल्य एवं आंतरिक प्रत्याय दर", description: "Discounted cash flow techniques, NPV vs IRR conflict, capital rationing, project feasibility.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s5-p2-ch3", number: 3, title: "Cost of Capital: Specific Costs & WACC", hindiTitle: "पूंजी की लागत: ऋण, अंश एवं भारित औसत पूंजी लागत (WACC)", description: "Cost of debt (Kd), preference (Kp), equity (Ke) via CAPM, book value vs market value weights.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s5-p2-ch4", number: 4, title: "Capital Structure Theories & Operating / Financial Leverages", hindiTitle: "पूंजी संरचना सिद्धांत एवं उत्तोलक (EBIT-EPS विश्लेषण)", description: "Net Income, Net Operating Income, MM Theory without/with taxes, Operating & Financial Leverage.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s5-p2-ch5", number: 5, title: "Working Capital Management & Cash Operating Cycle", hindiTitle: "कार्यशील पूंजी प्रबंधन एवं रोकड़ परिचालन चक्र", description: "Gross vs net working capital, estimation of working capital requirement, inventory & receivables.", levels: { min: 35, max: 70 }, topicsCount: 7, estimatedHours: 14 }
+          { id: "prsu-s5-dsc14-ch1", number: 1, title: "Meaning, Nature, Objectives & Basic Principles of Auditing", hindiTitle: "अंकेक्षण का अर्थ, प्रकृति, उद्देश्य एवं मूलभूत सिद्धांत", description: "Continuous audit, interim audit, statutory audit, internal audit, distinction with accounting.", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s5-dsc14-ch2", number: 2, title: "Internal Control, Internal Check, Audit Programme & Working Papers", hindiTitle: "आंतरिक नियंत्रण, आंतरिक निरीक्षण, अंकेक्षण कार्यक्रम एवं कार्यपत्रक", description: "Auditor's evaluation of internal controls, test checking, audit working papers, audit notebook.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s5-dsc14-ch3", number: 3, title: "Vouching: Cash Book, Purchases, Sales, Deferred Revenue & Ledger", hindiTitle: "प्रमाणन: रोकड़, क्रय, विक्रय, आस्थगित आयगत व्यय एवं खाता बही", description: "Voucher examination, missing vouchers, vouching of wages, capital vs revenue payments.", levels: { min: 35, max: 65 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s5-dsc14-ch4", number: 4, title: "Verification and Valuation of Fixed, Current & Intangible Assets and Liabilities", hindiTitle: "स्थाई, चालू व अमूर्त संपत्तियों एवं दायित्वों का सत्यापन तथा मूल्यांकन", description: "Verification of plant, goodwill, inventory valuation (AS-2), contingent liabilities verification.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s5-dsc14-ch5", number: 5, title: "Company Auditor: Appointment, Qualifications, Powers, Duties & Audit Reports", hindiTitle: "कंपनी अंकेक्षक: नियुक्ति, अधिकार, कर्तव्य एवं अंकेक्षण प्रतिवेदन (Sec 139-147)", description: "Qualification, disqualifications, rotation of auditors, clean vs qualified vs adverse audit report.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 }
         ]
       },
       {
-        id: "prsu-s5-p3",
-        paperNumber: 3,
-        title: "Auditing (अंकेक्षण)",
+        id: "prsu-s5-dsc15",
+        paperNumber: "DSC-15",
+        title: "Principles of Marketing / Financial Management (विपणन एवं वित्तीय प्रबंध)",
         marks: 100,
-        description: "Audit procedures, internal control, vouching, verification of assets/liabilities, company auditor rights and report.",
+        description: "Capital budgeting (NPV/IRR), cost of capital (WACC), leverages, capital structure, working capital management.",
         chapters: [
-          { id: "prsu-s5-p3-ch1", number: 1, title: "Meaning, Objectives, Advantages & Types of Audit", hindiTitle: "अंकेक्षण का अर्थ, उद्देश्य, लाभ एवं प्रकार", description: "Continuous audit, interim audit, statutory audit, internal audit, distinction with accounting.", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
-          { id: "prsu-s5-p3-ch2", number: 2, title: "Internal Control, Internal Check & Audit Programme", hindiTitle: "आंतरिक नियंत्रण, आंतरिक निरीक्षण एवं अंकेक्षण कार्यक्रम", description: "Auditor's evaluation of internal controls, test checking, audit working papers, audit notebook.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s5-p3-ch3", number: 3, title: "Vouching: Cash, Purchases, Sales & Ledger Vouching", hindiTitle: "प्रमाणन: रोकड़, क्रय, विक्रय एवं खाता बही प्रमाणन", description: "Voucher examination, missing vouchers, vouching of wages, capital vs revenue payments.", levels: { min: 35, max: 65 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s5-p3-ch4", number: 4, title: "Verification and Valuation of Assets and Liabilities", hindiTitle: "संपत्तियों एवं दायित्वों का सत्यापन तथा मूल्यांकन", description: "Verification of plant, goodwill, inventory valuation (AS-2), contingent liabilities verification.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s5-p3-ch5", number: 5, title: "Company Auditor: Appointment, Powers, Duties & Report (Sec 139-147)", hindiTitle: "कंपनी अंकेक्षक: नियुक्ति, अधिकार, कर्तव्य एवं अंकेक्षण प्रतिवेदन", description: "Qualification, disqualifications, rotation of auditors, clean vs qualified vs adverse audit report.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 }
+          { id: "prsu-s5-dsc15-ch1", number: 1, title: "Financial Management: Objectives, Wealth Maximization, Time Value of Money", hindiTitle: "वित्तीय प्रबंध: उद्देश्य, संपदा अधिकतमीकरण एवं मुद्रा का समय मूल्य", description: "Finance function, profit vs wealth maximization, present value and future value discounting.", levels: { min: 25, max: 55 }, topicsCount: 6, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s5-dsc15-ch2", number: 2, title: "Capital Budgeting Decisions: Payback Period, Net Present Value (NPV), IRR & PI", hindiTitle: "पूंजी बजटिंग तकनीकें: शुद्ध वर्तमान मूल्य (NPV) एवं आंतरिक प्रत्याय दर (IRR)", description: "Discounted cash flow techniques, NPV vs IRR conflict, capital rationing, project feasibility.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s5-dsc15-ch3", number: 3, title: "Cost of Capital: Cost of Debt, Equity, Retained Earnings & WACC", hindiTitle: "पूंजी की लागत: ऋण, अंश, प्रतिधारित आय एवं भारित औसत पूंजी लागत (WACC)", description: "Cost of debt (Kd), preference (Kp), equity (Ke) via CAPM, book value vs market value weights.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s5-dsc15-ch4", number: 4, title: "Capital Structure Theories & Leverage Analysis (EBIT-EPS, Operating & Financial)", hindiTitle: "पूंजी संरचना सिद्धांत एवं उत्तोलक विश्लेषण (EBIT-EPS, परिचालन व वित्तीय उत्तोलक)", description: "Net Income, Net Operating Income, MM Theory without/with taxes, Operating & Financial Leverage.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s5-dsc15-ch5", number: 5, title: "Working Capital Management: Operating Cycle, Cash, Inventory & Receivables", hindiTitle: "कार्यशील पूंजी प्रबंधन: परिचालन चक्र, रोकड़, स्कंध एवं देनदार प्रबंधन", description: "Gross vs net working capital, estimation of working capital requirement, cash budgets.", levels: { min: 35, max: 70 }, topicsCount: 7, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s5-p4",
-        paperNumber: 4,
-        title: "Entrepreneurship Development (उद्यमिता विकास)",
+        id: "prsu-s5-dse1",
+        paperNumber: "DSE-1",
+        title: "Discipline Specific Elective: Financial Services & Institutions (वित्तीय सेवाएं एवं संस्थान)",
         marks: 100,
-        description: "Entrepreneur traits, project identification, feasibility analysis, MSME support, PMEGP, venture capital.",
+        description: "Specialized Finance Group Paper 1: Merchant banking, mutual funds, leasing, factoring, credit rating agencies, venture finance.",
         chapters: [
-          { id: "prsu-s5-p4-ch1", number: 1, title: "Concept, Traits & Theories of Entrepreneurship", hindiTitle: "उद्यमिता की अवधारणा, गुण एवं सिद्धांत", description: "Schumpeter innovation theory, risk bearing, social vs corporate entrepreneurship.", levels: { min: 20, max: 50 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
-          { id: "prsu-s5-p4-ch2", number: 2, title: "Project Identification & Feasibility Analysis", hindiTitle: "परियोजना पहचान एवं व्यवहार्यता विश्लेषण", description: "Market survey, technical feasibility, financial viability, break-even economic analysis.", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s5-p4-ch3", number: 3, title: "Preparation of Detailed Project Report (DPR) & Business Plan", hindiTitle: "विस्तृत परियोजना प्रतिवेदन (DPR) एवं व्यावसायिक योजना", description: "Components of bankable project report, cash flow projections, sensitivity analysis.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s5-p4-ch4", number: 4, title: "Institutional Support to MSMEs: DIC, SIDBI & PMEGP Schemes", hindiTitle: "एमएसएमई को संस्थागत सहायता एवं सरकारी योजनाएं", description: "Role of District Industries Centre (DIC), NSIC, Stand-Up India, Mudra loans, credit guarantee.", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s5-p4-ch5", number: 5, title: "Venture Capital, Angel Investors & Startup Ecosystem", hindiTitle: "उद्यम पूंजी, एंजेल निवेशक एवं स्टार्टअप पारिस्थितिकी", description: "Seed funding, Series A/B rounds, incubation centres, Intellectual Property Rights (Patents/Trademarks).", levels: { min: 25, max: 55 }, topicsCount: 7, estimatedHours: 12 }
+          { id: "prsu-s5-dse1-ch1", number: 1, title: "Financial System in India: Money Market, Capital Market & Regulatory Structure", hindiTitle: "भारतीय वित्तीय प्रणाली: मुद्रा बाजार, पूंजी बाजार एवं नियामक ढांचा", description: "Call money market, commercial paper, treasury bills, role of SEBI and RBI in capital markets.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s5-dse1-ch2", number: 2, title: "Merchant Banking, Issue Management, Underwriting & Book Building", hindiTitle: "मर्चेंट बैंकिंग, इश्यू मैनेजमेंट, हामीदारी एवं बुक बिल्डिंग प्रक्रिया", description: "Pre-issue and post-issue activities, SEBI ICDR regulations, role of lead managers.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s5-dse1-ch3", number: 3, title: "Mutual Funds: Types of Schemes, NAV Determination & SEBI Mutual Fund Regulations", hindiTitle: "म्यूचुअल फंड: योजनाओं के प्रकार, एनएवी (NAV) निर्धारण एवं सेबी नियम", description: "Open-ended vs close-ended funds, equity, debt and hybrid funds, AMFI code of ethics.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s5-dse1-ch4", number: 4, title: "Lease Financing, Hire Purchase Finance, Factoring & Forfaiting Services", hindiTitle: "पट्टा वित्तपोषण, किराया क्रय वित्त, फैक्टरिंग एवं फॉरफेटिंग सेवाएं", description: "Financial lease vs operating lease, recourse vs non-recourse factoring, export forfaiting.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s5-dse1-ch5", number: 5, title: "Credit Rating Agencies (CRISIL, ICRA, CARE), Venture Capital & Housing Finance", hindiTitle: "क्रेडिट रेटिंग एजेंसियां (CRISIL, ICRA), वेंचर कैपिटल एवं आवास वित्त", description: "Rating methodology, symbols, benefits to investors, NHB and affordable housing finance.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 12 }
+        ]
+      },
+      {
+        id: "prsu-s5-sec3",
+        paperNumber: "SEC-3",
+        title: "Skill Enhancement Course / Practical Internship: Financial Analysis & Modeling",
+        marks: 100,
+        description: "Hands-on financial modeling: Advanced Excel, 3-statement financial modeling, DCF valuation, loan amortization schedules.",
+        chapters: [
+          { id: "prsu-s5-sec3-ch1", number: 1, title: "Excel for Financial Modeling: Functions, Pivot Tables, What-If Analysis", hindiTitle: "वित्तीय मॉडलिंग के लिए एक्सेल: फलन, पिवट टेबल एवं व्हॉट-इफ विश्लेषण", description: "Data tables, goal seek, scenario manager, INDEX-MATCH, OFFSET, dynamic charting.", levels: { min: 20, max: 55 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s5-sec3-ch2", number: 2, title: "Financial Statement Modeling: Building Integrated P&L, Balance Sheet & Cash Flow", hindiTitle: "वित्तीय विवरण मॉडलिंग: एकीकृत लाभ-हानि, बैलेंस शीट एवं रोकड़ प्रवाह निर्माण", description: "Linking revenue schedules, debt schedules, working capital drivers into integrated statements.", levels: { min: 30, max: 70 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s5-sec3-ch3", number: 3, title: "Valuation Modeling: Discounted Cash Flow (DCF) & Relative Valuation", hindiTitle: "मूल्यांकन मॉडलिंग: बट्टाकृत रोकड़ प्रवाह (DCF) एवं सापेक्ष मूल्यांकन", description: "Free Cash Flow to Firm (FCFF), Terminal Value estimation, PE and EV/EBITDA multiples.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s5-sec3-ch4", number: 4, title: "Loan Amortization Schedules & Capital Investment Project Modeling", hindiTitle: "ऋण परिशोधन अनुसूची एवं पूंजी निवेश परियोजना मॉडलिंग", description: "Principal and interest breakup, balloon payments, project IRR and NPV calculation tables.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s5-sec3-ch5", number: 5, title: "Financial Dashboard Design, Sensitivity Analysis & Executive Presentation", hindiTitle: "वित्तीय डैशबोर्ड डिजाइन, संवेदनशीलता विश्लेषण एवं कार्यकारी प्रस्तुति", description: "Building interactive KPI visual summaries, tornado charts, presenting models to CFOs.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 14 }
         ]
       }
     ]
@@ -350,71 +474,85 @@ const prsuSemesters = [
     title: "B.Com Semester 6 (PRSU / NEP)",
     shortTitle: "B.Com Sem 6",
     institution: "PRSU",
-    description: "Sixth semester final year covering GST & Customs Law, Advanced Costing, Human Resource Management, E-Commerce.",
+    description: "Degree Level Final Semester: 5 Subjects, 20 Credits (DSC-16, DSC-17, DSC-18, DSE-2, Research Project / Dissertation).",
     eligibility: "Completed B.Com Semester 5",
-    scheme: "NEP-2020 / PRSU Scheme (4 Papers, 20 Chapters)",
+    scheme: "NEP-2020 / PRSU Scheme (5-6 Subjects - 20 Credits)",
     papers: [
       {
-        id: "prsu-s6-p1",
-        paperNumber: 1,
-        title: "Goods & Services Tax (GST) & Customs Law (जीएसटी एवं सीमा शुल्क)",
+        id: "prsu-s6-dsc16",
+        paperNumber: "DSC-16",
+        title: "Indirect Taxes with GST (जीएसटी एवं अप्रत्यक्ष कर विधान)",
         marks: 100,
-        description: "GST constitutional framework, Supply (Sec 7), Input Tax Credit (Sec 16, 17(5)), Returns, Customs duty valuation.",
+        description: "Constitutional framework, Supply (Sec 7), ITC (Sec 16, 17(5)), Composition levy (Sec 10), Returns, Customs valuation.",
         chapters: [
-          { id: "prsu-s6-p1-ch1", number: 1, title: "Constitutional Framework, CGST/SGST/IGST & Supply Concept", hindiTitle: "जीएसटी का संवैधानिक ढांचा एवं आपूर्ति की अवधारणा (Sec 7)", description: "101st Constitutional Amendment, dual GST model, taxable event: supply vs sale, mixed/composite supply.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 14, isCompleted: true },
-          { id: "prsu-s6-p1-ch2", number: 2, title: "Time, Place and Value of Supply & Composition Scheme Sec 10", hindiTitle: "आपूर्ति का समय, स्थान, मूल्य एवं समाधान योजना (Sec 10)", description: "Time of supply of goods/services, transaction value Sec 15, composition eligibility & tax rates.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s6-p1-ch3", number: 3, title: "Input Tax Credit (ITC) Mechanics & Blocked Credits Sec 17(5)", hindiTitle: "इनपुट टैक्स क्रेडिट (ITC) एवं रोकी गई छूट (Sec 16 & 17(5))", description: "Conditions for taking ITC, blocked credits under Sec 17(5), electronic ledger utilization hierarchy.", levels: { min: 50, max: 85 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s6-p1-ch4", number: 4, title: "Registration, E-Invoicing, E-Way Bill & Returns (GSTR-1, 3B)", hindiTitle: "जीएसटी पंजीकरण, ई-इनवॉइसिंग, ई-वे बिल एवं विवरणियां", description: "Threshold limits for registration, mandatory e-invoicing, GSTR-1, GSTR-3B monthly compliance.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s6-p1-ch5", number: 5, title: "Customs Law: Types of Customs Duties & Valuation of Imports", hindiTitle: "सीमा शुल्क कानून: शुल्कों के प्रकार एवं आयात माल का मूल्यांकन", description: "Basic customs duty, IGST on imports, anti-dumping duty, assessable value calculation (CIF).", levels: { min: 40, max: 75 }, topicsCount: 7, estimatedHours: 14 }
+          { id: "prsu-s6-dsc16-ch1", number: 1, title: "Constitutional Basis, CGST/SGST/IGST Architecture & Concept of Supply (Sec 7)", hindiTitle: "जीएसटी का संवैधानिक आधार, सीजीएसटी/एसजीएसटी ढांचा एवं आपूर्ति की अवधारणा", description: "101st Constitutional Amendment, dual GST model, taxable event: supply vs sale, composite/mixed supply.", levels: { min: 40, max: 75 }, topicsCount: 8, estimatedHours: 14, isCompleted: true },
+          { id: "prsu-s6-dsc16-ch2", number: 2, title: "Time, Place & Value of Supply (Sec 12, 13, 15) & Composition Levy Scheme (Sec 10)", hindiTitle: "आपूर्ति का समय, स्थान व मूल्य तथा समाधान योजना (Sec 10)", description: "Time of supply of goods/services, transaction value Sec 15, composition eligibility & tax rates.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s6-dsc16-ch3", number: 3, title: "Input Tax Credit (ITC): Eligibility (Sec 16), Blocked Credits (Sec 17(5)) & Reversal", hindiTitle: "इनपुट टैक्स क्रेडिट (ITC): पात्रता (Sec 16) एवं रोकी गई छूट (Sec 17(5))", description: "Conditions for taking ITC, blocked credits under Sec 17(5), electronic ledger utilization hierarchy.", levels: { min: 50, max: 85 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s6-dsc16-ch4", number: 4, title: "Registration Procedures, Tax Invoice, E-Way Bill & Filing of Returns (GSTR-1, 3B)", hindiTitle: "पंजीकरण, कर बीजक, ई-वे बिल एवं विवरणी दाखिल करना (GSTR-1, 3B)", description: "Threshold limits for registration, mandatory e-invoicing, GSTR-1, GSTR-3B monthly compliance.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s6-dsc16-ch5", number: 5, title: "Customs Law: Types of Customs Duties, Assessable Value, Import & Export Procedures", hindiTitle: "सीमा शुल्क कानून: शुल्कों के प्रकार, कर योग्य मूल्य एवं आयात-निर्यात प्रक्रिया", description: "Basic customs duty, IGST on imports, anti-dumping duty, assessable value calculation (CIF).", levels: { min: 40, max: 75 }, topicsCount: 7, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s6-p2",
-        paperNumber: 2,
-        title: "Advanced Cost & Management Accounting (उच्चतर लागत एवं प्रबंध लेखांकन)",
+        id: "prsu-s6-dsc17",
+        paperNumber: "DSC-17",
+        title: "Management Accounting (प्रबंधकीय लेखांकन)",
         marks: 100,
-        description: "Process costing (losses/gains), equivalent production, service costing (transport), contract costing, standard costing.",
+        description: "Ratio analysis, Cash Flow Statement (AS-3), Marginal costing, CVP & Break-Even analysis, Budgetary control.",
         chapters: [
-          { id: "prsu-s6-p2-ch1", number: 1, title: "Process Costing: Normal Loss, Abnormal Loss & Abnormal Gain", hindiTitle: "प्रक्रिया लागत: सामान्य व असामान्य हानि/लाभ लेखांकन", description: "Process ledger accounts, scrap realization, valuation of abnormal loss and abnormal gain.", levels: { min: 45, max: 85 }, topicsCount: 8, estimatedHours: 16, isCompleted: true },
-          { id: "prsu-s6-p2-ch2", number: 2, title: "Process Costing: Equivalent Production & Inter-Process Profits", hindiTitle: "समतुल्य उत्पादन एवं अंतर-प्रक्रिया लाभ लेखांकन", description: "Statement of equivalent units (FIFO & Weighted Average), reserve for unrealized profits.", levels: { min: 50, max: 85 }, topicsCount: 8, estimatedHours: 16 },
-          { id: "prsu-s6-p2-ch3", number: 3, title: "Operating Costing: Transport, Hotel & Hospital Costing", hindiTitle: "परिचालन/सेवा लागत: परिवहन, होटल एवं अस्पताल लागत", description: "Composite cost units (passenger-km, tonne-km, room-days), operating cost sheet preparation.", levels: { min: 40, max: 75 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s6-p2-ch4", number: 4, title: "Contract Costing: Work Certified & Escalation Clause", hindiTitle: "ठेका लागत: प्रमाणित कार्य, रोकी गई राशि एवं मूल्य वृद्धि उपवाक्य", description: "Profit on incomplete contracts (AS-7 principles), work-in-progress presentation in balance sheet.", levels: { min: 45, max: 80 }, topicsCount: 8, estimatedHours: 14 },
-          { id: "prsu-s6-p2-ch5", number: 5, title: "Standard Costing & Variance Analysis: Material & Labour", hindiTitle: "प्रमाप लागत एवं विचरण विश्लेषण: सामग्री एवं श्रम विचरण", description: "Material price/usage/mix variance, Labour rate/efficiency/idle time variance calculations.", levels: { min: 50, max: 85 }, topicsCount: 8, estimatedHours: 16 }
+          { id: "prsu-s6-dsc17-ch1", number: 1, title: "Nature, Functions, Scope & Distinction with Financial and Cost Accounting", hindiTitle: "प्रबंधकीय लेखांकन की प्रकृति, कार्य, क्षेत्र एवं वित्तीय/लागत लेखांकन से अंतर", description: "Role of management accountant in corporate strategy, tools and techniques of management accounting.", levels: { min: 25, max: 55 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
+          { id: "prsu-s6-dsc17-ch2", number: 2, title: "Ratio Analysis: Liquidity, Solvency, Turnover & Profitability Ratios", hindiTitle: "अनुपात विश्लेषण: तरलता, शोधन क्षमता, आवर्त एवं लाभदायकता अनुपात", description: "Current ratio, quick ratio, debt-equity, inventory turnover, debtors turnover, ROE, DuPont analysis.", levels: { min: 30, max: 70 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s6-dsc17-ch3", number: 3, title: "Cash Flow Statement as per Accounting Standard 3 (AS-3 Revised)", hindiTitle: "रोकड़ प्रवाह विवरण: लेखांकन मानक 3 (AS-3 संशोधित) के अनुसार", description: "Cash from operating activities (indirect method), investing activities, financing activities.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s6-dsc17-ch4", number: 4, title: "Marginal Costing, Cost-Volume-Profit (CVP) Analysis & Break-Even Point (BEP)", hindiTitle: "सीमांत लागत, लागत-मात्रा-लाभ (CVP) विश्लेषण एवं सम-विच्छेद बिंदु (BEP)", description: "Contribution, P/V ratio, Break-even sales, Margin of safety, decision making problems.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s6-dsc17-ch5", number: 5, title: "Budgetary Control: Classification of Budgets, Cash Budget & Flexible Budget", hindiTitle: "बजटीय नियंत्रण: बजटों का वर्गीकरण, रोकड़ बजट एवं लोचशील बजट", description: "Budget manual, principal budget factor, preparation of flexible budget at different activity levels.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s6-p3",
-        paperNumber: 3,
-        title: "Human Resource Management (मानव संसाधन प्रबंध)",
+        id: "prsu-s6-dsc18",
+        paperNumber: "DSC-18",
+        title: "Financial Market Operations / E-Commerce (वित्तीय बाजार परिचालन एवं ई-कॉमर्स)",
         marks: 100,
-        description: "HR planning, job analysis, recruitment and selection, training, 360 performance appraisal, industrial relations.",
+        description: "Stock exchanges (BSE/NSE), IPOs, book building, SEBI regulations, payment systems (UPI), cyber security in commerce.",
         chapters: [
-          { id: "prsu-s6-p3-ch1", number: 1, title: "Nature, Scope & Strategic Role of Human Resource Management", hindiTitle: "मानव संसाधन प्रबंध की प्रकृति, क्षेत्र एवं रणनीतिक भूमिका", description: "HR functions, personnel management vs HRM, challenges of diversity and technology.", levels: { min: 25, max: 55 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
-          { id: "prsu-s6-p3-ch2", number: 2, title: "Human Resource Planning (HRP), Job Analysis & Description", hindiTitle: "मानव संसाधन नियोजन (HRP), कार्य विश्लेषण एवं विवरण", description: "Forecasting manpower demand/supply, job description vs job specification, job design.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s6-p3-ch3", number: 3, title: "Recruitment & Selection Process, Tests & Induction", hindiTitle: "भर्ती एवं चयन प्रक्रिया, परीक्षण, साक्षात्कार एवं कार्य-परिचय", description: "Internal vs external sourcing, structured interviews, psychometric testing, induction programs.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s6-p3-ch4", number: 4, title: "Training Methods & Performance Appraisal: 360-Degree Feedback", hindiTitle: "प्रशिक्षण विधियां एवं कार्य-निष्पादन मूल्यांकन (360 डिग्री फीडबैक)", description: "On-the-job vs off-the-job training, MBO appraisal, 360-degree feedback, potential evaluation.", levels: { min: 35, max: 65 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s6-p3-ch5", number: 5, title: "Industrial Relations, Trade Unions & Grievance Redressal", hindiTitle: "औद्योगिक संबंध, श्रम संघ, विवाद निवारण एवं श्रमिक कल्याण", description: "Collective bargaining, conciliation and arbitration, statutory grievance procedures in India.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 12 }
+          { id: "prsu-s6-dsc18-ch1", number: 1, title: "Financial Markets in India: Primary Market, IPOs, FPOs & Book Building", hindiTitle: "भारतीय वित्तीय बाजार: प्राथमिक बाजार, आईपीओ, एफपीओ एवं बुक बिल्डिंग", description: "Public issue mechanism, ASBA facility, retail and institutional quota, price discovery.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s6-dsc18-ch2", number: 2, title: "Secondary Market: Stock Exchanges (BSE, NSE), Trading Mechanism & T+1 Settlement", hindiTitle: "द्वितीयक बाजार: शेयर बाजार (BSE, NSE), ट्रेडिंग प्रणाली एवं T+1 निपटान", description: "Screen-based trading, order types, demat accounts, clearing corporation operations.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 14 },
+          { id: "prsu-s6-dsc18-ch3", number: 3, title: "Securities and Exchange Board of India (SEBI): Role, Powers & Investor Protection", hindiTitle: "भारतीय प्रतिभूति एवं विनिमय बोर्ड (सेबी): भूमिका, अधिकार एवं निवेशक संरक्षण", description: "SCORES platform, insider trading prohibitions, regulation of brokers and depositories.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s6-dsc18-ch4", number: 4, title: "E-Commerce Architecture, Payment Gateways, UPI, Digital Wallets & Mobile Commerce", hindiTitle: "ई-कॉमर्स वास्तुकला, भुगतान गेटवे, यूपीआई, डिजिटल वॉलेट्स एवं मोबाइल कॉमर्स", description: "B2B, B2C, C2C business models, payment gateway aggregators, QR-code payment rails.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s6-dsc18-ch5", number: 5, title: "Cyber Security in Financial Transactions, Cryptography, SSL & IT Act 2000", hindiTitle: "वित्तीय लेन-देन में साइबर सुरक्षा, कूटलेखन, एसएसएल एवं आईटी अधिनियम 2000", description: "Symmetric vs asymmetric encryption, phishing and ransomware defense, legal validity of digital signatures.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 }
         ]
       },
       {
-        id: "prsu-s6-p4",
-        paperNumber: 4,
-        title: "E-Commerce & Digital Business Applications (ई-कॉमर्स)",
+        id: "prsu-s6-dse2",
+        paperNumber: "DSE-2",
+        title: "Discipline Specific Elective: Security Analysis & Portfolio Management",
         marks: 100,
-        description: "E-commerce architecture, B2B/B2C, UPI payment systems, digital marketing, SSL security, IT Act 2000.",
+        description: "Specialized Finance Group Paper 2: Risk-return analysis, fundamental EIC analysis, technical charts, Markowitz, CAPM.",
         chapters: [
-          { id: "prsu-s6-p4-ch1", number: 1, title: "E-Commerce Architecture & Business Models: B2B, B2C, C2C", hindiTitle: "ई-कॉमर्स वास्तुकला एवं व्यावसायिक मॉडल: B2B, B2C, C2C", description: "Marketplace vs inventory models, digital supply chain, advantages and challenges in India.", levels: { min: 25, max: 55 }, topicsCount: 6, estimatedHours: 10, isCompleted: true },
-          { id: "prsu-s6-p4-ch2", number: 2, title: "Electronic Payment Systems: UPI, Gateways & Digital Wallets", hindiTitle: "इलेक्ट्रॉनिक भुगतान प्रणाली: यूपीआई, गेटवे एवं डिजिटल वॉलेट्स", description: "Payment gateway mechanics, merchant accounts, settlement cycles, QR-code payment rails.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s6-p4-ch3", number: 3, title: "Digital Marketing, SEO, Social Commerce & Affiliate Networks", hindiTitle: "डिजिटल मार्केटिंग, एसईओ, सोशल कॉमर्स एवं एफिलिएट नेटवर्क", description: "Search engine optimization (SEO), Google Analytics, conversion funnels, influencer marketing.", levels: { min: 30, max: 60 }, topicsCount: 7, estimatedHours: 12 },
-          { id: "prsu-s6-p4-ch4", number: 4, title: "Cyber Security, Cryptography, SSL/TLS & Fraud Prevention", hindiTitle: "साइबर सुरक्षा, कूटलेखन, एसएसएल एवं वित्तीय धोखाधड़ी रोकथाम", description: "Symmetric vs asymmetric encryption, phishing and ransomware defense, PCI-DSS compliance.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
-          { id: "prsu-s6-p4-ch5", number: 5, title: "Information Technology Act 2000 & Digital Signatures", hindiTitle: "सूचना प्रौद्योगिकी अधिनियम 2000 एवं डिजिटल हस्ताक्षर", description: "Legal recognition of electronic records, certifying authorities, cyber offenses and penalties.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 }
+          { id: "prsu-s6-dse2-ch1", number: 1, title: "Investment Environment, Risk-Return Tradeoff, Systematic vs Unsystematic Risk", hindiTitle: "निवेश पर्यावरण, जोखिम-प्रतिफल संतुलन, व्यवस्थित बनाम अव्यवस्थित जोखिम", description: "Measurement of returns, variance, standard deviation, beta coefficient computation.", levels: { min: 35, max: 75 }, topicsCount: 7, estimatedHours: 14, isCompleted: true },
+          { id: "prsu-s6-dse2-ch2", number: 2, title: "Fundamental Analysis: Economic Analysis, Industry Analysis & Company Analysis (EIC)", hindiTitle: "मौलिक विश्लेषण: आर्थिक, उद्योग एवं कंपनी स्तर विश्लेषण (EIC फ्रेमवर्क)", description: "Macroeconomic indicators, industry life cycle, financial ratios analysis, management quality.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s6-dse2-ch3", number: 3, title: "Technical Analysis: Dow Theory, Chart Patterns, Trendlines, Moving Averages & RSI", hindiTitle: "तकनीकी विश्लेषण: डाउ सिद्धांत, चार्ट पैटर्न, मूविंग एवरेज एवं आरएसआई (RSI)", description: "Candlestick patterns, head and shoulders, support and resistance levels, momentum indicators.", levels: { min: 35, max: 75 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s6-dse2-ch4", number: 4, title: "Efficient Market Hypothesis (EMH): Weak, Semi-Strong & Strong Form Efficiency", hindiTitle: "दक्ष बाजार परिकल्पना (EMH): कमजोर, अर्ध-मजबूत एवं मजबूत दक्षता", description: "Random walk theory, empirical tests of market efficiency, behavioral finance anomalies.", levels: { min: 30, max: 70 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s6-dse2-ch5", number: 5, title: "Portfolio Theory: Markowitz Model, Sharpe Single Index & Capital Asset Pricing Model (CAPM)", hindiTitle: "पोर्टफोलियो सिद्धांत: मार्कोविट्ज़ मॉडल, शार्प मॉडल एवं सीएपीएम (CAPM)", description: "Efficient frontier, optimal portfolio selection, Security Market Line (SML), Capital Market Line (CML).", levels: { min: 40, max: 85 }, topicsCount: 8, estimatedHours: 18 }
+        ]
+      },
+      {
+        id: "prsu-s6-proj",
+        paperNumber: "PROJ",
+        title: "Research Project / Dissertation / Field Work (शोध परियोजना / फील्ड वर्क)",
+        marks: 100,
+        description: "Capstone Undergraduate Project: Research methodology, literature review, sampling, data analysis (SPSS/Excel), viva defense.",
+        chapters: [
+          { id: "prsu-s6-proj-ch1", number: 1, title: "Fundamentals of Business Research Methodology: Problem Identification & Design", hindiTitle: "व्यावसायिक अनुसंधान पद्धति के मूल तत्व: समस्या पहचान एवं अनुसंधान रूपरेखा", description: "Exploratory vs descriptive vs causal research design, formulating research questions.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 12, isCompleted: true },
+          { id: "prsu-s6-proj-ch2", number: 2, title: "Literature Review, Hypothesis Formulation & Conceptual Framework", hindiTitle: "साहित्य समीक्षा, परिकल्पना निर्माण एवं वैचारिक ढांचा", description: "Identifying research gaps from indexed journals, null vs alternative hypotheses.", levels: { min: 25, max: 60 }, topicsCount: 7, estimatedHours: 12 },
+          { id: "prsu-s6-proj-ch3", number: 3, title: "Sampling Techniques, Questionnaire Design & Primary/Secondary Data Collection", hindiTitle: "प्रतिचयन तकनीकें, प्रश्नावली निर्माण एवं प्राथमिक व द्वितीयक समंक संकलन", description: "Probability vs non-probability sampling, Likert scale measurement, pilot testing surveys.", levels: { min: 30, max: 65 }, topicsCount: 7, estimatedHours: 14 },
+          { id: "prsu-s6-proj-ch4", number: 4, title: "Data Processing, Statistical Analysis (SPSS/Excel) & Interpretation of Findings", hindiTitle: "समंक प्रसंस्करण, सांख्यिकीय विश्लेषण (एक्सेल/एसपीएसएस) एवं निष्कर्ष", description: "Descriptive statistics, chi-square tests, correlation and regression testing of hypotheses.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 },
+          { id: "prsu-s6-proj-ch5", number: 5, title: "Dissertation Writing, Referencing (APA), Executive Summary & Viva-Voce Defense", hindiTitle: "शोध प्रबंध लेखन, संदर्भ सूची (APA), सारांश एवं मौखिक परीक्षा रक्षा", description: "Report chapters layout, bibliography management, preparing presentation slides for viva defense.", levels: { min: 35, max: 70 }, topicsCount: 8, estimatedHours: 16 }
         ]
       }
     ]
   }
 ]
 
-// 1. Replace PRSU definition in coursesData.ts
+// Locate PRSU in coursesContent
 const prsuMarkerStart = 'id: "prsu",'
 const nextInstMarker = 'id: "acca",'
 
@@ -431,150 +569,8 @@ let objStart = coursesContent.lastIndexOf("{", startIndex)
 // Find closing brace of PRSU object before ACCA
 let objEnd = coursesContent.lastIndexOf("},", endIndex)
 
-const newPrsuObject = `{\n    id: "prsu",\n    name: "Pt. Ravishankar Shukla University (PRSU), Raipur",\n    shortName: "PRSU B.Com",\n    badgeColor: "bg-amber-600 text-white",\n    description: "Premier state university in Raipur, Chhattisgarh offering undergraduate commerce degrees (B.Com Semester 1 to Semester 6) aligned with UGC NEP-2020.",\n    officialUrl: "https://www.prsu.ac.in",\n    levels: ${JSON.stringify(prsuSemesters, null, 6).replace(/\n/g, "\n    ")}\n  `
+const newPrsuObject = `{\n    id: "prsu",\n    name: "Pt. Ravishankar Shukla University (PRSU), Raipur",\n    shortName: "PRSU B.Com",\n    badgeColor: "bg-amber-600 text-white",\n    description: "Premier state university in Raipur, Chhattisgarh offering undergraduate commerce degrees (B.Com Semester 1 to Semester 6) aligned with UGC NEP-2020.",\n    officialUrl: "https://www.prsu.ac.in",\n    levels: ${JSON.stringify(prsuNepSemesters, null, 6).replace(/\n/g, "\n    ")}\n  }`
 
-coursesContent = coursesContent.slice(0, objStart) + newPrsuObject + coursesContent.slice(objEnd + 1)
+coursesContent = coursesContent.slice(0, objStart) + newPrsuObject + coursesContent.slice(objEnd)
 fs.writeFileSync(coursesDataPath, coursesContent, "utf-8")
-console.log("✅ Successfully updated src/data/coursesData.ts with all 6 semesters, 24 papers, and 120 chapters of PRSU B.Com!")
-
-// 2. Add sample comprehensive lessons for key PRSU chapters into chapterContentData.ts
-const samplePrsuLessons = {
-  "prsu-s1-p1-ch1": {
-    id: "lesson-prsu-s1-p1-ch1",
-    chapterId: "prsu-s1-p1-ch1",
-    title: "Meaning, Principles & Accounting Standards (AS-1, AS-10)",
-    hindiTitle: "लेखांकन के सिद्धांत एवं मानक (AS-1, AS-10)",
-    overview: "Financial accounting is the systematic process of identifying, recording, classifying, and summarizing financial transactions according to GAAP and mandatory Accounting Standards (AS-1 Disclosure of Accounting Policies, AS-10 Property, Plant and Equipment).",
-    eli10: {
-      en: "Imagine you have a piggy bank and a notebook. Every time you get pocket money or buy chocolates, you write the date and exact amount. Accounting is just that notebook, but with strict rules so nobody can cheat and everyone knows your exact financial health!",
-      hi: "मान लीजिए आपके पास एक गुल्लक और एक डायरी है। जब भी आपको पैसे मिलते हैं या आप कोई खर्च करते हैं, तो आप डायरी में तारीख और रकम लिखते हैं। लेखांकन (Accounting) बस वही नियमबद्ध डायरी है जिससे व्यापार का सही लाभ-हानि पता चलता है।",
-      hinglish: "Socho aapke paas ek diary hai jisme aap roz ka aana-jaana paisa likhte ho. Accounting bas wahi system hai jo official rules (GAAP aur Accounting Standards) follow karta hai taaki business ka exact profit aur balance sheet pata chale."
-    },
-    statutoryContext: {
-      standards: "AS 1 (Disclosure of Accounting Policies) & AS 10 (Property, Plant and Equipment)",
-      sections: "Section 128, 129 & 133 of Companies Act 2013",
-      provisions: "Requires books of accounts to be maintained on accrual basis under double-entry system, presenting a true and fair view of state of affairs."
-    },
-    practicalIllustration: {
-      problemStatement: "M/s Raipur Traders purchased machinery costing ₹5,00,000 on 1st April 2024. Installation expenses incurred were ₹50,000. Under AS-10, determine the total capitalized cost of machinery and record the journal entry.",
-      solutionSteps: [
-        "Step 1: Identify purchase price (₹5,00,000) and directly attributable costs (Installation ₹50,000).",
-        "Step 2: Under AS-10, all expenses incurred to bring the asset to its working condition must be capitalized.",
-        "Step 3: Total capitalized cost = ₹5,00,000 + ₹50,000 = ₹5,50,000."
-      ],
-      journalEntries: [
-        { particulars: "Machinery Account ...................................... Dr.", debit: "₹5,50,000", credit: "" },
-        { particulars: "   To Bank Account", debit: "", credit: "₹5,00,000" },
-        { particulars: "   To Cash Account (Installation Expenses)", debit: "", credit: "₹50,000" }
-      ]
-    },
-    commonMistakes: [
-      "Treating machinery installation charges as revenue expenditure instead of capitalizing under AS-10.",
-      "Omitting fundamental accounting assumptions (Going Concern, Consistency, Accrual) without required AS-1 disclosures."
-    ],
-    memoryTrick: "Golden Rule of Asset Capitalization: 'Buy Price + Fit Price = Total Asset Cost' (B + F = T).",
-    practiceQuestions: [
-      { q: "What are the three fundamental accounting assumptions under AS-1?", a: "Going Concern, Consistency, and Accrual. If they are followed, no specific disclosure is required. If not followed, the fact must be disclosed." },
-      { q: "Can installation charges of plant be debited to Profit & Loss Account?", a: "No. Under AS-10, installation charges are directly attributable costs and must be debited to Plant/Machinery Account." }
-    ]
-  },
-  "prsu-s1-p1-ch2": {
-    id: "lesson-prsu-s1-p1-ch2",
-    chapterId: "prsu-s1-p1-ch2",
-    title: "Royalty Accounts: Minimum Rent & Shortworkings",
-    hindiTitle: "रॉयल्टी (अधिकार शुल्क) खाते: न्यूनतम किराया एवं लघुकार्य",
-    overview: "Royalty is periodic consideration paid by a lessee (user) to a lessor (owner) for exploiting special rights like coal mines, patents, or copyright books. Features Minimum Rent, Shortworkings, and Recoupment clauses.",
-    eli10: {
-      en: "Imagine you borrow your friend's bicycle to deliver newspapers. You promise him ₹10 for every newspaper delivered, but at least ₹50 per day no matter what. That ₹50 guarantee is 'Minimum Rent'. If you deliver only 3 papers (₹30 earned), the extra ₹20 you have to pay from your pocket is 'Shortworkings'!",
-      hi: "मान लीजिए आप किसी लेखक की किताब छापने का अधिकार लेते हैं। आप प्रति किताब ₹20 देने का वादा करते हैं, लेकिन साल का कम से कम ₹10,000 जरूर देंगे (न्यूनतम किराया)। यदि किसी साल केवल 300 किताबें बिकीं (₹6,000), तो बाकी के ₹4,000 जो आपको अपनी जेब से भरने पड़े, उसे 'लघुकार्य (Shortworkings)' कहते हैं।",
-      hinglish: "Agar aap kisi ki mine ya book right use karte ho aur per-unit payment ke saath ek minimum guarantee (Minimum Rent) dete ho, toh production kam hone par jo deficit hota hai use Shortworkings bolte hain, jise aage chal kar recover kiya ja sakta hai."
-    },
-    statutoryContext: {
-      standards: "Guidance Note on Accounting for Mineral Rights & Royalties",
-      sections: "Mines and Minerals (Development and Regulation) Act & Indian Contract Act 1872",
-      provisions: "Royalty based on actual output/sales, subject to agreed minimum dead rent and recoupment terms within lease deed."
-    },
-    practicalIllustration: {
-      problemStatement: "A lessee took a coal mine on royalty of ₹5 per tonne of coal extracted, with Minimum Rent of ₹40,000 p.a. Shortworkings can be recouped in first 3 years. Year 1 Output: 6,000 tonnes. Year 2 Output: 10,000 tonnes. Pass journal entries in lessee's books.",
-      solutionSteps: [
-        "Step 1: Year 1 Actual Royalty = 6,000 * ₹5 = ₹30,000. Minimum Rent = ₹40,000. Shortworking = ₹10,000. Payment = ₹40,000.",
-        "Step 2: Year 2 Actual Royalty = 10,000 * ₹5 = ₹50,000. Excess = ₹10,000. Recoup Year 1 shortworking ₹10,000. Payment = ₹40,000."
-      ],
-      journalEntries: [
-        { date: "Year 1", particulars: "Royalty A/c ............................................. Dr.", debit: "₹30,000", credit: "" },
-        { date: "Year 1", particulars: "Shortworkings A/c ................................. Dr.", debit: "₹10,000", credit: "" },
-        { date: "Year 1", particulars: "   To Landlord A/c", debit: "", credit: "₹40,000" },
-        { date: "Year 1", particulars: "Landlord A/c ........................................... Dr.", debit: "₹40,000", credit: "" },
-        { date: "Year 1", particulars: "   To Bank A/c", debit: "", credit: "₹40,000" },
-        { date: "Year 2", particulars: "Royalty A/c ............................................. Dr.", debit: "₹50,000", credit: "" },
-        { date: "Year 2", particulars: "   To Shortworkings A/c (Recouped)", debit: "", credit: "₹10,000" },
-        { date: "Year 2", particulars: "   To Landlord A/c (Net Payable)", debit: "", credit: "₹40,000" }
-      ]
-    },
-    commonMistakes: [
-      "Recouping shortworkings beyond the expiry period allowed in the lease agreement.",
-      "Failing to transfer unrecouped shortworkings to Profit & Loss Account in the year of forfeiture."
-    ],
-    memoryTrick: "Formula: 'Payment to Landlord = Higher of Actual Royalty or Minimum Rent (Minus Recouped Shortworkings)'.",
-    practiceQuestions: [
-      { q: "What is Shortworkings in Royalty Accounts?", a: "Shortworkings is the excess of Minimum Rent over the Actual Royalty when output/sales are lower than the threshold level." },
-      { q: "Where does Unrecouped Shortworkings appear at the end of the year?", a: "It is written off as a loss to the debit side of the Profit & Loss Account." }
-    ]
-  },
-  "prsu-s6-p1-ch1": {
-    id: "lesson-prsu-s6-p1-ch1",
-    chapterId: "prsu-s6-p1-ch1",
-    title: "Constitutional Framework, CGST/SGST/IGST & Supply Concept",
-    hindiTitle: "जीएसटी का संवैधानिक ढांचा एवं आपूर्ति की अवधारणा (Sec 7)",
-    overview: "Goods and Services Tax (GST) is a comprehensive destination-based consumption tax introduced via the 101st Constitutional Amendment Act 2016. Replaced 17 central and state indirect taxes with CGST, SGST, UTGST, and IGST under the supreme principle of 'Supply' (Section 7 CGST Act).",
-    eli10: {
-      en: "Before GST, if you bought a toy made in another state, you paid 4 different taxes: Excise, VAT, Entry Tax, CST. With GST, it's 'One Nation, One Tax'. If you buy inside your state, you pay CGST + SGST. If you buy from another state, you pay IGST directly!",
-      hi: "जीएसटी से पहले एक ही सामान पर कई टैक्स लगते थे—एक्साइज ड्यूटी, वैट, एंट्री टैक्स। 1 जुलाई 2017 से 'एक देश, एक कर' लागू हुआ। राज्य के अंदर खरीदारी पर CGST और SGST आधा-आधा लगता है, और दूसरे राज्य से मंगाने पर केवल IGST लगता है।",
-      hinglish: "Pehle har state me alag alag VAT aur excise lagta tha jisse tax par tax (cascading effect) hota tha. 101st Constitutional Amendment se GST aaya. Ab sirf 'Supply' par tax lagta hai: intra-state me CGST + SGST aur inter-state me IGST."
-    },
-    statutoryContext: {
-      standards: "Articles 246A, 269A & 279A (GST Council) of the Constitution of India",
-      sections: "Section 7 (Scope of Supply) & Section 9 (Levy and Collection) of CGST Act 2017",
-      provisions: "Supply includes all forms of supply of goods or services or both such as sale, transfer, barter, exchange, license, rental, lease made for a consideration in the course or furtherance of business."
-    },
-    practicalIllustration: {
-      problemStatement: "A dealer in Raipur (Chhattisgarh) supplies commercial goods worth ₹2,00,000 to a trader in Bilaspur (Chhattisgarh). Applicable GST rate is 18%. In another transaction, he supplies goods worth ₹1,50,000 to a dealer in Nagpur (Maharashtra). Calculate the CGST, SGST, and IGST applicable.",
-      solutionSteps: [
-        "Step 1: Raipur to Bilaspur is within Chhattisgarh (Intra-State Supply). Applicable: CGST (9%) + SGST (9%).",
-        "Step 2: CGST = 9% of ₹2,00,000 = ₹18,000. SGST = 9% of ₹2,00,000 = ₹18,000. Total = ₹36,000.",
-        "Step 3: Raipur to Nagpur is Chhattisgarh to Maharashtra (Inter-State Supply). Applicable: IGST (18%).",
-        "Step 4: IGST = 18% of ₹1,50,000 = ₹27,000."
-      ],
-      journalEntries: [
-        { particulars: "Bilaspur Trader A/c ..................................... Dr.", debit: "₹2,36,000", credit: "" },
-        { particulars: "   To Sales Account", debit: "", credit: "₹2,00,000" },
-        { particulars: "   To Output CGST Account (9%)", debit: "", credit: "₹18,000" },
-        { particulars: "   To Output SGST Account (9%)", debit: "", credit: "₹18,000" },
-        { particulars: "Nagpur Trader A/c ....................................... Dr.", debit: "₹1,77,000", credit: "" },
-        { particulars: "   To Sales Account", debit: "", credit: "₹1,50,000" },
-        { particulars: "   To Output IGST Account (18%)", debit: "", credit: "₹27,000" }
-      ]
-    },
-    commonMistakes: [
-      "Charging IGST on intra-state supply or charging CGST/SGST on interstate supply.",
-      "Confusing 'Composite Supply' (taxed at principal rate) with 'Mixed Supply' (taxed at highest rate)."
-    ],
-    memoryTrick: "GST Golden Mantra: 'Within State = C + S (Halves). Outside State = Full I (Whole)'.",
-    practiceQuestions: [
-      { q: "Which Constitutional Amendment enabled the implementation of GST in India?", a: "The 101st Constitutional Amendment Act, 2016, which inserted Article 246A conferring simultaneous powers to Parliament and State Legislatures." },
-      { q: "What is the taxable event under GST law?", a: "The taxable event under GST is 'Supply' of goods or services or both, as defined under Section 7 of the CGST Act 2017." }
-    ]
-  }
-}
-
-// Check if these lessons already exist in chapterLessonsContent
-for (const [chKey, chVal] of Object.entries(samplePrsuLessons)) {
-  if (!chapterLessonsContent.includes(`"${chKey}":`) && !chapterLessonsContent.includes(`${chKey}:`)) {
-    const lastBraceIndex = chapterLessonsContent.lastIndexOf("}")
-    const lessonString = `,\n  // PRSU B.Com Chapter: ${chVal.title}\n  "${chKey}": ${JSON.stringify(chVal, null, 2).replace(/\n/g, "\n  ")}\n}`
-    chapterLessonsContent = chapterLessonsContent.slice(0, lastBraceIndex) + lessonString
-  }
-}
-
-fs.writeFileSync(chapterContentPath, chapterLessonsContent, "utf-8")
-console.log("✅ Successfully updated src/data/chapterContentData.ts with detailed PRSU lessons!")
+console.log("✅ Successfully updated coursesData.ts with the EXACT 6-semester PRSU NEP-2020 curriculum (34 papers, 170 chapters)!")
