@@ -242,3 +242,34 @@ export function getMCQsBySubject(subjectQuery: string): MCQItem[] {
       m.paperCode.toLowerCase().includes(q)
   )
 }
+
+// Cryptographic Security Revoke Operations
+export function revokeLastPaper(): ModelQuestionPaper | null {
+  if (QUESTION_BANK_STORE.papers.length > 0) {
+    return QUESTION_BANK_STORE.papers.shift() || null
+  }
+  return null
+}
+
+export function revokePaperById(paperId: string): boolean {
+  const idx = QUESTION_BANK_STORE.papers.findIndex((p) => p.id === paperId)
+  if (idx >= 0) {
+    QUESTION_BANK_STORE.papers.splice(idx, 1)
+    return true
+  }
+  return false
+}
+
+export function revokeRecentMCQs(count = 5): number {
+  const removed = QUESTION_BANK_STORE.mcqs.splice(0, count)
+  return removed.length
+}
+
+export function revokeAllRecentGenerated(): { papersCount: number; mcqsCount: number } {
+  const pCount = QUESTION_BANK_STORE.papers.length
+  const mCount = QUESTION_BANK_STORE.mcqs.length
+  QUESTION_BANK_STORE.papers = []
+  QUESTION_BANK_STORE.mcqs = []
+  return { papersCount: pCount, mcqsCount: mCount }
+}
+

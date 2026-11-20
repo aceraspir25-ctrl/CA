@@ -297,6 +297,12 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ ok: true, handled: true, reply })
         }
 
+        if (cmd === "/revoke") {
+          const reply = await handleNaturalLanguageHinglishCommand(`revoke ${args.join(" ")}`.trim(), chatId)
+          await sendTelegramMessage(reply, chatId)
+          return NextResponse.json({ ok: true, handled: true, reply })
+        }
+
         if (cmd === "/amendments") {
           const reply = await handleNaturalLanguageHinglishCommand("amendment check karo", chatId)
           await sendTelegramMessage(reply, chatId)

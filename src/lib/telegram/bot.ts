@@ -20,6 +20,7 @@ import {
   runAutonomousDualAiCycle,
   SUBJECT_ROTATION_QUEUE
 } from "@/lib/ai/dualAiQuestionAgent"
+import { executeSecureRevoke } from "@/lib/security/revokeManager"
 
 export interface TelegramConfig {
   botToken?: string
@@ -357,6 +358,46 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
   ]
   const isHinglish = hinglishTokens.some((t) => q.split(/[\s,?.!]+/).includes(t))
   const lang: "hi" | "hinglish" | "en" = isPureHindi ? "hi" : isHinglish ? "hinglish" : "en"
+
+  // 000. MASTER CRYPTOGRAPHIC REVOKE OPERATION (REQUIRES SECRET CODE CONFIRMATION)
+  if (q.includes("revoke") || q.includes("रिवोक") || q.includes("हटाओ") || q.includes("रद्द") || q.includes("वापस लो")) {
+    const codeMatch = query.match(/\b\d{4}\b/)
+    const candidateCode = codeMatch ? codeMatch[0] : ""
+
+    let target = "last"
+    if (q.includes("all") || q.includes("सब") || q.includes("saare") || q.includes("sabhi")) {
+      target = "all"
+    } else if (q.includes("mcq") || q.includes("mcqs") || q.includes("objective")) {
+      target = "mcq"
+    }
+
+    if (!candidateCode) {
+      if (lang === "hi") {
+        return `⚠️ *मास्टर सुरक्षा रिवोक प्रोटोकॉल (SECURITY REVOKE)*\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `आप प्लेटफॉर्म से अपलोड किए गए किसी भी पेपर, प्रश्न या कंटेंट को तुरंत हटा/रद्द कर सकते हैं।\n\n` +
+          `🔒 *4-अंकीय मास्टर कोड आवश्यक:*\n` +
+          `रिवोक की पुष्टि करने हेतु अपना 4-अंकीय कोड दर्ज करें:\n` +
+          `👉 \`revoke <CODE>\` (अंतिम पेपर हटाने हेतु)\n` +
+          `👉 \`revoke <CODE> all\` (सभी हालिया अपलोड हटाने हेतु)\n` +
+          `👉 \`revoke <CODE> mcq\` (MCQs हटाने हेतु)\n\n` +
+          `_सुरक्षा सूचना: सही कोड के सत्यापन के बिना कोई भी डेटा हटाया नहीं जा सकता।_`
+      }
+
+      return `⚠️ *SECURITY REVOKE PROTOCOL INITIATED*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `You can immediately revoke, unpublish, and purge any uploaded test paper, MCQs, or study content.\n\n` +
+        `🔒 *Master Passcode Required:*\n` +
+        `To confirm the revocation, provide your 4-digit authorization code:\n` +
+        `👉 \`revoke <CODE>\` (revokes latest paper)\n` +
+        `👉 \`revoke <CODE> all\` (revokes all recent generated papers & uploads)\n` +
+        `👉 \`revoke <CODE> mcq\` (revokes recent MCQs)\n\n` +
+        `_Security Note: Without the verified authorization code, no data will be revoked._`
+    }
+
+    const revokeResult = executeSecureRevoke(candidateCode, target)
+    return revokeResult.message
+  }
 
   // 00. DUAL AI AGENTS (GEMINI + GPT) - Question Banks, MCQs, MQP, PYQ, Sample Papers
   const isQuestionOrPaperGen =
