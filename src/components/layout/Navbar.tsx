@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useTheme } from "next-themes"
@@ -37,8 +37,9 @@ interface NavbarProps {
   sidebarOpen: boolean
 }
 
-function Breadcrumb({ pathname }: { pathname: string }) {
-  const segments = pathname.split("/").filter(Boolean)
+function Breadcrumb() {
+  const pathname = usePathname()
+  const segments = (pathname || "").split("/").filter(Boolean)
   if (segments.length === 0) return <span className="text-sm font-medium">Home</span>
 
   return (
@@ -66,7 +67,6 @@ function Breadcrumb({ pathname }: { pathname: string }) {
 }
 
 export default function Navbar({ onToggleSidebar, sidebarOpen }: NavbarProps) {
-  const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [isCommandOpen, setIsCommandOpen] = useState(false)
 
@@ -98,7 +98,9 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }: NavbarProps) {
 
         {/* Breadcrumb */}
         <div className="hidden lg:flex items-center">
-          <Breadcrumb pathname={pathname} />
+          <Suspense fallback={<span className="text-sm font-medium">Home</span>}>
+            <Breadcrumb />
+          </Suspense>
         </div>
 
         {/* Command Palette Trigger */}

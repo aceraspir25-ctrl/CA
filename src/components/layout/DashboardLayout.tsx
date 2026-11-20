@@ -37,10 +37,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         />
       </Suspense>
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <Navbar
-          onToggleSidebar={toggleSidebar}
-          sidebarOpen={mobileMenuOpen || !sidebarCollapsed}
-        />
+        <Suspense fallback={<header className="h-14 border-b border-[hsl(var(--border))] glass-nav px-4 shrink-0" />}>
+          <Navbar
+            onToggleSidebar={toggleSidebar}
+            sidebarOpen={mobileMenuOpen || !sidebarCollapsed}
+          />
+        </Suspense>
         <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4 md:p-6 pb-20 md:pb-6">
           {children}
         </main>

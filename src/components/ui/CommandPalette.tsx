@@ -26,6 +26,14 @@ interface SearchItem {
 }
 
 const SEARCH_CATALOG: SearchItem[] = [
+  // Direct Subjects (Instant 1-Click Access)
+  { id: "sub-dsc1", title: "Fundamental of Accounting (DSC-1)", subtitle: "B.Com Sem 1 • Royalty, Hire Purchase, Double Entry, Depreciation", category: "B.Com Semesters", href: "/courses/subject/prsu-bcom-s1-p1", badge: "DSC-1" },
+  { id: "sub-dsc2", title: "Business Law (DSC-2)", subtitle: "B.Com Sem 1 • Indian Contract Act 1872, Sale of Goods, Partnership", category: "B.Com Semesters", href: "/courses/subject/prsu-bcom-s1-p2", badge: "DSC-2" },
+  { id: "sub-dsc3", title: "Business Economics (DSC-3)", subtitle: "B.Com Sem 1 • Elasticity, Production Functions, Market Forms", category: "B.Com Semesters", href: "/courses/subject/prsu-bcom-s1-p3", badge: "DSC-3" },
+  { id: "sub-dsc13", title: "Income Tax Law & Practice (DSC-13)", subtitle: "B.Com Sem 5 • Salary, House Property, Capital Gains, Deductions", category: "B.Com Semesters", href: "/courses/subject/prsu-bcom-s5-p1", badge: "DSC-13" },
+  { id: "sub-dsc14", title: "Auditing & Corporate Governance (DSC-14)", subtitle: "B.Com Sem 5 • Audit Procedures, Vouching, CARO 2020", category: "B.Com Semesters", href: "/courses/subject/prsu-bcom-s5-p2", badge: "DSC-14" },
+  { id: "sub-dsc16", title: "Indirect Taxes with GST (DSC-16)", subtitle: "B.Com Sem 6 • Supply, Input Tax Credit Sec 17(5), GST Rates, Invoices", category: "B.Com Semesters", href: "/courses/subject/prsu-bcom-s6-p1", badge: "DSC-16" },
+
   // B.Com Semesters (PRSU NEP-2020)
   { id: "bcom-s1", title: "B.Com Semester 1 (NEP)", subtitle: "Financial Accounting (DSC-1), Business Law (DSC-2), Business Economics (DSC-3)", category: "B.Com Semesters", href: "/courses?inst=prsu&level=prsu-bcom-sem1", badge: "Sem 1" },
   { id: "bcom-s2", title: "B.Com Semester 2 (NEP)", subtitle: "Corporate Accounting Basics (DSC-4), Business Mathematics (DSC-5), Business Environment", category: "B.Com Semesters", href: "/courses?inst=prsu&level=prsu-bcom-sem2", badge: "Sem 2" },

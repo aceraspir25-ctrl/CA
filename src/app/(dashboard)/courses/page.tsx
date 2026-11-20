@@ -1,11 +1,9 @@
 "use client"
 
 import { useState, useEffect, Suspense } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { INSTITUTIONS_DATA, Institution, CourseLevel, SubjectPaper, Chapter } from "@/data/coursesData"
-import { getChapterLessonData } from "@/data/chapterContentData"
 import { useAppStore } from "@/lib/store"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -21,9 +19,6 @@ import {
   ExternalLink,
   BookMarked,
   Languages,
-  AlertTriangle,
-  Lightbulb,
-  FileSpreadsheet,
   ArrowRight,
   Search,
   Check
@@ -32,6 +27,7 @@ import Link from "next/link"
 
 function CoursesContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const { markTopicStudied, activeLanguage, setLanguage, studentLevel } = useAppStore()
 
   const instParam = searchParams.get("inst")
@@ -40,9 +36,6 @@ function CoursesContent() {
   const [selectedInstId, setSelectedInstId] = useState<string>(instParam || "prsu")
   const [selectedLevelId, setSelectedLevelId] = useState<string>(levelParam || "prsu-bcom-sem1")
   const [activeTab, setActiveTab] = useState<"curriculum" | "learning-path" | "graph">("curriculum")
-  const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null)
-  const [lessonLang, setLessonLang] = useState<"en" | "hi" | "hinglish">("hinglish")
-  const [chapterFilter, setChapterFilter] = useState("")
 
   useEffect(() => {
     if (instParam) setSelectedInstId(instParam)
@@ -73,7 +66,7 @@ function CoursesContent() {
               </h1>
             </div>
             <p className="text-blue-200 text-xs sm:text-sm max-w-2xl leading-relaxed">
-              Explore PRSU Raipur NEP-2020 6-Semester Degree and Professional CA, CMA, CS & ACCA programs. Complete syllabus coverage with verified conceptual depth.
+              Explore PRSU Raipur NEP-2020 6-Semester Degree and Professional CA, CMA, CS & ACCA programs. Click any subject to immediately open its dedicated full chapter content studio.
             </p>
           </div>
 
@@ -87,11 +80,10 @@ function CoursesContent() {
                   onClick={() => {
                     setSelectedInstId(inst.id)
                     setSelectedLevelId(inst.levels[0].id)
-                    setSelectedChapter(null)
                   }}
                   className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer active:scale-95 ${
                     isActive
-                      ? "bg-white text-slate-950 border-white shadow-lg ring-2 ring-primary/40"
+                      ? "bg-white text-slate-950 border-white shadow-lg ring-2 ring-primary/40 font-black"
                       : "bg-white/10 text-white/90 border-white/15 hover:bg-white/20 hover:text-white"
                   }`}
                 >
@@ -116,7 +108,6 @@ function CoursesContent() {
                 key={lvl.id}
                 onClick={() => {
                   setSelectedLevelId(lvl.id)
-                  setSelectedChapter(null)
                 }}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
                   isSelected
@@ -184,7 +175,7 @@ function CoursesContent() {
             {papersList.map((paper) => (
               <div
                 key={paper.id}
-                className="rounded-3xl glass-panel border border-[hsl(var(--border))] p-5 shadow-xs flex flex-col justify-between hover:shadow-md transition-all"
+                className="rounded-3xl glass-panel border border-[hsl(var(--border))] p-5 shadow-xs flex flex-col justify-between hover:border-primary/50 transition-all group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -196,9 +187,11 @@ function CoursesContent() {
                     </span>
                   </div>
 
-                  <h3 className="text-base font-extrabold text-[hsl(var(--foreground))]">
-                    {paper.title}
-                  </h3>
+                  <Link href={`/courses/subject/${paper.id}`} className="block">
+                    <h3 className="text-base font-extrabold text-[hsl(var(--foreground))] group-hover:text-primary transition-colors cursor-pointer">
+                      {paper.title}
+                    </h3>
+                  </Link>
                   <p className="text-xs text-[hsl(var(--muted-foreground))] mt-1 line-clamp-2">
                     {paper.description}
                   </p>
@@ -208,217 +201,52 @@ function CoursesContent() {
                       Chapters ({paper.chapters.length}):
                     </p>
                     <div className="space-y-2">
-                      {paper.chapters.map((ch) => {
-                        const isSelected = selectedChapter?.id === ch.id
-                        return (
-                          <div
-                            key={ch.id}
-                            onClick={() => setSelectedChapter(ch)}
-                            className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 active:scale-[0.99] ${
-                              isSelected
-                                ? "border-primary bg-primary/10 shadow-sm ring-2 ring-primary/30"
-                                : "border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-[hsl(var(--muted)/0.7)]"
-                            }`}
-                          >
-                            <div className="space-y-0.5 min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-black text-primary shrink-0">
-                                  Ch {ch.number}.
-                                </span>
-                                <h4 className="text-xs font-bold text-[hsl(var(--foreground))] truncate">
-                                  {ch.title}
-                                </h4>
-                              </div>
-                              <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate">
-                                {ch.hindiTitle} &bull; {ch.estimatedHours} Hours
-                              </p>
+                      {paper.chapters.map((ch) => (
+                        <Link
+                          key={ch.id}
+                          href={`/courses/subject/${paper.id}`}
+                          className="p-3 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:bg-primary/10 hover:border-primary/40 transition-all cursor-pointer flex items-center justify-between gap-3 active:scale-[0.99] block"
+                        >
+                          <div className="space-y-0.5 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-black text-primary shrink-0">
+                                Ch {ch.number}.
+                              </span>
+                              <h4 className="text-xs font-bold text-[hsl(var(--foreground))] truncate">
+                                {ch.title}
+                              </h4>
                             </div>
-
-                            <div className="flex items-center gap-2 shrink-0">
-                              <Badge variant="secondary" className="text-[10px] font-bold">
-                                Lvl {ch.levels.min}–{ch.levels.max}
-                              </Badge>
-                              <ChevronRight className="h-4 w-4 text-[hsl(var(--muted-foreground))]" />
-                            </div>
+                            <p className="text-[11px] text-[hsl(var(--muted-foreground))] truncate">
+                              {ch.hindiTitle} &bull; {ch.estimatedHours} Hours
+                            </p>
                           </div>
-                        )
-                      })}
+
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Badge variant="secondary" className="text-[10px] font-bold">
+                              Lvl {ch.levels.min}–{ch.levels.max}
+                            </Badge>
+                            <ArrowRight className="h-4 w-4 text-[hsl(var(--muted-foreground))] group-hover:text-primary transition-colors" />
+                          </div>
+                        </Link>
+                      ))}
                     </div>
                   </div>
+                </div>
+
+                <div className="mt-5 pt-3 border-t border-[hsl(var(--border))]">
+                  <Button
+                    asChild
+                    className="w-full gap-2 text-xs font-extrabold rounded-xl btn-tactile cursor-pointer"
+                  >
+                    <Link href={`/courses/subject/${paper.id}`}>
+                      Open Subject & Read All Chapters
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
                 </div>
               </div>
             ))}
           </div>
-
-          {/* CHAPTER 23-POINT EXPANDABLE VIEWER */}
-          {selectedChapter && (() => {
-            const lesson = getChapterLessonData(selectedChapter.id, selectedChapter.title, selectedChapter.hindiTitle)
-
-            return (
-              <div className="rounded-3xl glass-panel border-2 border-primary p-6 shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[hsl(var(--border))] pb-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-emerald-600 text-white font-bold text-xs">
-                        Chapter {selectedChapter.number} Standardized
-                      </Badge>
-                      <Badge variant="outline" className="text-xs font-bold">
-                        23-Point Engine
-                      </Badge>
-                    </div>
-                    <h2 className="text-xl sm:text-2xl font-black text-[hsl(var(--foreground))] mt-1">
-                      {selectedChapter.title}
-                    </h2>
-                    <p className="text-sm font-semibold text-primary">{selectedChapter.hindiTitle}</p>
-                  </div>
-
-                  {/* Language Selector */}
-                  <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[hsl(var(--muted))] border border-[hsl(var(--border))] shrink-0 self-start sm:self-auto">
-                    <Languages className="h-4 w-4 text-primary ml-1" />
-                    {(["en", "hi", "hinglish"] as const).map((lang) => (
-                      <button
-                        key={lang}
-                        onClick={() => setLessonLang(lang)}
-                        className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          lessonLang === lang
-                            ? "bg-primary text-primary-foreground shadow-xs"
-                            : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
-                        }`}
-                      >
-                        {lang === "en" ? "English" : lang === "hi" ? "हिन्दी" : "Hinglish"}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed italic">
-                  {lesson.overview}
-                </p>
-
-                {/* 23-Point Visual Modules Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Point 4: ELI10 */}
-                  <div className="p-4 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 space-y-2">
-                    <h4 className="text-xs font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-                      <Lightbulb className="h-4 w-4 text-amber-500" />
-                      Point 4: Explain Like I&apos;m 10 (ELI10 Intuition)
-                    </h4>
-                    <p className="text-xs text-[hsl(var(--foreground))] leading-relaxed">
-                      {lesson.eli10[lessonLang]}
-                    </p>
-                  </div>
-
-                  {/* Point 7 & 17: Statutory Rules */}
-                  <div className="p-4 rounded-2xl border border-blue-500/20 bg-blue-500/5 space-y-2">
-                    <h4 className="text-xs font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
-                      <GraduationCap className="h-4 w-4 text-blue-600" />
-                      Point 7 & 17: Statutory Rules & Applicable Standards
-                    </h4>
-                    <p className="text-xs text-[hsl(var(--foreground))] leading-relaxed">
-                      <strong>Standards:</strong> {lesson.statutoryContext.standards}<br />
-                      <strong>Legal Sections:</strong> {lesson.statutoryContext.sections}<br />
-                      <strong>Compliance:</strong> {lesson.statutoryContext.provisions}
-                    </p>
-                  </div>
-
-                  {/* Point 13 & 14: Practical Numerical & Journal */}
-                  <div className="p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 space-y-2">
-                    <h4 className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                      <FileSpreadsheet className="h-4 w-4 text-amber-600" />
-                      Point 13 & 14: Practical Numerical & Illustration
-                    </h4>
-                    <p className="text-xs text-[hsl(var(--foreground))] font-semibold">
-                      {lesson.practicalIllustration.problemStatement}
-                    </p>
-                    <div className="text-[11px] text-[hsl(var(--foreground))] space-y-0.5">
-                      {lesson.practicalIllustration.solutionSteps.map((step, idx) => (
-                        <p key={idx}>{step}</p>
-                      ))}
-                    </div>
-                    {lesson.practicalIllustration.journalEntries && (
-                      <div className="mt-2 p-2.5 rounded-xl bg-[hsl(var(--card))] border border-[hsl(var(--border))] font-mono text-[11px] space-y-1">
-                        {lesson.practicalIllustration.journalEntries.map((je, i) => (
-                          <div key={i} className="flex justify-between">
-                            <span className="truncate">{je.particulars}</span>
-                            <span className="font-bold shrink-0">{je.debit || je.credit}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Point 18: Common Exam Traps */}
-                  <div className="p-4 rounded-2xl border border-rose-500/20 bg-rose-500/5 space-y-2">
-                    <h4 className="text-xs font-black uppercase tracking-wider text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
-                      <AlertTriangle className="h-4 w-4 text-rose-600" />
-                      Point 18: Common Exam Traps & Mistakes
-                    </h4>
-                    <ul className="text-xs text-[hsl(var(--foreground))] list-disc list-inside space-y-1 leading-relaxed">
-                      {lesson.commonMistakes.map((m, i) => (
-                        <li key={i}>{m}</li>
-                      ))}
-                    </ul>
-                    <div className="mt-2 pt-2 border-t border-rose-500/20 text-[11px] font-medium text-rose-600 dark:text-rose-400">
-                      <strong>💡 Memory Shortcut:</strong> {lesson.memoryTrick}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Self-Assessment Check */}
-                <div className="p-4 rounded-2xl glass-panel border border-[hsl(var(--border))] space-y-3">
-                  <h4 className="text-xs font-black uppercase tracking-wider text-[hsl(var(--foreground))] flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                    Point 23: Quick Self-Assessment Check
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                    {lesson.practiceQuestions.map((pq, i) => (
-                      <div key={i} className="p-3 rounded-xl bg-[hsl(var(--card))] border border-[hsl(var(--border))] space-y-1">
-                        <p className="font-bold text-[hsl(var(--foreground))]">Q: {pq.q}</p>
-                        <p className="text-[hsl(var(--muted-foreground))]">A: {pq.a}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Action Buttons Strip */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[hsl(var(--border))]">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Button
-                      onClick={() => {
-                        markTopicStudied({
-                          id: selectedChapter.id,
-                          title: selectedChapter.title,
-                          course: activeLevel.shortTitle,
-                          levelAchieved: selectedChapter.levels.max,
-                        })
-                      }}
-                      className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl btn-tactile cursor-pointer"
-                    >
-                      <CheckCircle2 className="h-4 w-4" /> Mark Studied (+50 XP)
-                    </Button>
-                    <Button asChild className="gap-2 text-xs font-bold rounded-xl btn-tactile cursor-pointer">
-                      <Link href={`/ai-tutor?prompt=${encodeURIComponent(`Explain ${selectedChapter.title} in simple terms with practical numerical illustrations and exam tips.`)}`}>
-                        <Sparkles className="h-4 w-4" /> Ask AI Tutor
-                      </Link>
-                    </Button>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs font-semibold rounded-xl">
-                      <Link href="/lab">
-                        <Layers className="h-3.5 w-3.5" /> Practice in Lab
-                      </Link>
-                    </Button>
-                    <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs font-semibold rounded-xl">
-                      <Link href="/tests">
-                        <BookMarked className="h-3.5 w-3.5" /> Take Quiz
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )
-          })()}
         </TabsContent>
 
         {/* TAB 2: SMART LEARNING PATH */}

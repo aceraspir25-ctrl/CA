@@ -101,7 +101,7 @@ const courses: CourseCard[] = [
     currentChapter: 3,
     totalChapters: 5,
     badgeColor: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20",
-    href: "/courses?inst=prsu&level=prsu-bcom-sem1",
+    href: "/courses/subject/prsu-bcom-s1-p1",
     accentBorder: "hover:border-blue-500/50",
   },
   {
@@ -114,7 +114,7 @@ const courses: CourseCard[] = [
     currentChapter: 4,
     totalChapters: 12,
     badgeColor: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20",
-    href: "/courses?inst=icai&level=ca-foundation",
+    href: "/courses/subject/ca-f-p1",
     accentBorder: "hover:border-indigo-500/50",
   },
   {
@@ -127,7 +127,7 @@ const courses: CourseCard[] = [
     currentChapter: 2,
     totalChapters: 5,
     badgeColor: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20",
-    href: "/courses?inst=prsu&level=prsu-bcom-sem5",
+    href: "/courses/subject/prsu-bcom-s5-p1",
     accentBorder: "hover:border-emerald-500/50",
   },
   {

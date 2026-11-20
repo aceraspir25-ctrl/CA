@@ -3855,3 +3855,51 @@ export const INSTITUTIONS_DATA: Institution[] = [
     ]
   }
 ];
+
+export function findSubjectPaperById(paperId: string): {
+  paper: SubjectPaper
+  level: CourseLevel
+  institution: Institution
+} | null {
+  for (const inst of INSTITUTIONS_DATA) {
+    for (const lvl of inst.levels) {
+      if (lvl.papers) {
+        const found = lvl.papers.find((p) => p.id === paperId)
+        if (found) return { paper: found, level: lvl, institution: inst }
+      }
+      if (lvl.groups) {
+        for (const grp of lvl.groups) {
+          const found = grp.papers.find((p) => p.id === paperId)
+          if (found) return { paper: found, level: lvl, institution: inst }
+        }
+      }
+    }
+  }
+  return null
+}
+
+export function getAllSubjectPapers(): {
+  paper: SubjectPaper
+  level: CourseLevel
+  institution: Institution
+}[] {
+  const result: { paper: SubjectPaper; level: CourseLevel; institution: Institution }[] = []
+  for (const inst of INSTITUTIONS_DATA) {
+    for (const lvl of inst.levels) {
+      if (lvl.papers) {
+        for (const p of lvl.papers) {
+          result.push({ paper: p, level: lvl, institution: inst })
+        }
+      }
+      if (lvl.groups) {
+        for (const grp of lvl.groups) {
+          for (const p of grp.papers) {
+            result.push({ paper: p, level: lvl, institution: inst })
+          }
+        }
+      }
+    }
+  }
+  return result
+}
+
