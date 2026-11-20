@@ -17,6 +17,7 @@ import {
   BarChart2,
   Settings,
   LogOut,
+  X,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -107,47 +108,78 @@ const courseGroups: NavGroup[] = [
 interface SidebarProps {
   isCollapsed: boolean
   onToggle: () => void
+  isMobileOpen?: boolean
+  onCloseMobile?: () => void
 }
 
-export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
+export default function Sidebar({
+  isCollapsed,
+  onToggle,
+  isMobileOpen = false,
+  onCloseMobile,
+}: SidebarProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const instParam = searchParams.get("inst")
   const levelParam = searchParams.get("level")
 
   return (
-    <aside
-      className={cn(
-        "flex flex-col h-screen bg-[hsl(var(--sidebar-bg))] text-[hsl(var(--sidebar-fg))] transition-all duration-300 ease-in-out shrink-0",
-        isCollapsed ? "w-[68px]" : "w-[240px]"
+    <>
+      {/* Mobile Backdrop Overlay */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden"
+          onClick={onCloseMobile}
+          aria-hidden="true"
+        />
       )}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between px-3 py-4 border-b border-white/10">
-        {!isCollapsed && (
+
+      <aside
+        className={cn(
+          "flex flex-col h-screen bg-[hsl(var(--sidebar-bg))] text-[hsl(var(--sidebar-fg))] transition-all duration-300 ease-in-out shrink-0",
+          // Mobile: sliding fixed drawer
+          "fixed inset-y-0 left-0 z-50 md:static md:z-auto",
+          isMobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:translate-x-0",
+          isCollapsed ? "md:w-[68px]" : "md:w-[240px]",
+          "w-[280px] max-w-[85vw]"
+        )}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-3 py-4 border-b border-white/10">
           <div className="flex items-center gap-2 overflow-hidden">
             <GraduationCap className="shrink-0 h-7 w-7 text-blue-400" />
-            <span className="font-bold text-base whitespace-nowrap text-white">
-              EduFinance Pro
-            </span>
+            {(!isCollapsed || isMobileOpen) && (
+              <span className="font-bold text-base whitespace-nowrap text-white">
+                EduFinance Pro
+              </span>
+            )}
           </div>
-        )}
-        {isCollapsed && <GraduationCap className="mx-auto h-7 w-7 text-blue-400" />}
-        <button
-          onClick={onToggle}
-          className={cn(
-            "p-1 rounded-md hover:bg-white/10 transition-colors text-white/70 hover:text-white shrink-0",
-            isCollapsed && "mx-auto"
-          )}
-          aria-label="Toggle sidebar"
-        >
-          {isCollapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
-          )}
-        </button>
-      </div>
+
+          {/* Desktop collapse toggle */}
+          <button
+            onClick={onToggle}
+            className={cn(
+              "hidden md:flex p-1 rounded-md hover:bg-white/10 transition-colors text-white/70 hover:text-white shrink-0",
+              isCollapsed && "mx-auto"
+            )}
+            aria-label="Toggle sidebar"
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </button>
+
+          {/* Mobile close button */}
+          <button
+            onClick={onCloseMobile}
+            className="flex md:hidden p-1.5 rounded-md hover:bg-white/10 text-white/70 hover:text-white shrink-0 ml-auto"
+            aria-label="Close mobile navigation"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
 
       {/* Scrollable nav */}
       <div className="flex-1 overflow-y-auto py-2">
@@ -165,17 +197,18 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={onCloseMobile}
                 className={cn(
                   "flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors",
                   active
                     ? "bg-blue-600 text-white"
                     : "text-white/70 hover:bg-white/10 hover:text-white",
-                  isCollapsed && "justify-center"
+                  isCollapsed && !isMobileOpen && "justify-center"
                 )}
-                title={isCollapsed ? item.label : undefined}
+                title={isCollapsed && !isMobileOpen ? item.label : undefined}
               >
                 <Icon className="h-4 w-4 shrink-0" />
-                {!isCollapsed && <span className="truncate">{item.label}</span>}
+                {(!isCollapsed || isMobileOpen) && <span className="truncate">{item.label}</span>}
               </Link>
             )
           })}
@@ -206,17 +239,18 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                   <Link
                     key={`${group.title}-${item.label}`}
                     href={item.href}
+                    onClick={onCloseMobile}
                     className={cn(
                       "flex items-center gap-3 rounded-md px-2 py-1.5 text-sm transition-colors",
                       active
                         ? "bg-blue-600 text-white"
                         : "text-white/60 hover:bg-white/10 hover:text-white",
-                      isCollapsed && "justify-center"
+                      isCollapsed && !isMobileOpen && "justify-center"
                     )}
-                    title={isCollapsed ? item.label : undefined}
+                    title={isCollapsed && !isMobileOpen ? item.label : undefined}
                   >
                     <Icon className={cn("h-4 w-4 shrink-0", group.color)} />
-                    {!isCollapsed && <span className="truncate">{item.label}</span>}
+                    {(!isCollapsed || isMobileOpen) && <span className="truncate">{item.label}</span>}
                   </Link>
                 )
               })}
@@ -270,5 +304,6 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         )}
       </div>
     </aside>
+  </>
   )
 }

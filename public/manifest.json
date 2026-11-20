@@ -1,0 +1,17 @@
+{
+  "name": "EduFinance Pro",
+  "short_name": "EduFinance",
+  "description": "Master CA, CMA, CS & B.Com with AI tutoring and visual learning",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0b132b",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
