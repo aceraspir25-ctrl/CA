@@ -14,6 +14,12 @@ import {
 } from "@/data/telegramAdminData"
 import { INSTITUTIONS_DATA } from "@/data/coursesData"
 import { executeAIChat } from "@/lib/ai/gateway"
+import {
+  generateFullExaminationPaper,
+  generateMCQBatchForSubject,
+  runAutonomousDualAiCycle,
+  SUBJECT_ROTATION_QUEUE
+} from "@/lib/ai/dualAiQuestionAgent"
 
 export interface TelegramConfig {
   botToken?: string
@@ -312,6 +318,13 @@ export async function executeLeaderAutonomousCycle(
   const targetChat = adminChatId || telegramConfigState.adminChatId || (process.env.TELEGRAM_ADMIN_CHAT_ID !== "9270115302" ? process.env.TELEGRAM_ADMIN_CHAT_ID : "")
   if (!skipDirectSend && targetChat && targetChat !== "9270115302") {
     await sendTelegramMessage(report, targetChat)
+
+    // Dual-AI (Gemini + GPT) Examination Paper & MCQ Generation
+    try {
+      await runAutonomousDualAiCycle(targetChat)
+    } catch (e) {
+      console.error("Error running Dual-AI autonomous cycle:", e)
+    }
   }
 
   return report
@@ -332,6 +345,86 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
   ]
   const isHinglish = hinglishTokens.some((t) => q.split(/[\s,?.!]+/).includes(t))
   const lang: "hi" | "hinglish" | "en" = isPureHindi ? "hi" : isHinglish ? "hinglish" : "en"
+
+  // 00. DUAL AI AGENTS (GEMINI + GPT) - Question Banks, MCQs, MQP, PYQ, Sample Papers
+  const isQuestionOrPaperGen =
+    (q.includes("gemini") && q.includes("gpt")) ||
+    q.includes("mcq") ||
+    q.includes("mqp") ||
+    q.includes("objective") ||
+    q.includes("previous year") ||
+    q.includes("pyq") ||
+    q.includes("sample paper") ||
+    q.includes("question paper") ||
+    q.includes("question bank") ||
+    (q.includes("question") && (q.includes("answer") || q.includes("search") || q.includes("banao") || q.includes("add") || q.includes("upload") || q.includes("paper"))) ||
+    q.includes("प्रश्न पत्र") ||
+    q.includes("वस्तुनिष्ठ") ||
+    q.includes("सैम्पल पेपर") ||
+    q.includes("मॉडल पेपर")
+
+  if (isQuestionOrPaperGen) {
+    let target = SUBJECT_ROTATION_QUEUE[0]
+    if (q.includes("tax") || q.includes("income tax") || q.includes("आयकर")) {
+      target = SUBJECT_ROTATION_QUEUE.find((s) => s.code === "DSC-13") || target
+    } else if (q.includes("gst") || q.includes("indirect") || q.includes("जीएसटी")) {
+      target = SUBJECT_ROTATION_QUEUE.find((s) => s.code === "DSC-16") || target
+    } else if (q.includes("law") || q.includes("कानून") || q.includes("contract")) {
+      target = SUBJECT_ROTATION_QUEUE.find((s) => s.code === "DSC-2") || target
+    } else if (q.includes("cost") || q.includes("लागत")) {
+      target = SUBJECT_ROTATION_QUEUE.find((s) => s.code === "DSC-10") || target
+    } else if (q.includes("audit") || q.includes("अंकेक्षण")) {
+      target = SUBJECT_ROTATION_QUEUE.find((s) => s.code === "DSC-14") || target
+    } else if (q.includes("ca") || q.includes("foundation")) {
+      target = SUBJECT_ROTATION_QUEUE.find((s) => s.inst === "ICAI") || target
+    } else if (q.includes("sem 2") || q.includes("corporate")) {
+      target = SUBJECT_ROTATION_QUEUE.find((s) => s.code === "DSC-4") || target
+    } else if (q.includes("sem 3") || q.includes("stat")) {
+      target = SUBJECT_ROTATION_QUEUE.find((s) => s.code === "DSC-8") || target
+    } else if (q.includes("sem 6") || q.includes("management acc")) {
+      target = SUBJECT_ROTATION_QUEUE.find((s) => s.code === "DSC-17") || target
+    }
+
+    const type: "MQP" | "PYQ" | "SAMPLE" = (q.includes("pyq") || q.includes("previous year")) ? "PYQ" : q.includes("sample") ? "SAMPLE" : "MQP"
+
+    const paper = await generateFullExaminationPaper(
+      target.subject,
+      target.code,
+      target.inst as any,
+      target.level,
+      type
+    )
+
+    if (lang === "hi") {
+      return `🤖 *DUAL-AI (GEMINI + GPT) प्रश्न बैंक एवं परीक्षा पेपर तैयार!*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `🎯 *आपका निर्देश:* "${query}"\n` +
+        `🏛 *संस्थान:* ${paper.institution} | ${paper.courseLevel}\n` +
+        `📄 *विषय:* *${paper.subject}* (${paper.paperCode})\n` +
+        `🏆 *पेपर प्रकार:* ${paper.type === "MQP" ? "मॉडल प्रश्न पत्र (MQP)" : paper.type === "PYQ" ? "विगत वर्ष का प्रश्न पत्र (PYQ)" : "सैम्पल अभ्यास पत्र"}\n` +
+        `⏱ *समय:* ${paper.duration} | *पूर्णांक:* ${paper.totalMarks} अंक\n\n` +
+        `📊 *सर्च एवं जनरेट की गई सामग्री:*\n` +
+        `• 🎯 *सेक्शन A (वस्तुनिष्ठ प्रश्न):* ${paper.sectionA.length} द्विभाषी MCQs (व्याख्या एवं कानूनी संदर्भ सहित)\n` +
+        `• 📝 *सेक्शन B (लघु उत्तरीय प्रश्न):* ${paper.sectionB.length} वैधानिक अवधारणा प्रश्न (मॉडल उत्तर सहित)\n` +
+        `• 🧮 *सेक्शन C (व्यावहारिक/संख्यात्मक):* ${paper.sectionC.length} पूर्ण हल सहित प्रश्न एवं जर्नल प्रविष्टियां\n\n` +
+        `✅ *अपलोड स्थिति:* यह पेपर प्लेटफॉर्म के 'Assessment Center & Tests' में तुरंत लाइव अपलोड हो गया है!\n` +
+        `💡 *एजेंट स्थिति:* Gemini 2.5 Flash और GPT-4o 24×7 स्वचालित रूप से नए प्रश्न व पेपर्स जोड़ रहे हैं।`
+    }
+
+    return `🤖 *DUAL-AI (GEMINI 2.5 + GPT-4o) AGENT: EXAMINATION PAPER SYNTHESIZED & UPLOADED!*\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `🎯 *Your Prompt:* "${query}"\n` +
+      `🏛 *Course:* ${paper.institution} | ${paper.courseLevel}\n` +
+      `📄 *Subject:* *${paper.subject}* (${paper.paperCode})\n` +
+      `🏆 *Paper Type:* ${paper.type === "MQP" ? "Model Question Paper (MQP)" : paper.type === "PYQ" ? "Previous Year Question Paper (PYQ)" : "Sample Practice Paper"}\n` +
+      `⏱ *Duration:* ${paper.duration} | *Marks:* ${paper.totalMarks} Marks\n\n` +
+      `📊 *Synthesized Structure:*\n` +
+      `• 🎯 *Section A (Objective MCQs):* ${paper.sectionA.length} Bilingual MCQs with statutory rationales\n` +
+      `• 📝 *Section B (Conceptual Short):* ${paper.sectionB.length} Questions with statutory section answers\n` +
+      `• 🧮 *Section C (Practical Numericals):* ${paper.sectionC.length} Solved problems with journal entries\n\n` +
+      `✅ *Platform Status:* Successfully added to Assessment Center & Tests database!\n` +
+      `💡 *Agent Status:* Continuous 24×7 autonomous cycle active with Telegram notification alerts.`
+  }
 
   // 0A. LEADER-00 Directs Internet Deep Search (Course -> Subject -> Chapter -> Module -> Topic)
   const isInternetHarvesting =

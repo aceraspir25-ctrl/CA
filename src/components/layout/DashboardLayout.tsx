@@ -49,7 +49,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Quick Access Mobile Bottom Bar */}
-      <MobileBottomNav />
+      <Suspense fallback={null}>
+        <MobileBottomNav />
+      </Suspense>
 
       {/* Floating AI Doubt Solver */}
       <FloatingAIAssistant />
