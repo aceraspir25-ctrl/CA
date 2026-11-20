@@ -208,20 +208,20 @@ export async function POST(req: NextRequest) {
         if (cmd === "/status") {
           const reply = await handleNaturalLanguageHinglishCommand("status", chatId)
           await sendTelegramMessage(reply, chatId)
-          return NextResponse.json({ ok: true })
+          return NextResponse.json({ ok: true, handled: true, reply })
         }
 
         if (cmd === "/pending") {
           const reply = await handleNaturalLanguageHinglishCommand("pending", chatId)
           await sendTelegramMessage(reply, chatId)
-          return NextResponse.json({ ok: true })
+          return NextResponse.json({ ok: true, handled: true, reply })
         }
 
         if (cmd === "/research") {
           const topic = args.join(" ") || "General Topic"
           const reply = await handleNaturalLanguageHinglishCommand(`research ${topic}`, chatId)
           await sendTelegramMessage(reply, chatId)
-          return NextResponse.json({ ok: true })
+          return NextResponse.json({ ok: true, handled: true, reply })
         }
       }
 
