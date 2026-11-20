@@ -31,7 +31,8 @@ import {
   Activity,
   Send,
   Smartphone,
-  BellRing
+  BellRing,
+  Crown
 } from "lucide-react"
 import {
   INITIAL_REGISTERED_SOURCES,
@@ -926,35 +927,98 @@ export default function ContentPipelinePage() {
           </Card>
         </TabsContent>
 
-        {/* TAB 6: SPECIALIZED AGENTS TEAM */}
-        <TabsContent value="agents" className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
-            {[
-              { code: "CAO-00", name: "Central AI Orchestrator", role: "Assigns and coordinates tasks across all pipeline agents." },
-              { code: "ARA-01", name: "Research Agent", role: "Discovers official syllabus notices, gazettes, and academic articles." },
-              { code: "EXT-02", name: "Source Extraction Agent", role: "Extracts facts, definitions, formulas, and statutory references." },
-              { code: "CCA-03", name: "Content Creation Agent", role: "Synthesizes original notes, solved numericals, and ELI10 analogies." },
-              { code: "AVA-06", name: "Verification Agent", role: "Verifies mathematical calculations, journal entries, and legal dates." },
-              { code: "CPY-07", name: "Copyright Agent", role: "Checks source licenses, attribution tags, and redistribution permissions." },
-              { code: "SYL-08", name: "Syllabus Mapping Agent", role: "Maps each unit, chapter, and topic to official institute schemes." },
-              { code: "TRA-09", name: "Translation Agent", role: "Produces accurate translations in English, हिन्दी, and Hinglish." },
-              { code: "PUB-10", name: "Publishing Agent", role: "Deploys verified, approved materials into student curriculum views." },
-            ].map((ag) => (
-              <Card key={ag.code} className="border-[hsl(var(--border))]">
-                <CardHeader className="p-3 pb-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-[hsl(var(--muted))] text-indigo-600">
-                      {ag.code}
-                    </span>
-                    <span className="text-[10px] text-emerald-600 font-semibold">Active</span>
+        {/* TAB 6: SPECIALIZED AGENTS TEAM & SUPREME LEADER */}
+        <TabsContent value="agents" className="space-y-6">
+          {/* Supreme Leader Featured Card */}
+          <Card className="border-2 border-indigo-500 bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 text-white shadow-xl overflow-hidden">
+            <CardHeader className="p-5 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-indigo-500/30 rounded-xl border border-indigo-400/40 text-amber-300">
+                    <Crown className="h-7 w-7 text-amber-400 animate-pulse" />
                   </div>
-                  <CardTitle className="text-xs font-bold mt-1">{ag.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-3 pt-1 text-[11px] text-[hsl(var(--muted-foreground))]">
-                  {ag.role}
-                </CardContent>
-              </Card>
-            ))}
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-amber-400 text-slate-950">
+                        LEADER-00
+                      </span>
+                      <Badge className="bg-emerald-500 text-white text-[10px]">Supreme Commander</Badge>
+                      <Badge variant="outline" className="text-indigo-200 border-indigo-400/40 text-[10px]">
+                        24×7 Self-Healing & Bug-Fixing
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-base font-bold mt-1 text-white">
+                      Supreme Leader & Chief Autonomous Orchestrator
+                    </CardTitle>
+                    <CardDescription className="text-xs text-indigo-200">
+                      Commands all 11 specialized sub-agents, delegates research orders, auto-fixes code & calculation bugs in real time, and sends executive digests directly to Super Admin Telegram.
+                    </CardDescription>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => handleExecuteHinglish("Leader report")}
+                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs gap-1.5 shrink-0"
+                >
+                  <Activity className="h-4 w-4" /> Trigger Leader Cycle & Bug Audit
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-5 pt-1 text-xs space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-[11px]">
+                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 space-y-1">
+                  <span className="text-indigo-300 font-bold block">🎯 Order Delegation:</span>
+                  <p className="text-slate-300">Issues structured tasks to OSM-02, MPA-11, CCA-04, and QGA-05 24 hours a day.</p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 space-y-1">
+                  <span className="text-emerald-300 font-bold block">🛡️ Self-Healing Engine:</span>
+                  <p className="text-slate-300">Auto-detects memory anomalies, broken syllabus mappings, or math drift and hot-patches them.</p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 space-y-1">
+                  <span className="text-amber-300 font-bold block">📱 Telegram Executive Reports:</span>
+                  <p className="text-slate-300">Delivers real-time status pulses and approval summaries to @CA_TRIDEV.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Sub-Agents Grid */}
+          <div className="space-y-2">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
+              11 Subordinate Specialized Agents Under Command:
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+              {[
+                { code: "OSM-02", name: "Official Source Surveillance", role: "Surveils MCA, ICAI BoS, CBDT and CBIC gazettes for instant curriculum amendments." },
+                { code: "MPA-11", name: "Multi-Platform Harvester", role: "Harvests concept depth across BYJU'S, PW, Aakash, EduRev, StudyX, Toppr, Vedantu." },
+                { code: "SAR-01", name: "Syllabus Alignment Agent", role: "Maps each unit and learning objective to official 2024-2026 ICAI/ICMAI schemes." },
+                { code: "CCA-04", name: "Content Creation Agent", role: "Synthesizes original notes, bilingual ELI10 explanations, and step-by-step illustrations." },
+                { code: "VCR-06", name: "Verification & Calculation", role: "Audits journal debits/credits, CAS-6 formulas, and statutory tax slabs." },
+                { code: "QGA-05", name: "Question Bank Agent", role: "Synthesizes original exam-pattern MCQs with comprehensive statutory solutions." },
+                { code: "HNP-08", name: "Handwritten Notes Studio", role: "Compiles visual flowcharts, study diagrams, and downloadable revision sheets." },
+                { code: "CPA-09", name: "Copyright & Rights Engine", role: "Assigns clean fair-dealing clearances and categorizes research sources." },
+                { code: "FQA-07", name: "Faculty Review Orchestrator", role: "Routes high-stakes materials into the Super Admin Telegram approval queue." },
+                { code: "DLI-10", name: "Digital Library Publisher", role: "Deploys approved lessons and study packages into student curriculum views." },
+                { code: "SGC-03", name: "System Guard Controller", role: "Enforces 100% non-destructive preservation of all existing user data and routes." },
+              ].map((ag) => (
+                <Card key={ag.code} className="border-[hsl(var(--border))]">
+                  <CardHeader className="p-3 pb-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-[hsl(var(--muted))] text-indigo-600">
+                        {ag.code}
+                      </span>
+                      <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-500/30">
+                        Operational
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-xs font-bold mt-1">{ag.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3 pt-1 text-[11px] text-[hsl(var(--muted-foreground))]">
+                    {ag.role}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </TabsContent>
 

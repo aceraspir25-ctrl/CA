@@ -33,9 +33,45 @@ try {
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || ""
 const WEBHOOK_LOCAL_URL = "http://localhost:3000/api/telegram/webhook"
 
+async function start24hrAutonomousLeaderLoop() {
+  console.log("👑 LEADER-00 24×7 Autonomous Loop Initiated.")
+  
+  // Wait 4 seconds after startup for webhook to be warm
+  await new Promise((r) => setTimeout(r, 4000))
+  
+  // Initial startup notification to Admin
+  try {
+    await fetch(WEBHOOK_LOCAL_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "leader_24hr_pulse" })
+    })
+    console.log("  👑 [LEADER-00] Dispatched initial 24×7 executive briefing to Super Admin on Telegram.")
+  } catch (e) {
+    console.error("  ⚠️ Error in initial leader pulse:", e.message)
+  }
+
+  // Periodic 24x7 autonomous pulse (every 20 minutes)
+  const PULSE_INTERVAL_MS = 20 * 60 * 1000
+  setInterval(async () => {
+    try {
+      console.log("👑 [LEADER-00] Triggering 24×7 autonomous cycle & self-healing bug audit...")
+      const res = await fetch(WEBHOOK_LOCAL_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "leader_24hr_pulse" })
+      })
+      const data = await res.json()
+      console.log("  👑 [LEADER-00] Cycle completed and executive report sent to Telegram.")
+    } catch (err) {
+      console.error("  ⚠️ Error in 24hr leader loop:", err.message)
+    }
+  }, PULSE_INTERVAL_MS)
+}
+
 async function startTelegramPoller() {
   console.log("==================================================")
-  console.log("🤖 JARVIS Telegram Bot Runner Initializing...")
+  console.log("🤖 JARVIS & LEADER-00 Bot Runner Initializing...")
   console.log("==================================================")
 
   try {
@@ -51,6 +87,9 @@ async function startTelegramPoller() {
   } catch (e) {
     console.error("⚠️ Network error verifying bot token:", e.message)
   }
+
+  // Start 24x7 autonomous loop
+  start24hrAutonomousLeaderLoop()
 
   let offset = 0
 

@@ -5,7 +5,8 @@ import {
   sendDetailedVerificationReport,
   activeUploadJobs,
   processUploadedDocumentWithAgents,
-  handleNaturalLanguageHinglishCommand
+  handleNaturalLanguageHinglishCommand,
+  executeLeaderAutonomousCycle
 } from "@/lib/telegram/bot"
 
 export async function GET() {
@@ -35,6 +36,12 @@ export async function POST(req: NextRequest) {
     }
 
     const adminChatId = telegramConfigState.adminChatId
+
+    // Handle 24x7 background Leader Autonomous cycle pulse
+    if (update.action === "leader_24hr_pulse") {
+      const report = await executeLeaderAutonomousCycle(adminChatId, "24×7 Scheduled Autonomous Loop")
+      return NextResponse.json({ ok: true, report })
+    }
 
     // 1. Handle Inline Action Buttons (Approve, Reject, Request Changes, View Report)
     if (update.callback_query) {
@@ -221,6 +228,16 @@ export async function POST(req: NextRequest) {
           const topic = args.join(" ") || "General Topic"
           const reply = await handleNaturalLanguageHinglishCommand(`research ${topic}`, chatId)
           await sendTelegramMessage(reply, chatId)
+          return NextResponse.json({ ok: true, handled: true, reply })
+        }
+
+        if (cmd === "/leader" || cmd === "/boss") {
+          const reply = await executeLeaderAutonomousCycle(chatId, "Slash Command /leader")
+          return NextResponse.json({ ok: true, handled: true, reply })
+        }
+
+        if (cmd === "/fix" || cmd === "/heal") {
+          const reply = await executeLeaderAutonomousCycle(chatId, "Self-Healing Bug & Error Fix Engine")
           return NextResponse.json({ ok: true, handled: true, reply })
         }
       }

@@ -20,6 +20,30 @@ export interface AIAgent {
 
 export const INITIAL_AI_AGENTS: AIAgent[] = [
   {
+    id: "agent-leader-00",
+    name: "Supreme Leader & Chief Autonomous Orchestrator",
+    code: "LEADER-00",
+    role: "Commander-in-Chief, Autonomous Task Allocator & Self-Healing Bug Fixer",
+    description: "Supreme Commander of all specialized sub-agents. Continuously monitors system health across all course pipelines, schedules research cycles, directs specialized agents, detects anomalies, auto-patches code/syllabus drift in real time, and sends executive progress & health reports directly to the Super Admin via Telegram.",
+    institutions: ["All 21 Levels", "All 11 Sub-Agents", "Telegram Remote Gateway"],
+    status: "running",
+    lastRunTime: "Real-time 24×7",
+    tasksCompleted: 4890,
+    successRate: 100,
+    permissions: [
+      "Supreme Agent Command & Dynamic Task Delegation",
+      "Autonomous Self-Healing & Bug Fixing Engine",
+      "Real-Time Exception Interception & Auto-Patching",
+      "Direct Telegram Executive Reporting & Alerts",
+      "24×7 Continuous Execution Loop Orchestration"
+    ],
+    logs: [
+      { id: "log-lead-1", timestamp: "Real-time", level: "SUCCESS", message: "LEADER-00 active: All 11 agents operational with 0 errors. Real-time Telegram sync online." },
+      { id: "log-lead-2", timestamp: "1 min ago", level: "VERIFIED", message: "Auto-healed: Validated 21 course levels and 103 official papers. Zero syllabus drift detected." },
+      { id: "log-lead-3", timestamp: "5 mins ago", level: "INFO", message: "Command issued to OSM-02 & MPA-11: Execute 24x7 surveillance and sync study packages." }
+    ]
+  },
+  {
     id: "agent-1",
     name: "Academic Research Agent",
     code: "ARA-01",
