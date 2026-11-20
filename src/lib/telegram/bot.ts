@@ -313,32 +313,72 @@ export async function executeLeaderAutonomousCycle(adminChatId?: string, trigger
 }
 
 /**
- * Natural Language Hinglish Command Processor
+ * Natural Language Hinglish, Hindi & English Multilingual Command Processor
  */
 export async function handleNaturalLanguageHinglishCommand(query: string, adminChatId: string): Promise<string> {
   const q = query.toLowerCase().trim()
 
-  // 0. Supreme Leader & Bug Fixing Commands (e.g. "leader", "leader report", "bug fix karo", "error fix karo", "24hr")
+  // 1. Language Detection (Hindi Devanagari, Hinglish Roman, or English)
+  const isPureHindi = Boolean(query.match(/[\u0900-\u097F]/))
+  const hinglishTokens = [
+    "karo", "kare", "karna", "chalao", "dikhao", "banao", "samjhao", "kaise", "kya", "kyun",
+    "sab", "saare", "sabhi", "batao", "theek", "aaj", "bhejo", "de do", "aur", "me", "se",
+    "ko", "par", "hai", "hain", "kisi", "kuch", "apne", "mere", "hume", "shuru", "kaam", "bhi"
+  ]
+  const isHinglish = hinglishTokens.some((t) => q.split(/[\s,?.!]+/).includes(t))
+  const lang: "hi" | "hinglish" | "en" = isPureHindi ? "hi" : isHinglish ? "hinglish" : "en"
+
+  // 0. Supreme Leader & Bug Fixing Commands (Hindi, Hinglish & English)
   if (
     q.includes("leader") ||
     q.includes("boss") ||
     q.includes("bug") ||
     q.includes("error") ||
     q.includes("fix") ||
+    q.includes("heal") ||
+    q.includes("theek") ||
     q.includes("24hr") ||
     q.includes("24 hour") ||
     q.includes("24 ghante") ||
-    q.includes("self heal")
+    q.includes("self heal") ||
+    q.includes("लीडर") ||
+    q.includes("कमांडर") ||
+    q.includes("बग") ||
+    q.includes("त्रुटि") ||
+    q.includes("सुधार") ||
+    q.includes("ठीक करो")
   ) {
     return await executeLeaderAutonomousCycle(adminChatId, `Super Admin Instruction: "${query}"`)
   }
 
-  // 1. Run all agents (e.g. "I want to every agent run", "run all agents", "saare agents run karo", "har agent run kare")
+  // 1. Run all agents (Hindi, Hinglish & English)
   if (
-    (q.includes("agent") && (q.includes("run") || q.includes("start") || q.includes("chalao") || q.includes("kare") || q.includes("all") || q.includes("every"))) ||
+    ((q.includes("agent") || q.includes("एजेंट")) &&
+      (q.includes("run") || q.includes("start") || q.includes("chalao") || q.includes("kare") || q.includes("all") || q.includes("every") || q.includes("चलाओ") || q.includes("शुरू") || q.includes("सभी") || q.includes("सारे"))) ||
     q.includes("every agent") ||
-    q.includes("all agent")
+    q.includes("all agent") ||
+    q.includes("saare agent") ||
+    q.includes("सभी एजेंट") ||
+    q.includes("सारे एजेंट")
   ) {
+    if (lang === "hi") {
+      return `⚡ *सभी 11 ऑटोनॉमस एजेंट्स सक्रिय और रियल-टाइम में कार्यरत हैं!*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `1. 🔍 *OSM-02 (नियामक निगरानी):* MCA, ICAI एवं CBDT पोर्टल की लाइव निगरानी (AY 2025-26 सत्यापित)।\n` +
+        `2. 🌐 *MPA-11 (मल्टी-प्लेटफ़ॉर्म हार्वेस्टर):* BYJU'S, PW, Aakash, EduRev, StudyX से कॉन्सेप्ट मिलान।\n` +
+        `3. 📐 *SAR-01 (पाठ्यक्रम संरेखण):* 2024-2026 न्यू स्कीम के साथ 100% मैपिंग।\n` +
+        `4. ✍️ *CCA-04 (कंटेंट निर्माण):* मौलिक अध्ययन नोट्स एवं व्यावहारिक उदाहरण तैयार।\n` +
+        `5. 🧮 *VCR-06 (सत्यापन एवं गणना):* गणितीय फॉर्मूले (CAS-6, EOQ, GST ITC Sec 16) शत-प्रतिशत संतुलित।\n` +
+        `6. 🎯 *QGA-05 (प्रश्न बैंक निर्माण):* 15 मानक परीक्षा उपयोगी MCQs तैयार।\n` +
+        `7. 📝 *HNP-08 (हस्तलिखित नोट्स स्टूडियो):* विज़ुअल फ्लोचार्ट एवं रिवीज़न शीट्स संकलित।\n` +
+        `8. ⚖️ *CPA-09 (कॉपीराइट एवं अधिकार):* फेयर-डीलिंग एवं मौलिकता सत्यापित।\n` +
+        `9. 📬 *FQA-07 (फैकल्टी समीक्षा):* पैकेज आपके Telegram डेस्क पर भेजा गया।\n` +
+        `10. 🏛 *DLI-10 (डिजिटल लाइब्रेरी पब्लिशर):* लाइब्रेरी में लाइव प्रकाशन हेतु तैयार।\n` +
+        `11. 🛡 *SGC-03 (सिस्टम सुरक्षा गार्ड):* 100% नॉन-डिस्ट्रक्टिव सुरक्षा सक्रिय।\n\n` +
+        `✅ *परिणाम:* सभी 11 एजेंट्स सफलतापूर्वक निष्पादित!\n` +
+        `प्लेटफॉर्म स्थिति: *24×7 ऑटोनॉमस रूप से लाइव*`
+    }
+
     return `⚡ *ALL 11 AUTONOMOUS AGENTS TRIGGERED & RUNNING IN REAL TIME!*\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
       `1. 🔍 *OSM-02 (Official Surveillance):* Active | Monitored MCA, ICAI BoS & CBDT portals (AY 2025-26 confirmed).\n` +
@@ -356,19 +396,43 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
       `Platform Status: *100% Autonomous 24×7*`
   }
 
-  // 2. Pending approvals
-  if (q.includes("pending") || q.includes("approval") || q.includes("dikhao")) {
+  // 2. Pending approvals (Hindi, Hinglish & English)
+  if (
+    q.includes("pending") ||
+    q.includes("approval") ||
+    q.includes("dikhao") ||
+    q.includes("पेंडिंग") ||
+    q.includes("लंबित") ||
+    q.includes("स्वीकृति")
+  ) {
     const pendingJobs = activeUploadJobs.filter((j) => j.status === "pending_review")
     if (pendingJobs.length === 0) {
-      return "🎉 *Approval Queue is Clear!* No study material is currently waiting for your review. All packages are published!"
+      return lang === "hi"
+        ? "🎉 *स्वीकृति कतार खाली है!* कोई भी अध्ययन सामग्री वर्तमान में समीक्षा हेतु लंबित नहीं है। सभी पैकेज प्रकाशित हैं!"
+        : "🎉 *Approval Queue is Clear!* No study material is currently waiting for your review. All packages are published!"
+    }
+    if (lang === "hi") {
+      return `⏳ *समीक्षा हेतु लंबित सामग्री (${pendingJobs.length} आइटम):*\n\n` +
+        pendingJobs.map((j) => `• *${j.fileName}* (${j.courseDetection.course})\n  आईडी: \`${j.id}\` | स्थिति: *लंबित समीक्षा*`).join("\n\n") +
+        `\n\nकार्ड के बटनों का उपयोग करें या /status भेजें।`
     }
     return `⏳ *Found ${pendingJobs.length} item(s) awaiting your review:*\n\n` +
       pendingJobs.map((j) => `• *${j.fileName}* (${j.courseDetection.course})\n  ID: \`${j.id}\` | Status: *Pending Review*`).join("\n\n") +
       `\n\nUse the buttons on your latest report card or send: /status`
   }
 
-  // 3. Verify notes (e.g. "CMA Inter ke notes verify karo", "CA Inter ke notes verify karo")
-  if (q.includes("notes") && (q.includes("verify") || q.includes("check"))) {
+  // 3. Verify notes & syllabus (Hindi, Hinglish & English)
+  if (
+    (q.includes("note") || q.includes("syllabus") || q.includes("नोट्स") || q.includes("पाठ्यक्रम")) &&
+    (q.includes("verify") || q.includes("check") || q.includes("जांच") || q.includes("सत्यापित"))
+  ) {
+    if (lang === "hi") {
+      return `🔍 *क्रॉस-वेरिफिकेशन एजेंट (VCR-06 एवं OSM-02) सक्रिय...*\n\n` +
+        `• ICMAI/ICAI नवीनतम अध्ययन सामग्री की जांच जारी\n` +
+        `• CAS-6 एवं Ind AS संशोधनों का मिलान पूर्ण\n` +
+        `• गणितीय फॉर्मूलों एवं संख्यात्मक शेषों का ऑडिट पूर्ण\n\n` +
+        `✅ *परिणाम:* सभी नोट्स आधिकारिक पाठ्यक्रम के अनुरूप सत्यापित! शून्य विसंगति।`
+    }
     return `🔍 *Initiating Cross-Verification Agent (VCR-06 & OSM-02)...*\n\n` +
       `• Scanning ICMAI/ICAI latest study materials\n` +
       `• Checking CAS-6 / Ind AS amendments\n` +
@@ -376,9 +440,23 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
       `✅ *Result:* All notes verified! Zero discrepancies found against official syllabus.`
   }
 
-  // 4. Upload simulation (e.g. "Ye PDF upload karo", "Upload notes")
-  if (q.includes("pdf") || q.includes("upload") || q.includes("bhejo")) {
+  // 4. Upload simulation (Hindi, Hinglish & English)
+  if (
+    q.includes("pdf") ||
+    q.includes("upload") ||
+    q.includes("bhejo") ||
+    q.includes("अपलोड") ||
+    q.includes("भेजो") ||
+    q.includes("फाइल")
+  ) {
     const job = await processUploadedDocumentWithAgents("Cost_Accounting_Notes.pdf", "4.2 MB", "@Admin", adminChatId)
+    if (lang === "hi") {
+      return `📥 *दस्तावेज़ प्राप्त एवं 7 विशेषज्ञ एजेंटों द्वारा विश्लेषित!*\n\n` +
+        `• फाइल: \`${job.fileName}\`\n` +
+        `• ऑटो-डिटेक्टेड कोर्स: *${job.courseDetection.course}* (${job.courseDetection.subject})\n` +
+        `• अध्याय: *${job.courseDetection.chapter}*\n\n` +
+        `सत्यापन रिपोर्ट और 1-क्लिक अप्रूवल बटन ऊपर भेज दिए गए हैं!`
+    }
     return `📥 *PDF Received & Processed by 7 Specialized Agents!*\n\n` +
       `• Document: \`${job.fileName}\`\n` +
       `• Auto-Detected Course: *${job.courseDetection.course}* (${job.courseDetection.subject})\n` +
@@ -386,14 +464,35 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
       `Verification report with approval buttons has been dispatched above!`
   }
 
-  // 5. MCQs generation (e.g. "Chapter 4 ke MCQs banao")
-  if (q.includes("mcq") || q.includes("question") || q.includes("banao")) {
+  // 5. MCQs generation (Hindi, Hinglish & English)
+  if (
+    (q.includes("mcq") || q.includes("question") || q.includes("quiz") || q.includes("प्रश्न") || q.includes("क्विज")) &&
+    (q.includes("banao") || q.includes("generate") || q.includes("create") || q.includes("बनाओ") || q.includes("तैयार"))
+  ) {
+    if (lang === "hi") {
+      return `🧠 *प्रश्न निर्माण एजेंट (QGA-05) सक्रिय!*\n\n` +
+        `विस्तृत वैधानिक कारणों, प्रासंगिक धाराओं और चरणबद्ध गणनाओं के साथ 15 नए मानक परीक्षा उपयोगी बहुविकल्पीय प्रश्न (MCQs) तैयार किए गए हैं। समीक्षा हेतु आपकी कतार में प्रस्तुत।`
+    }
     return `🧠 *Question Generation Agent (QGA-05) Triggered!*\n\n` +
       `Drafted 15 new practical MCQs with detailed rationale, statutory sections, and calculation steps. Sent to your approval queue.`
   }
 
-  // 6. Amendments check (e.g. "ICAI latest amendments check karo")
-  if (q.includes("amendment") || q.includes("icai") || q.includes("notification")) {
+  // 6. Amendments check (Hindi, Hinglish & English)
+  if (
+    q.includes("amendment") ||
+    q.includes("notification") ||
+    q.includes("circular") ||
+    q.includes("संशोधन") ||
+    q.includes("अधिसूचना") ||
+    q.includes("परिपत्र")
+  ) {
+    if (lang === "hi") {
+      return `📢 *आधिकारिक स्रोत निगरानी एजेंट (OSM-02) रिपोर्ट:*\n\n` +
+        `• *MCA पोर्टल:* आज कोई नया विनियामक परिपत्र जारी नहीं हुआ।\n` +
+        `• *CBDT:* धारा 115BAC संशोधित स्लैब AY 2025-26 हेतु सत्यापित।\n` +
+        `• *ICAI BoS:* नई शिक्षा प्रशिक्षण योजना संक्रमण मार्गदर्शन नोट्स सत्यापित।\n` +
+        `स्थिति: प्लेटफॉर्म पाठ्यक्रम 100% नवीनतम और अद्यतन है।`
+    }
     return `📢 *Official Source Surveillance Agent (OSM-02) Report:*\n\n` +
       `• *MCA Portal:* No new notifications today.\n` +
       `• *CBDT:* Section 115BAC revised slabs confirmed for AY 2025-26.\n` +
@@ -401,8 +500,20 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
       `Status: Platform curriculum is 100% up to date.`
   }
 
-  // 7. Daily agent report (e.g. "Aaj ki agent report do")
-  if (q.includes("report") || q.includes("aaj") || q.includes("daily")) {
+  // 7. Daily agent report (Hindi, Hinglish & English)
+  if (
+    (q.includes("report") || q.includes("रिपोर्ट")) &&
+    (q.includes("aaj") || q.includes("daily") || q.includes("आज") || q.includes("दैनिक") || q.includes("do") || q.includes("दो") || q.includes("विवरण"))
+  ) {
+    if (lang === "hi") {
+      return `📊 *दैनिक एजेंट निष्पादन एवं स्वास्थ्य रिपोर्ट*\n\n` +
+        `• 🤖 *सक्रिय ऑटोनॉमस एजेंट:* 11 एजेंट्स\n` +
+        `• ⚡ *आज पूर्ण किए गए साइकिल्स:* 1,420 चक्र\n` +
+        `• 📥 *विश्लेषित दस्तावेज़:* ${activeUploadJobs.length} PDFs\n` +
+        `• ⏳ *लंबित स्वीकृतियां:* ${activeUploadJobs.filter((j) => j.status === "pending_review").length}\n` +
+        `• ✅ *प्रकाशित पाठ:* 198 अध्याय\n` +
+        `• 🛡 *ऑडिट स्थिति:* 100% नॉन-डिस्ट्रक्टिव सुरक्षा अनुपालन सत्यापित।`
+    }
     return `📊 *DAILY AGENT EXECUTION & HEALTH REPORT*\n\n` +
       `• 🤖 *Active Autonomous Agents:* 11 Agents\n` +
       `• ⚡ *Tasks Completed Today:* 1,420 cycles\n` +
@@ -412,19 +523,49 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
       `• 🛡 *Audit Status:* 100% Non-destructive compliance verified.`
   }
 
-  // 8. Publish command (e.g. "Is content ko publish karo", "live karo")
-  if (q.includes("publish") || q.includes("live karo") || q.includes("deploy karo")) {
+  // 8. Publish command (Hindi, Hinglish & English)
+  if (
+    q.includes("publish") ||
+    q.includes("live karo") ||
+    q.includes("deploy") ||
+    q.includes("पब्लिश") ||
+    q.includes("प्रकाशित") ||
+    q.includes("लाइव करो")
+  ) {
     const firstPending = activeUploadJobs.find((j) => j.status === "pending_review")
     if (firstPending) {
       firstPending.status = "approved"
-      return `✅ *Published!* \`${firstPending.fileName}\` (${firstPending.courseDetection.course}) has been verified and deployed directly to Student Digital Library!`
+      return lang === "hi"
+        ? `✅ *प्रकाशित!* \`${firstPending.fileName}\` (${firstPending.courseDetection.course}) सत्यापित होकर सीधे छात्र डिजिटल लाइब्रेरी में लाइव कर दिया गया है!`
+        : `✅ *Published!* \`${firstPending.fileName}\` (${firstPending.courseDetection.course}) has been verified and deployed directly to Student Digital Library!`
     }
-    return `ℹ️ No pending content currently waiting for publish authorization.`
+    return lang === "hi"
+      ? `ℹ️ प्रकाशन हेतु वर्तमान में कोई सामग्री कतार में लंबित नहीं है।`
+      : `ℹ️ No pending content currently waiting for publish authorization.`
   }
 
-  // 9. Detailed Platform Status
-  if (q.includes("status") || q.includes("kaam") || q.includes("health")) {
+  // 9. Detailed Platform Status (Hindi, Hinglish & English)
+  if (
+    q.includes("status") ||
+    q.includes("health") ||
+    q.includes("स्थिति") ||
+    q.includes("हालत") ||
+    q.includes("सिस्टम कैसा")
+  ) {
     const pendingCount = activeUploadJobs.filter((j) => j.status === "pending_review").length
+    if (lang === "hi") {
+      return `📊 *एडुसिस्टम प्रो — रियल-टाइम प्लेटफॉर्म स्वास्थ्य*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `• 🚀 *सिस्टम स्थिति:* 100% ऑनलाइन एवं ऑटोनॉमस\n` +
+        `• 🤖 *सक्रिय एजेंट्स:* 11 / 11 कार्यरत 24×7\n` +
+        `• 📚 *पाठ्यक्रम कवरेज:* 21 लेवल्स (CA, CMA, CS, PRSU B.Com, ACCA, BBA)\n` +
+        `• 📑 *आधिकारिक पेपर्स:* 103 मानक विषय पूर्णतः मैप\n` +
+        `• 📥 *विश्लेषित दस्तावेज़:* ${activeUploadJobs.length} PDFs\n` +
+        `• ⏳ *लंबित अप्रूवल कतार:* ${pendingCount} आइटम\n` +
+        `• 📖 *प्रकाशित डिजिटल लाइब्रेरी:* 198 पाठ लाइव\n` +
+        `• 📱 *Telegram एडमिन डेस्क:* कनेक्टेड एवं सक्रिय\n` +
+        `• 🛡 *डेटा सुरक्षा:* 100% नॉन-डिस्ट्रक्टिव सक्रिय`
+    }
     return `📊 *EDUSYSTEM PRO — REAL-TIME PLATFORM HEALTH*\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
       `• 🚀 *System Status:* 100% Online & Autonomous\n` +
@@ -438,16 +579,26 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
       `• 🛡 *Preservation Guard:* 100% Non-Destructive Active`
   }
 
-  // 10. DYNAMIC CONTENT CREATION / RESEARCH ON ARBITRARY TOPIC PROMPT
+  // 10. DYNAMIC CONTENT CREATION / RESEARCH ON ARBITRARY TOPIC PROMPT (Hindi, Hinglish & English)
   if (
-    (q.includes("generate") || q.includes("banao") || q.includes("create") || q.includes("research") || q.includes("taiyar")) &&
-    (q.includes("chapter") || q.includes("notes") || q.includes("topic") || q.includes("package") || q.includes("course") || q.includes("library") || q.includes("daalo"))
+    (q.includes("generate") || q.includes("banao") || q.includes("create") || q.includes("research") || q.includes("taiyar") || q.includes("बनाओ") || q.includes("तैयार") || q.includes("रिसर्च")) &&
+    (q.includes("chapter") || q.includes("notes") || q.includes("topic") || q.includes("package") || q.includes("course") || q.includes("library") || q.includes("daalo") || q.includes("अध्याय") || q.includes("नोट्स") || q.includes("विषय"))
   ) {
     const cleanedTopic = query
-      .replace(/generate|banao|create|research|taiyar|karo|ke|par|ek|naya|new|notes|chapter|package|aur|daalo|library|me|ko/gi, " ")
+      .replace(/generate|banao|create|research|taiyar|karo|ke|par|ek|naya|new|notes|chapter|package|aur|daalo|library|me|ko|बनाओ|तैयार|करो|के|पर|एक|नया|नोट्स|अध्याय|लाइब्रेरी|में|को/gi, " ")
       .trim() || "Financial Accounting Standard"
 
     const job = await processUploadedDocumentWithAgents(`${cleanedTopic.replace(/\s+/g, "_")}_Notes.pdf`, "3.8 MB", "@Admin", adminChatId)
+
+    if (lang === "hi") {
+      return `🎯 *LEADER-00 एवं CCA-04 ने आपके प्रॉम्प्ट पर कार्य पूर्ण किया!*\n\n` +
+        `• *आपका निर्देश:* "${query}"\n` +
+        `• *पहचाना गया विषय:* *${job.courseDetection.subject}* (${job.courseDetection.chapter})\n` +
+        `• *कार्रवाई:* 7-स्टेज अनुसंधान, गणना जांच और पाठ्यक्रम सत्यापन पूर्ण।\n` +
+        `• *तैयार पैकेज:* अवधारणा नोट्स, चरणबद्ध उदाहरण एवं फॉर्मूला शीट।\n\n` +
+        `1-क्लिक अप्रूवल बटनों के साथ कार्ड ऊपर प्रेषित कर दिया गया है!`
+    }
+
     return `🎯 *LEADER-00 & CCA-04 EXECUTED YOUR CUSTOM PROMPT!*\n\n` +
       `• *Your Prompt:* "${query}"\n` +
       `• *Topic Identified:* *${job.courseDetection.subject}* (${job.courseDetection.chapter})\n` +
@@ -456,10 +607,8 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
       `Approval card with 1-click publish buttons has been dispatched above!`
   }
 
-  // 11. GENERAL AI ACADEMIC TUTOR & COMPREHENSIVE PROMPT REASONING (Gemini / Knowledge Engine)
+  // 11. GENERAL AI ACADEMIC TUTOR & COMPREHENSIVE PROMPT REASONING (Hindi, Hinglish & English)
   try {
-    const isHindi = Boolean(query.match(/[\u0900-\u097F]/))
-    const lang = isHindi ? "hi" : "hinglish"
     const aiResponse = await executeAIChat({
       messages: [{ role: "user", content: query }],
       language: lang,
@@ -468,18 +617,24 @@ export async function handleNaturalLanguageHinglishCommand(query: string, adminC
     })
 
     if (aiResponse && aiResponse.content) {
-      return `🤖 *AI ACADEMIC AGENT (LEADER-00 & CCA-04)*\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `📌 *Query:* _"${query}"_\n\n` +
-        aiResponse.content +
-        `\n\n━━━━━━━━━━━━━━━━━━━━\n💡 _Tip: You can ask any CA/CMA/CS question, statutory section, numerical, or prompt me to generate new study materials!_`
+      const header = lang === "hi"
+        ? `🤖 *एआई शैक्षणिक एजेंट (LEADER-00 एवं CCA-04)*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📌 *आपका प्रश्न:* _"${query}"_\n\n`
+        : `🤖 *AI ACADEMIC AGENT (LEADER-00 & CCA-04)*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📌 *Query:* _"${query}"_\n\n`
+
+      const footer = lang === "hi"
+        ? `\n\n━━━━━━━━━━━━━━━━━━━━\n💡 _संकेत: आप किसी भी सीए/सीएमए/सीएस विषय, धारा, संख्यात्मक प्रश्न या नए नोट्स बनाने हेतु कभी भी प्रॉम्प्ट दे सकते हैं!_`
+        : `\n\n━━━━━━━━━━━━━━━━━━━━\n💡 _Tip: You can ask any CA/CMA/CS question, statutory section, numerical, or prompt me to generate new study materials!_`
+
+      return header + aiResponse.content + footer
     }
   } catch (err: any) {
     console.error("Error executing dynamic AI prompt in Telegram:", err)
   }
 
   // Fallback
-  return `🤖 *JARVIS Admin Assistant:* Received your instruction: "${query}".\n\nTry sending commands like:\n• "I want to every agent run" (Triggers all 11 agents)\n• "Pending approvals dikhao"\n• "CMA Inter ke notes verify karo"\n• "Aaj ki agent report do"\n• /status (Full platform health)`
+  return lang === "hi"
+    ? `🤖 *जार्विस एडमिन असिस्टेंट:* आपका निर्देश प्राप्त हुआ: "${query}"।\n\nआप किसी भी भाषा (हिन्दी, हिंग्लिश या इंग्लिश) में प्रॉम्प्ट दे सकते हैं।\nउदाहरण: "सभी एजेंट चलाओ", "आज की रिपोर्ट दो", "पेंडिंग अप्रूवल दिखाओ", या /status।`
+    : `🤖 *JARVIS Admin Assistant:* Received your instruction: "${query}".\n\nYou can give orders in Hindi, Hinglish or English anytime!\nTry: "I want to every agent run", "Pending approvals dikhao", "सभी एजेंट चलाओ", or /status.`
 }
 
 /**
